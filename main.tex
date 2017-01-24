@@ -127,6 +127,7 @@
 
   % syntax
   \newcommand\labs[2]{\lambda #1 \ . \ #2}
+  \newcommand\dabs[2]{\delta #1 \ . \ #2}
   \newcommand\lapp[2]{#1 \ #2}
   \newcommand\lsub[3]{#1 \left[ #2 \mapsto #3 \right]}
 
@@ -160,10 +161,16 @@
         $t \Coloneqq $ & & (term) \\
         & $c$ & (constant of type $P \in B$) \\
         & $x$ & (variable) \\
-        & $\labs{x : T}{t}$ & (abstraction) \\
+        & $f$ & (abstraction) \\
         & $\lapp{t}{t}$ & (application) \\
         & $\labs{X}{t}$ & (type abstraction) \\
         & $\lapp{t}{T}$ & (type application)
+      \end{tabular}
+
+      \begin{tabular}{l l l}
+        $f \Coloneqq $ & & (abstraction) \\
+        & $\dabs{x : T}{f}$ & (abstraction) \\
+        & $\labs{x : T}{t}$ & (abstraction)
       \end{tabular}
 
     \end{mdframed}
@@ -189,7 +196,7 @@
       \begin{prooftree}
           \AxiomC{$\Gamma, x : T_1 \vdash t_2 : T_2$}
         \RightLabel{(\textsc{T-Abs})}
-        \UnaryInfC{$\Gamma \vdash \labs{x : T_2}{T_2} : T_1 \rightarrow T_2$}
+        \UnaryInfC{$\Gamma \vdash \labs{x : T_2}{t_2} : T_1 \rightarrow T_2$}
       \end{prooftree}
 
       \begin{prooftree}
