@@ -14,7 +14,7 @@ provide {
   multiply = (x : Integer) -> (y : Integer) -> ...
 }
 
-given (a : *) (instance : Numeric a) provide {
+provide (implicit a : *) -> (implicit instance : Numeric a) -> {
   square = x -> instance.multiply x x
 }
 

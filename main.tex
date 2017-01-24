@@ -39,7 +39,6 @@
 
 % Paper history
 \received{February 2017}
-\received[accepted]{June 2017}
 
 
 % Document starts
@@ -112,7 +111,7 @@
 % We no longer use \terms command
 \terms{}
 
-\keywords{Ad hoc polymorphism}
+\keywords{Ad hoc polymorphism, Implicit parameters}
 
 
 \thanks{
@@ -125,36 +124,26 @@
 
 \section{Introduction}
 
-  % syntax
-  \newcommand\labs[2]{\lambda #1 \ . \ #2}
-  \newcommand\dabs[2]{\delta #1 \ . \ #2}
-  \newcommand\lapp[2]{#1 \ #2}
-  \newcommand\lsub[3]{#1 \left[ #2 \mapsto #3 \right]}
-  \newcommand\lprovide[2]{\text{provide } #1 \text{ in } #2}
+\section{Implicit parameters}
 
-  % evaluation
+  % misc
+  \newcommand\entails[2]{#1 \vdash #2}
+  \newcommand\hastype[2]{#1 : #2}
+  \newcommand\upsert[3]{#1 \otimes \left( #2 \hookrightarrow #3 \right)}
+  \newcommand\lookup[3]{\upsert{#1}{#2}{#3}}
   \newcommand\evalsto[2]{#1 \longrightarrow #2}
 
+  % terms
+  \newcommand\labs[2]{\lambda #1 \ . \ #2}
+  \newcommand\dabs[2]{\delta #1 \ . \ #2}
+  \newcommand\app[2]{#1 \ #2}
+  \newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
+  \newcommand\provide[2]{\text{provide } #1 \text{ in } #2}
+
   % types
-  \newcommand\tarrow[2]{#1 \rightarrow #2}
-  \newcommand\tforall[2]{\forall #1 \ . \ #2}
-
-  \begin{figure}[h!]
-    \begin{mdframed}
-
-      \begin{tabular}{l l l l}
-        $T \Coloneqq $ & & & (type) \\
-        & $P$ & where $P \in B$ & (base type) \\
-        & $T \rightarrow T$ & & (lambda type) \\
-        & $T \rightarrow_{\delta} T$ & & (delta type) \\
-        & $X$ & & (type variable) \\
-        & $\tforall{X}{T}$ & & (universal type) \\
-      \end{tabular}
-
-    \end{mdframed}
-    \caption{Syntax of types}
-    \label{fig:types_syntax}
-  \end{figure}
+  \newcommand\larrow[2]{#1 \rightarrow #2}
+  \newcommand\darrow[2]{#1 \rightarrow_{\delta} #2}
+  \newcommand\tabs[2]{\forall #1 \ . \ #2}
 
   \begin{figure}[h!]
     \begin{mdframed}
@@ -163,11 +152,12 @@
         $t \Coloneqq $ & & (term) \\
         & $c$ & (constant of type $P \in B$) \\
         & $x$ & (variable) \\
-        & $\labs{x : T}{t}$ & (lambda abstraction) \\
-        & $\dabs{x : T}{t}$ & (delta abstraction) \\
-        & $\lapp{t}{t}$ & (application) \\
+        & $\provide{t}{t}$ & (implicit parameter binding) \\
+        & $\labs{\hastype{x}{T}}{t}$ & (lambda abstraction) \\
+        & $\dabs{\hastype{x}{T}}{t}$ & (delta abstraction) \\
+        & $\app{t}{t}$ & (lambda application) \\
         & $\labs{X}{t}$ & (type abstraction) \\
-        & $\lapp{t}{T}$ & (type application) \\
+        & $\app{t}{T}$ & (type application) \\
       \end{tabular}
 
     \end{mdframed}
@@ -178,61 +168,78 @@
   \begin{figure}[h!]
     \begin{mdframed}
 
+      \begin{tabular}{l l l l}
+        $T \Coloneqq $ & & & (type) \\
+        & $P$ & where $P \in B$ & (base type) \\
+        & $\larrow{T}{T}$ & & (lambda type) \\
+        & $\darrow{T}{T}$ & & (delta type) \\
+        & $X$ & & (type variable) \\
+        & $\tabs{X}{T}$ & & (universal type) \\
+      \end{tabular}
+
+    \end{mdframed}
+    \caption{Syntax of types}
+    \label{fig:types_syntax}
+  \end{figure}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
+
       \begin{prooftree}
           \AxiomC{$c$ is a constant of type $P$}
         \RightLabel{(\textsc{T-Const})}
-        \UnaryInfC{$\Delta; \Gamma \vdash c : P$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{c}{P}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$x : T \in \Gamma$}
+          \AxiomC{$\hastype{x}{T} \in \Gamma$}
         \RightLabel{(\textsc{T-Var})}
-        \UnaryInfC{$\Delta; \Gamma \vdash x : T$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{T}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta; \Gamma, x : T_1 \vdash t_2 : T_2$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{T_1}}{\hastype{t}{T_2}}$}
         \RightLabel{(\textsc{T-Abs})}
-        \UnaryInfC{$\Delta; \Gamma \vdash \labs{x : T_2}{t_2} : T_1 \rightarrow T_2$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{\hastype{x}{T_1}}{t}}{\larrow{T_1}{T_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta; \Gamma \vdash t_1 : X \rightarrow Y$}
-          \AxiomC{$\Delta; \Gamma \vdash t_2 : X$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{T_2}{T_1}}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{T_2}}$}
         \RightLabel{(\textsc{T-App})}
-        \BinaryInfC{$\Delta; \Gamma \vdash \lapp{t_1}{t_2} : Y$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{T_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta; \Gamma \vdash t_1 : T_1$}
-          \AxiomC{$\Delta \otimes \left( t_1 \hookrightarrow T_1 \right); \Gamma \vdash t_2 : T_2$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{T_1}}$}
+          \AxiomC{$\entails{\upsert{\Delta}{t_1}{T_1}; \Gamma}{\hastype{t_2}{T_2}}$}
         \RightLabel{(\textsc{T-TProvide})}
-        \BinaryInfC{$\Delta; \Gamma \vdash \lprovide{t_1}{t_2} : T_2$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{T_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta; \Gamma \vdash t : T$}
-        \RightLabel{(\textsc{T-TAbs})}
-        \UnaryInfC{$\Delta; \Gamma \vdash \labs{X}{t} : \tforall{X}{T}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\Delta; \Gamma \vdash t : \tforall{X}{T_1}$}
-        \RightLabel{(\textsc{T-TApp})}
-        \UnaryInfC{$\Delta; \Gamma \vdash \lapp{t}{T_2} : \lsub{T_1}{X}{T_2}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\Delta; \Gamma, x : T_1 \vdash t_2 : T_2$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{T_1}}{\hastype{t_2}{T_2}}$}
         \RightLabel{(\textsc{T-DAbs})}
-        \UnaryInfC{$\Delta; \Gamma \vdash \dabs{x: T_1}{t_2} : T_1 \rightarrow_\delta T_2$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\dabs{\hastype{x}{T_1}}{t_2}}{\darrow{T_1}{T_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta; \Gamma \vdash t : T_1 \rightarrow_\delta T_2$}
-          \AxiomC{$\Delta \otimes \left( t_1 \hookrightarrow T_1 \right)$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\darrow{T_2}{T_1}}}$}
+          \AxiomC{$\lookup{\Delta}{t_2}{T_2}$}
         \RightLabel{(\textsc{T-DApp})}
-        \BinaryInfC{$\Delta; \Gamma \vdash t : T_2$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t_1}{T_1}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{T}}$}
+        \RightLabel{(\textsc{T-TAbs})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{X}{t}}{\tabs{X}{T}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{\tabs{X}{T_1}}}$}
+        \RightLabel{(\textsc{T-TApp})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t}{T_2}}{\sub{T_1}{X}{T_2}}}$}
       \end{prooftree}
 
     \end{mdframed}
@@ -243,36 +250,34 @@
   \begin{figure}[h!]
     \begin{mdframed}
 
-      Let $v$ represent any variable $x$, abstraction $\labs{x : T}{t}$, or type abstraction $\labs{X}{t}$, but not an application $\lapp{t_1}{t_2}$ or type application $\lapp{t}{T}$.
-
       \begin{prooftree}
           \AxiomC{$\evalsto{t_1}{t_1'}$}
         \RightLabel{(\textsc{E-App1})}
-        \UnaryInfC{$\evalsto{\lapp{t_1}{t_2}}{\lapp{t'_1}{t_2}}$}
+        \UnaryInfC{$\evalsto{\app{t_1}{t_2}}{\app{t'_1}{t_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\evalsto{t}{t'}$}
         \RightLabel{(\textsc{E-App2})}
-        \UnaryInfC{$\evalsto{\lapp{v}{t}}{\lapp{v}{t'}}$}
+        \UnaryInfC{$\evalsto{\app{v}{t}}{\app{v}{t'}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{E-AppAbs})}
-        \UnaryInfC{$\evalsto{\lapp{\left(\labs{x}{t}\right)}{v}}{\lsub{t}{x}{v}}$}
+        \UnaryInfC{$\evalsto{\app{\left(\labs{x}{t}\right)}{v}}{\sub{t}{x}{v}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\evalsto{t}{t'}$}
-        \RightLabel{(\textsc{E-TApp1})}
-        \UnaryInfC{$\evalsto{\lapp{t}{T}}{\lapp{t'}{T}}$}
+        \RightLabel{(\textsc{E-TApp})}
+        \UnaryInfC{$\evalsto{\app{t}{T}}{\app{t'}{T}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{E-TAppTAbs})}
-        \UnaryInfC{$\evalsto{\lapp{\left(\labs{X}{t}\right)}{T}}{\lsub{t}{X}{T}}$}
+        \UnaryInfC{$\evalsto{\app{\left(\labs{X}{t}\right)}{T}}{\sub{t}{X}{T}}$}
       \end{prooftree}
 
     \end{mdframed}
