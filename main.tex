@@ -130,6 +130,7 @@
   \newcommand\dabs[2]{\delta #1 \ . \ #2}
   \newcommand\lapp[2]{#1 \ #2}
   \newcommand\lsub[3]{#1 \left[ #2 \mapsto #3 \right]}
+  \newcommand\lprovide[2]{\text{provide } #1 \text{ in } #2}
 
   % evaluation
   \newcommand\evalsto[2]{#1 \longrightarrow #2}
@@ -144,7 +145,8 @@
       \begin{tabular}{l l l l}
         $T \Coloneqq $ & & & (type) \\
         & $P$ & where $P \in B$ & (base type) \\
-        & $T \rightarrow T$ & & (arrow type) \\
+        & $T \rightarrow T$ & & (lambda type) \\
+        & $T \rightarrow_{\delta} T$ & & (delta type) \\
         & $X$ & & (type variable) \\
         & $\tforall{X}{T}$ & & (universal type) \\
       \end{tabular}
@@ -161,13 +163,11 @@
         $t \Coloneqq $ & & (term) \\
         & $c$ & (constant of type $P \in B$) \\
         & $x$ & (variable) \\
-        & $f$ & (abstraction) \\
+        & $\labs{x : T}{t}$ & (lambda abstraction) \\
+        & $\dabs{x : T}{t}$ & (delta abstraction) \\
         & $\lapp{t}{t}$ & (application) \\
         & $\labs{X}{t}$ & (type abstraction) \\
         & $\lapp{t}{T}$ & (type application) \\
-        $f \Coloneqq $ & & (abstraction) \\
-        & $\dabs{x : T}{f}$ & (abstraction) \\
-        & $\labs{x : T}{t}$ & (abstraction)
       \end{tabular}
 
     \end{mdframed}
@@ -181,38 +181,58 @@
       \begin{prooftree}
           \AxiomC{$c$ is a constant of type $P$}
         \RightLabel{(\textsc{T-Const})}
-        \UnaryInfC{$\Gamma \vdash c : P$}
+        \UnaryInfC{$\Delta; \Gamma \vdash c : P$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$x : T \in \Gamma$}
         \RightLabel{(\textsc{T-Var})}
-        \UnaryInfC{$\Gamma \vdash x : T$}
+        \UnaryInfC{$\Delta; \Gamma \vdash x : T$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Gamma, x : T_1 \vdash t_2 : T_2$}
+          \AxiomC{$\Delta; \Gamma, x : T_1 \vdash t_2 : T_2$}
         \RightLabel{(\textsc{T-Abs})}
-        \UnaryInfC{$\Gamma \vdash \labs{x : T_2}{t_2} : T_1 \rightarrow T_2$}
+        \UnaryInfC{$\Delta; \Gamma \vdash \labs{x : T_2}{t_2} : T_1 \rightarrow T_2$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Gamma \vdash t_1 : X \rightarrow Y$}
-          \AxiomC{$\Gamma \vdash t_2 : X$}
+          \AxiomC{$\Delta; \Gamma \vdash t_1 : X \rightarrow Y$}
+          \AxiomC{$\Delta; \Gamma \vdash t_2 : X$}
         \RightLabel{(\textsc{T-App})}
-        \BinaryInfC{$\Gamma \vdash \lapp{t_1}{t_2} : Y$}
+        \BinaryInfC{$\Delta; \Gamma \vdash \lapp{t_1}{t_2} : Y$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Gamma \vdash t : T$}
+          \AxiomC{$\Delta; \Gamma \vdash t_1 : T_1$}
+          \AxiomC{$\Delta \otimes \left( t_1 \hookrightarrow T_1 \right); \Gamma \vdash t_2 : T_2$}
+        \RightLabel{(\textsc{T-TProvide})}
+        \BinaryInfC{$\Delta; \Gamma \vdash \lprovide{t_1}{t_2} : T_2$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Delta; \Gamma \vdash t : T$}
         \RightLabel{(\textsc{T-TAbs})}
-        \UnaryInfC{$\Gamma \vdash \labs{X}{t} : \tforall{X}{T}$}
+        \UnaryInfC{$\Delta; \Gamma \vdash \labs{X}{t} : \tforall{X}{T}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Gamma \vdash t : \tforall{X}{T_1}$}
+          \AxiomC{$\Delta; \Gamma \vdash t : \tforall{X}{T_1}$}
         \RightLabel{(\textsc{T-TApp})}
-        \UnaryInfC{$\Gamma \vdash \lapp{t}{T_2} : \lsub{T_1}{X}{T_2}$}
+        \UnaryInfC{$\Delta; \Gamma \vdash \lapp{t}{T_2} : \lsub{T_1}{X}{T_2}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Delta; \Gamma, x : T_1 \vdash t_2 : T_2$}
+        \RightLabel{(\textsc{T-DAbs})}
+        \UnaryInfC{$\Delta; \Gamma \vdash \dabs{x: T_1}{t_2} : T_1 \rightarrow_\delta T_2$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Delta; \Gamma \vdash t : T_1 \rightarrow_\delta T_2$}
+          \AxiomC{$\Delta \otimes \left( t_1 \hookrightarrow T_1 \right)$}
+        \RightLabel{(\textsc{T-DApp})}
+        \BinaryInfC{$\Delta; \Gamma \vdash t : T_2$}
       \end{prooftree}
 
     \end{mdframed}
