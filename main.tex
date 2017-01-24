@@ -1,7 +1,8 @@
 \documentclass[acmlarge]{acmart}
 
 \usepackage{booktabs} % For formal tables
-
+\usepackage{bussproofs}
+\usepackage{mdframed}
 
 \usepackage[ruled]{algorithm2e} % For algorithms
 \renewcommand{\algorithmcfname}{ALGORITHM}
@@ -124,7 +125,136 @@
 
 \section{Introduction}
 
-Hello, World!
+  % syntax
+  \newcommand\labs[2]{\lambda #1 \ . \ #2}
+  \newcommand\lapp[2]{#1 \ #2}
+  \newcommand\lsub[3]{#1 \left[ #2 \mapsto #3 \right]}
+
+  % evaluation
+  \newcommand\evalsto[2]{#1 \longrightarrow #2}
+
+  % types
+  \newcommand\tarrow[2]{#1 \rightarrow #2}
+  \newcommand\tforall[2]{\forall #1 \ . \ #2}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
+
+      \begin{tabular}{l l l l}
+        $T \Coloneqq $ & & & (type) \\
+        & $P$ & where $P \in B$ & (base type) \\
+        & $T \rightarrow T$ & & (arrow type) \\
+        & $X$ & & (type variable) \\
+        & $\tforall{X}{T}$ & & (universal type) \\
+      \end{tabular}
+
+    \end{mdframed}
+    \caption{Syntax of types for System F}
+    \label{fig:system_f_types_syntax}
+  \end{figure}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
+
+      \begin{tabular}{l l l}
+        $t \Coloneqq $ & & (term) \\
+        & $c$ & (constant of type $P \in B$) \\
+        & $x$ & (variable) \\
+        & $\labs{x : T}{t}$ & (abstraction) \\
+        & $\lapp{t}{t}$ & (application) \\
+        & $\labs{X}{t}$ & (type abstraction) \\
+        & $\lapp{t}{T}$ & (type application)
+      \end{tabular}
+
+    \end{mdframed}
+    \caption{Syntax of terms for System F}
+    \label{fig:system_f_terms_syntax}
+  \end{figure}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
+
+      \begin{prooftree}
+          \AxiomC{$c$ is a constant of type $P$}
+        \RightLabel{(\textsc{T-Const})}
+        \UnaryInfC{$\Gamma \vdash c : P$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$x : T \in \Gamma$}
+        \RightLabel{(\textsc{T-Var})}
+        \UnaryInfC{$\Gamma \vdash x : T$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Gamma, x : T_1 \vdash t_2 : T_2$}
+        \RightLabel{(\textsc{T-Abs})}
+        \UnaryInfC{$\Gamma \vdash \labs{x : T_2}{T_2} : T_1 \rightarrow T_2$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Gamma \vdash t_1 : X \rightarrow Y$}
+          \AxiomC{$\Gamma \vdash t_2 : X$}
+        \RightLabel{(\textsc{T-App})}
+        \BinaryInfC{$\Gamma \vdash \lapp{t_1}{t_2} : Y$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Gamma \vdash t : T$}
+        \RightLabel{(\textsc{T-TAbs})}
+        \UnaryInfC{$\Gamma \vdash \labs{X}{t} : \tforall{X}{T}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Gamma \vdash t : \tforall{X}{T_1}$}
+        \RightLabel{(\textsc{T-TApp})}
+        \UnaryInfC{$\Gamma \vdash \lapp{t}{T_2} : \lsub{T_1}{X}{T_2}$}
+      \end{prooftree}
+
+    \end{mdframed}
+    \caption{Typing rules for System F}
+    \label{fig:system_f_typing_rules}
+  \end{figure}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
+
+      Let $v$ represent any variable $x$, abstraction $\labs{x : T}{t}$, or type abstraction $\labs{X}{t}$, but not an application $\lapp{t_1}{t_2}$ or type application $\lapp{t}{T}$.
+
+      \begin{prooftree}
+          \AxiomC{$\evalsto{t_1}{t_1'}$}
+        \RightLabel{(\textsc{E-App1})}
+        \UnaryInfC{$\evalsto{\lapp{t_1}{t_2}}{\lapp{t'_1}{t_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\evalsto{t}{t'}$}
+        \RightLabel{(\textsc{E-App2})}
+        \UnaryInfC{$\evalsto{\lapp{v}{t}}{\lapp{v}{t'}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{}
+        \RightLabel{(\textsc{E-AppAbs})}
+        \UnaryInfC{$\evalsto{\lapp{\left(\labs{x}{t}\right)}{v}}{\lsub{t}{x}{v}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\evalsto{t}{t'}$}
+        \RightLabel{(\textsc{E-TApp1})}
+        \UnaryInfC{$\evalsto{\lapp{t}{T}}{\lapp{t'}{T}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{}
+        \RightLabel{(\textsc{E-TAppTAbs})}
+        \UnaryInfC{$\evalsto{\lapp{\left(\labs{X}{t}\right)}{T}}{\lsub{t}{X}{T}}$}
+      \end{prooftree}
+
+    \end{mdframed}
+    \caption{Operational semantics for System F}
+    \label{fig:system_f_semantics}
+  \end{figure}
 
 \section{Conclusion}
 
