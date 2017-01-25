@@ -212,7 +212,7 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{T_1}}$}
-          \AxiomC{$\entails{\upsert{\Delta}{t_1}{T_1}; \Gamma}{\hastype{t_2}{T_2}}$}
+          \AxiomC{$\entails{\upsert{\Delta}{T_1}{t_1}; \Gamma}{\hastype{t_2}{T_2}}$}
         \RightLabel{(\textsc{T-TProvide})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{T_2}}$}
       \end{prooftree}
@@ -225,7 +225,7 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\darrow{T_2}{T_1}}}$}
-          \AxiomC{$\lookup{\Delta}{t_2}{T_2}$}
+          \AxiomC{$\lookup{\Delta}{T_2}{t_2}$}
         \RightLabel{(\textsc{T-DApp})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t_1}{T_1}}$}
       \end{prooftree}
