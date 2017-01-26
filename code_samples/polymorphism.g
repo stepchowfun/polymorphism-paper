@@ -1,26 +1,35 @@
--- Typeclasses
+-----------------
+-- Typeclasses --
+-----------------
 
-Numeric = (a : *) -> {
+Numeric = forall a . {
   multiply : a -> a -> a
 }
 
-Squarable = (a : *) -> {
+Squarable = forall a . {
   square : a -> a
 }
 
--- Instances
+---------------
+-- Instances --
+---------------
 
+-- Numeric Int
 provide {
-  multiply = (x : Integer) -> (y : Integer) -> ...
+  multiply = multiplyInt
 }
 
-provide (implicit a : *) -> (implicit instance : Numeric a) -> {
-  square = x -> instance.multiply x x
+-- Squarable Int
+provide {
+  square = x -> @.multiply x x
 }
 
--- Examples
+--------------
+-- Examples --
+--------------
 
-tesseract : implicit (a : *) -> implicit (Squarable a) -> a -> a
-tesseract a instance x = instance.square $ instance.square x
+-- forall a . implicit Squarable a . a -> a
+tesseract = x -> @.square (@.square x)
 
-sixteenth x = tesseract $ tesseract x
+-- forall a . implicit Squarable a . a -> a
+sixteenth = x -> tesseract (tesseract x)

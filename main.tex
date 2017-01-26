@@ -111,7 +111,7 @@
 % We no longer use \terms command
 \terms{}
 
-\keywords{Ad hoc polymorphism, Implicit parameters}
+\keywords{Ad hoc polymorphism, Implicit parameters, Type classes}
 
 
 \thanks{
@@ -132,17 +132,17 @@
   \newcommand\upsert[3]{#1 \otimes \left( #2 \hookrightarrow #3 \right)}
   \newcommand\lookup[3]{\upsert{#1}{#2}{#3}}
   \newcommand\evalsto[2]{#1 \longrightarrow #2}
+  \newcommand\freevars[1]{\text{free} \left( #1 \right)}
 
   % terms
   \newcommand\labs[2]{\lambda #1 \ . \ #2}
-  \newcommand\dabs[2]{\delta #1 \ . \ #2}
   \newcommand\app[2]{#1 \ #2}
   \newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
+  \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
   \newcommand\provide[2]{\text{provide } #1 \text{ in } #2}
 
   % types
   \newcommand\larrow[2]{#1 \rightarrow #2}
-  \newcommand\darrow[2]{#1 \rightarrow_{\delta} #2}
   \newcommand\tabs[2]{\forall #1 \ . \ #2}
 
   \begin{figure}[h!]
@@ -150,14 +150,12 @@
 
       \begin{tabular}{l l l}
         $t \Coloneqq $ & & (term) \\
-        & $c$ & (constant of type $P \in B$) \\
+        & $c$ & (constant) \\
         & $x$ & (variable) \\
-        & $\provide{t}{t}$ & (implicit parameter binding) \\
-        & $\labs{\hastype{x}{T}}{t}$ & (lambda abstraction) \\
-        & $\dabs{\hastype{x}{T}}{t}$ & (delta abstraction) \\
-        & $\app{t}{t}$ & (lambda application) \\
-        & $\labs{X}{t}$ & (type abstraction) \\
-        & $\app{t}{T}$ & (type application) \\
+        & $\labs{x}{t}$ & (abstraction) \\
+        & $\app{t}{t}$ & (application) \\
+        & $\llet{x}{t}{t}$ & (let binding) \\
+        & $\provide{t}{t}$ & (implicit parameter binding)
       \end{tabular}
 
     \end{mdframed}
@@ -168,13 +166,14 @@
   \begin{figure}[h!]
     \begin{mdframed}
 
-      \begin{tabular}{l l l l}
-        $T \Coloneqq $ & & & (type) \\
-        & $P$ & where $P \in B$ & (base type) \\
-        & $\larrow{T}{T}$ & & (lambda type) \\
-        & $\darrow{T}{T}$ & & (delta type) \\
-        & $X$ & & (type variable) \\
-        & $\tabs{X}{T}$ & & (universal type) \\
+      \begin{tabular}{l l l}
+        $\tau \Coloneqq $ & & (monomorphic type) \\
+        & $\kappa$ & (type of constants) \\
+        & $\larrow{\tau}{\tau}$ & (arrow type) \\
+        & $\alpha$ & (type variable) \\
+        $\sigma \Coloneqq $ & & (polymorphic type) \\
+        & $\tau$ & (monomorphic type) \\
+        & $\tabs{\alpha}{\sigma}$ & (universal type)
       \end{tabular}
 
     \end{mdframed}
@@ -186,60 +185,56 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$c$ is a constant of type $P$}
+          \AxiomC{}
         \RightLabel{(\textsc{T-Const})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{c}{P}}$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{c}{\kappa}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{T} \in \Gamma$}
+          \AxiomC{$\hastype{x}{\tau} \in \Gamma$}
         \RightLabel{(\textsc{T-Var})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{T}}$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{\tau}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{T_1}}{\hastype{t}{T_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
         \RightLabel{(\textsc{T-Abs})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{\hastype{x}{T_1}}{t}}{\larrow{T_1}{T_2}}}$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{T_2}{T_1}}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{T_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-App})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{T_1}}$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{T_1}}$}
-          \AxiomC{$\entails{\upsert{\Delta}{T_1}{t_1}; \Gamma}{\hastype{t_2}{T_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\sigma}}$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\sigma}}{\hastype{t_2}{\tau}}$}
+        \RightLabel{(\textsc{T-Let})}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\entails{\upsert{\Delta}{\tau_1}{t_1}; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-TProvide})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{T_2}}$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{T_1}}{\hastype{t_2}{T_2}}$}
-        \RightLabel{(\textsc{T-DAbs})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\dabs{\hastype{x}{T_1}}{t_2}}{\darrow{T_1}{T_2}}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{\sigma_1}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\sigma_1 \sqsubseteq \sigma_2}$}
+        \RightLabel{(\textsc{T-Inst})}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t}{\sigma_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\darrow{T_2}{T_1}}}$}
-          \AxiomC{$\lookup{\Delta}{T_2}{t_2}$}
-        \RightLabel{(\textsc{T-DApp})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t_1}{T_1}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{T}}$}
-        \RightLabel{(\textsc{T-TAbs})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{X}{t}}{\tabs{X}{T}}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{\tabs{X}{T_1}}}$}
-        \RightLabel{(\textsc{T-TApp})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t}{T_2}}{\sub{T_1}{X}{T_2}}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{\sigma}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\alpha \notin \freevars{\Gamma}}$}
+        \RightLabel{(\textsc{T-Gen})}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t}{\tabs{\alpha}{\sigma}}}$}
       \end{prooftree}
 
     \end{mdframed}
@@ -269,15 +264,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\evalsto{t}{t'}$}
-        \RightLabel{(\textsc{E-TApp})}
-        \UnaryInfC{$\evalsto{\app{t}{T}}{\app{t'}{T}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
           \AxiomC{}
-        \RightLabel{(\textsc{E-TAppTAbs})}
-        \UnaryInfC{$\evalsto{\app{\left(\labs{X}{t}\right)}{T}}{\sub{t}{X}{T}}$}
+        \RightLabel{(\textsc{E-Let})}
+        \UnaryInfC{$\evalsto{\llet{x}{v}{t}}{\sub{t}{x}{v}}$}
       \end{prooftree}
 
     \end{mdframed}
