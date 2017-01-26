@@ -226,6 +226,12 @@
       \end{prooftree}
 
       \begin{prooftree}
+          \AxiomC{$\upsert{\Delta}{\sigma}{t}$}
+        \RightLabel{(\textsc{T-Impl})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{@}{\sigma}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{\sigma_1}}$}
           \AxiomC{$\entails{\Delta; \Gamma}{\sigma_1 \sqsubseteq \sigma_2}$}
         \RightLabel{(\textsc{T-Inst})}
@@ -237,12 +243,6 @@
           \AxiomC{$\entails{\Delta; \Gamma}{\alpha \notin \freevars{\Gamma}}$}
         \RightLabel{(\textsc{T-Gen})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t}{\tabs{\alpha}{\sigma}}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\upsert{\Delta}{\sigma}{t}$}
-        \RightLabel{(\textsc{T-Impl})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{@}{\sigma}}$}
       \end{prooftree}
 
     \end{mdframed}
