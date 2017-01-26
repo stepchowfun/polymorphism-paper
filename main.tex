@@ -156,7 +156,8 @@
         & $\labs{x}{t}$ & (abstraction) \\
         & $\app{t}{t}$ & (application) \\
         & $\llet{x}{t}{t}$ & (let binding) \\
-        & $\provide{t}{t}$ & (implicit parameter binding)
+        & $\provide{t}{t}$ & (provide binding) \\
+        & $@$ & (implicit parameter)
       \end{tabular}
 
     \end{mdframed}
@@ -198,7 +199,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\emptyset; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
+          \AxiomC{$\entails{\varnothing; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
         \RightLabel{(\textsc{T-Abs})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
       \end{prooftree}
@@ -236,6 +237,12 @@
           \AxiomC{$\entails{\Delta; \Gamma}{\alpha \notin \freevars{\Gamma}}$}
         \RightLabel{(\textsc{T-Gen})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t}{\tabs{\alpha}{\sigma}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\upsert{\Delta}{\sigma}{t}$}
+        \RightLabel{(\textsc{T-Impl})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{@}{\sigma}}$}
       \end{prooftree}
 
     \end{mdframed}
