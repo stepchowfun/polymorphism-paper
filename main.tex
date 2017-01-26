@@ -221,14 +221,14 @@
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
           \AxiomC{$\entails{\upsert{\varnothing}{\tau_1}{t_1}; \Gamma}{\hastype{t_2}{\tau_2}}$}
-        \RightLabel{(\textsc{T-TProvide})}
+        \RightLabel{(\textsc{T-Provide})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\upsert{\Delta}{\sigma}{t}$}
+          \AxiomC{}
         \RightLabel{(\textsc{T-Impl})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{@}{\sigma}}$}
+        \UnaryInfC{$\entails{\upsert{\Delta}{\sigma}{t}; \Gamma}{\hastype{@}{\sigma}}$}
       \end{prooftree}
 
       \begin{prooftree}
