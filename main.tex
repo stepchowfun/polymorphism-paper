@@ -3,6 +3,7 @@
 \usepackage{booktabs} % For formal tables
 \usepackage{bussproofs}
 \usepackage{mdframed}
+\usepackage{mathtools}
 
 \usepackage[ruled]{algorithm2e} % For algorithms
 \renewcommand{\algorithmcfname}{ALGORITHM}
@@ -197,7 +198,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
+          \AxiomC{$\entails{\emptyset; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
         \RightLabel{(\textsc{T-Abs})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
       \end{prooftree}
