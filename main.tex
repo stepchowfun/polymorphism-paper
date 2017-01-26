@@ -130,10 +130,9 @@
   % misc
   \newcommand\entails[2]{#1 \vdash #2}
   \newcommand\hastype[2]{#1 : #2}
-  \newcommand\upsert[3]{#1 \otimes \left( #2 \hookrightarrow #3 \right)}
-  \newcommand\lookup[3]{\upsert{#1}{#2}{#3}}
   \newcommand\evalsto[2]{#1 \longrightarrow #2}
   \newcommand\freevars[1]{\text{free} \left( #1 \right)}
+  \newcommand\generalize[1]{\overline{\Gamma}\left( #1 \right)}
 
   % terms
   \newcommand\labs[2]{\lambda #1 \ . \ #2}
@@ -144,6 +143,7 @@
 
   % types
   \newcommand\larrow[2]{#1 \rightarrow #2}
+  \newcommand\lcontextarrow[3]{#1 \Rightarrow #2 \rightarrow #3}
   \newcommand\tabs[2]{\forall #1 \ . \ #2}
 
   \begin{figure}[h!]
@@ -188,62 +188,51 @@
 
       \begin{prooftree}
           \AxiomC{}
-        \RightLabel{(\textsc{T-Const})}
+        \RightLabel{(\textsc{T-Constant})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{c}{\kappa}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{\tau} \in \Gamma$}
-        \RightLabel{(\textsc{T-Var})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{\tau}}$}
+          \AxiomC{$\hastype{x}{\sigma} \in \Gamma$}
+          \AxiomC{$\sigma \sqsubseteq \tau$}
+        \RightLabel{(\textsc{T-Variable})}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{\tau}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\varnothing; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
-        \RightLabel{(\textsc{T-Abs})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
+          \AxiomC{$\entails{\Delta_1; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Abstraction})}
+        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\labs{x}{t}}{\lcontextarrow{\Delta_1}{\tau_1}{\tau_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
-        \RightLabel{(\textsc{T-App})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\sigma}}$}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\sigma}}{\hastype{t_2}{\tau}}$}
-        \RightLabel{(\textsc{T-Let})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau}}$}
+          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\lcontextarrow{\Delta_2}{\tau_2}{\tau_1}}}$}
+          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_2}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Application})}
+        \BinaryInfC{$\entails{\Delta_1 \cup \Delta_2; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\upsert{\varnothing}{\tau_1}{t_1}; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\generalize{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Let})}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\entails{\sigma_1; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-Provide})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{}
-        \RightLabel{(\textsc{T-Impl})}
-        \UnaryInfC{$\entails{\upsert{\Delta}{\sigma}{t}; \Gamma}{\hastype{@}{\sigma}}$}
+        \RightLabel{(\textsc{T-Implicit})}
+        \UnaryInfC{$\entails{\Delta \cup \left\{ \sigma \right\}; \Gamma}{\hastype{@}{\sigma}}$}
       \end{prooftree}
 
-      \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{\sigma_1}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\sigma_1 \sqsubseteq \sigma_2}$}
-        \RightLabel{(\textsc{T-Inst})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t}{\sigma_2}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t}{\sigma}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\alpha \notin \freevars{\Gamma}}$}
-        \RightLabel{(\textsc{T-Gen})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{t}{\tabs{\alpha}{\sigma}}}$}
-      \end{prooftree}
+      $$ \generalize{\tau} = \tabs{\hat{\alpha}}{\tau} \qquad \text{where } \hat{\alpha} = \freevars{\tau} - \freevars{\Gamma} $$
 
     \end{mdframed}
     \caption{Typing rules}
