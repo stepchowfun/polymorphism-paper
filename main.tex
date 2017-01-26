@@ -220,7 +220,7 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\upsert{\Delta}{\tau_1}{t_1}; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\upsert{\varnothing}{\tau_1}{t_1}; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-TProvide})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
