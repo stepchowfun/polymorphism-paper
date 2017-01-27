@@ -142,8 +142,7 @@
   \newcommand\provide[2]{\text{provide } #1 \text{ in } #2}
 
   % types
-  \newcommand\larrow[2]{#1 \rightarrow #2}
-  \newcommand\lcontextarrow[3]{#1 \Rightarrow #2 \rightarrow #3}
+  \newcommand\larrow[3]{#1 \Rightarrow #2 \rightarrow #3}
   \newcommand\tabs[2]{\forall #1 \ . \ #2}
 
   \begin{figure}[h!]
@@ -171,11 +170,14 @@
       \begin{tabular}{l l l}
         $\tau \Coloneqq $ & & (monomorphic type) \\
         & $\kappa$ & (type of constants) \\
-        & $\larrow{\tau}{\tau}$ & (arrow type) \\
+        & $\larrow{\Delta}{\tau}{\tau}$ & (arrow type) \\
         & $\alpha$ & (type variable) \\
         $\sigma \Coloneqq $ & & (polymorphic type) \\
         & $\tau$ & (monomorphic type) \\
-        & $\tabs{\alpha}{\sigma}$ & (universal type)
+        & $\tabs{\alpha}{\sigma}$ & (universal type) \\
+        $\Delta \Coloneqq $ & & (implicit context) \\
+        & $\varnothing$ & (empty context) \\
+        & $\Delta \cup \left\{ \tau \right\}$ & (non-empty context)
       \end{tabular}
 
     \end{mdframed}
@@ -202,11 +204,11 @@
       \begin{prooftree}
           \AxiomC{$\entails{\Delta_1; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
         \RightLabel{(\textsc{T-Abstraction})}
-        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\labs{x}{t}}{\lcontextarrow{\Delta_1}{\tau_1}{\tau_2}}}$}
+        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\Delta_1}{\tau_1}{\tau_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\lcontextarrow{\Delta_2}{\tau_2}{\tau_1}}}$}
+          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\larrow{\Delta_2}{\tau_2}{\tau_1}}}$}
           \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-Application})}
         \BinaryInfC{$\entails{\Delta_1 \cup \Delta_2; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
