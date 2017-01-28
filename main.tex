@@ -211,8 +211,9 @@
       \begin{prooftree}
           \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\larrow{\Delta_2}{\tau_2}{\tau_1}}}$}
           \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\Delta_2 \subseteq \Delta_3$}
         \RightLabel{(\textsc{T-Application})}
-        \BinaryInfC{$\entails{\Delta_1 \cup \Delta_2; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
+        \TrinaryInfC{$\entails{\Delta_1 \cup \Delta_3; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
