@@ -2,6 +2,7 @@
 
 \usepackage{booktabs} % For formal tables
 \usepackage{bussproofs}
+\usepackage{amssymb}
 \usepackage{mdframed}
 \usepackage{mathtools}
 
@@ -48,7 +49,7 @@
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\evalsto[2]{#1 \longrightarrow #2}
 \newcommand\freevars[1]{\text{free} \left( #1 \right)}
-\newcommand\generalize[1]{\overline{\Gamma}\left( #1 \right)}
+\newcommand\generalize[2]{\overline{\Gamma}\left( #1, #2 \right)}
 \newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
 
 % Terms
@@ -58,8 +59,8 @@
 \newcommand\provide[2]{\text{provide } #1 \text{ in } #2}
 
 % Types
-\newcommand\larrow[3]{#1 \Rightarrow #2 \rightarrow #3}
-\newcommand\tabs[2]{\forall #1 \ . \ #2}
+\newcommand\larrow[2]{#1 \rightarrow #2}
+\newcommand\tabs[3]{\forall #1 . #2 \Rightarrow \ #3}
 
 
 % Document starts
@@ -172,11 +173,11 @@
       \begin{tabular}{l l l}
         $\tau \Coloneqq $ & & (monomorphic type) \\
         & $\kappa$ & (type of constants) \\
-        & $\larrow{\Delta}{\tau}{\tau}$ & (arrow type) \\
+        & $\larrow{\tau}{\tau}$ & (arrow type) \\
         & $\alpha$ & (type variable) \\
         $\sigma \Coloneqq $ & & (polymorphic type) \\
         & $\tau$ & (monomorphic type) \\
-        & $\tabs{\alpha}{\sigma}$ & (universal type) \\
+        & $\tabs{\alpha}{\Delta}{\sigma}$ & (universal type) \\
         $\Delta \Coloneqq $ & & (implicit context) \\
         & $\varnothing$ & (empty context) \\
         & $\left\{ \tau \right\}$ & (singleton context) \\
@@ -192,12 +193,6 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{}
-        \RightLabel{(\textsc{T-Constant})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{c}{\kappa}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
           \AxiomC{$\hastype{x}{\sigma} \in \Gamma$}
           \AxiomC{$\sigma \sqsubseteq \tau$}
         \RightLabel{(\textsc{T-Variable})}
@@ -205,29 +200,28 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta_1; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
         \RightLabel{(\textsc{T-Abstraction})}
-        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\Delta_1}{\tau_1}{\tau_2}}}$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\larrow{\Delta_2}{\tau_2}{\tau_1}}}$}
-          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_2}{\tau_2}}$}
-          \AxiomC{$\Delta_2 \subseteq \Delta_3$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-Application})}
-        \TrinaryInfC{$\entails{\Delta_1 \cup \Delta_3; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\generalize{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\Delta_2; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\entails{\Delta_1; \Gamma, \hastype{x}{\generalize{\Delta_2}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-Let})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}$}
+        \BinaryInfC{$\entails{\Delta_1; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\Delta \cup \left\{ \tau \right\}; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\Delta \cup \left\{ \tau_1 \right\}; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-Provide})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
@@ -240,12 +234,11 @@
 
       \begin{prooftree}
           \AxiomC{$\tau_2 = \sub{\tau_1}{\alpha_i}{\tau_i}$}
-          \AxiomC{$\beta_i \notin \freevars{ \forall \alpha_1 \ldots \forall \alpha_n . \tau_1 }$}
         \RightLabel{(\textsc{T-Specialization})}
-        \BinaryInfC{$\forall \alpha_1 \ldots \forall \alpha_n .\tau_1 \sqsubseteq \forall \beta_1 \ldots \forall \beta_m .\tau_2$}
+        \UnaryInfC{$\forall \alpha_1 \ldots \forall \alpha_n .\tau_1 \sqsubseteq \tau_2$}
       \end{prooftree}
 
-      $$ \generalize{\tau} = \forall \alpha_1 \ldots \forall \alpha_n . \tau \qquad \text{where } \left\{ \alpha_1, \ldots, \alpha_n\right\} = \freevars{\tau} - \freevars{\Gamma} $$
+      $$ \generalize{\Delta}{\tau} = \forall \alpha_1 \ldots \forall \alpha_n . \Delta \Rightarrow \tau \qquad \text{where } \left\{ \alpha_1, \ldots, \alpha_n\right\} = \freevars{\tau} - \freevars{\Gamma} $$
 
     \end{mdframed}
     \caption{Typing rules}
