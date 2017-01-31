@@ -42,6 +42,26 @@
 \received{February 2017}
 
 
+% Misc
+\newcommand\lambdaarobase{\lambda_@}
+\newcommand\entails[2]{#1 \vdash #2}
+\newcommand\hastype[2]{#1 : #2}
+\newcommand\evalsto[2]{#1 \longrightarrow #2}
+\newcommand\freevars[1]{\text{free} \left( #1 \right)}
+\newcommand\generalize[1]{\overline{\Gamma}\left( #1 \right)}
+\newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
+
+% Terms
+\newcommand\labs[2]{\lambda #1 \ . \ #2}
+\newcommand\app[2]{#1 \ #2}
+\newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
+\newcommand\provide[2]{\text{provide } #1 \text{ in } #2}
+
+% Types
+\newcommand\larrow[3]{#1 \Rightarrow #2 \rightarrow #3}
+\newcommand\tabs[2]{\forall #1 \ . \ #2}
+
+
 % Document starts
 \begin{document}
 % Title portion
@@ -68,7 +88,7 @@
 
 
 \begin{abstract}
-  Hello, World!
+  We introduce $\lambdaarobase$.
 \end{abstract}
 
 
@@ -121,29 +141,11 @@
 
 \maketitle
 
-
-
 \section{Introduction}
 
+  We introduce $\lambdaarobase$.
+
 \section{Implicit parameters}
-
-  % misc
-  \newcommand\entails[2]{#1 \vdash #2}
-  \newcommand\hastype[2]{#1 : #2}
-  \newcommand\evalsto[2]{#1 \longrightarrow #2}
-  \newcommand\freevars[1]{\text{free} \left( #1 \right)}
-  \newcommand\generalize[1]{\overline{\Gamma}\left( #1 \right)}
-  \newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
-
-  % terms
-  \newcommand\labs[2]{\lambda #1 \ . \ #2}
-  \newcommand\app[2]{#1 \ #2}
-  \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
-  \newcommand\provide[2]{\text{provide } #1 \text{ in } #2}
-
-  % types
-  \newcommand\larrow[3]{#1 \Rightarrow #2 \rightarrow #3}
-  \newcommand\tabs[2]{\forall #1 \ . \ #2}
 
   \begin{figure}[h!]
     \begin{mdframed}
