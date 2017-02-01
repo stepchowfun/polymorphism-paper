@@ -5,7 +5,6 @@
 \usepackage{amssymb}
 \usepackage{mdframed}
 \usepackage{mathtools}
-\usepackage{stmaryrd} % For \varoast
 
 \usepackage[ruled]{algorithm2e} % For algorithms
 \renewcommand{\algorithmcfname}{ALGORITHM}
@@ -45,7 +44,7 @@
 
 
 % Misc
-\newcommand\lambdaimplicit{\lambda_{\varoast}}
+\newcommand\lambdaarobase{\lambda_@}
 \newcommand\entails[2]{#1 \vdash #2}
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\evalsto[2]{#1 \longrightarrow #2}
@@ -90,7 +89,7 @@
 
 
 \begin{abstract}
-  We introduce $\lambdaimplicit$.
+  We introduce $\lambdaarobase$.
 \end{abstract}
 
 
@@ -145,7 +144,7 @@
 
 \section{Introduction}
 
-  We introduce $\lambdaimplicit$.
+  We introduce $\lambdaarobase$.
 
 \section{Implicit parameters}
 
@@ -159,7 +158,7 @@
         & $\app{t}{t}$ & (application) \\
         & $\llet{x}{t}{t}$ & (let binding) \\
         & $\provide{t}{t}$ & (provide binding) \\
-        & $\varoast$ & (implicit parameter)
+        & $@$ & (implicit parameter)
       \end{tabular}
 
     \end{mdframed}
@@ -228,7 +227,7 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{T-Implicit})}
-        \UnaryInfC{$\entails{\Delta \cup \left\{ \tau \right\}; \Gamma}{\hastype{\varoast}{\tau}}$}
+        \UnaryInfC{$\entails{\Delta \cup \left\{ \tau \right\}; \Gamma}{\hastype{@}{\tau}}$}
       \end{prooftree}
 
       $$ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta} \cup \freevars{\tau} \right) \setminus \freevars{\Gamma} $$
