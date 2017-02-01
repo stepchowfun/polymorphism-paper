@@ -193,10 +193,10 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{\sigma} \in \Gamma$}
-          \AxiomC{$\sigma \sqsubseteq \tau$}
+          \AxiomC{$\hastype{x}{\forall \alpha_1 \ldots \forall \alpha_n .\tau_1} \in \Gamma$}
+          \AxiomC{$\tau_2 = \sub{\tau_1}{\alpha_i}{\tau_i}$}
         \RightLabel{(\textsc{T-Variable})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{\tau}}$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{\tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -230,12 +230,6 @@
           \AxiomC{}
         \RightLabel{(\textsc{T-Implicit})}
         \UnaryInfC{$\entails{\Delta \cup \left\{ \tau \right\}; \Gamma}{\hastype{@}{\tau}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\tau_2 = \sub{\tau_1}{\alpha_i}{\tau_i}$}
-        \RightLabel{(\textsc{T-Specialization})}
-        \UnaryInfC{$\forall \alpha_1 \ldots \forall \alpha_n .\tau_1 \sqsubseteq \tau_2$}
       \end{prooftree}
 
       $$ \generalize{\Delta}{\tau} = \forall \alpha_1 \ldots \forall \alpha_n . \Delta \Rightarrow \tau \qquad \text{where } \left\{ \alpha_1, \ldots, \alpha_n\right\} = \freevars{\tau} - \freevars{\Gamma} $$
