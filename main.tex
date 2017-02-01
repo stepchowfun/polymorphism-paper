@@ -192,7 +192,7 @@
 
       \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
-          \AxiomC{$\Delta_1 \subseteq \Delta_2$}
+          \AxiomC{$\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}} \subseteq \Delta_2$}
         \RightLabel{(\textsc{T-Variable})}
         \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
       \end{prooftree}
