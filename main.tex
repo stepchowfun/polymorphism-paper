@@ -230,7 +230,7 @@
         \UnaryInfC{$\entails{\Delta \cup \left\{ \tau \right\}; \Gamma}{\hastype{@}{\tau}}$}
       \end{prooftree}
 
-      $$ \generalize{\Delta}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \freevars{\tau} - \freevars{\Gamma} $$
+      $$ \generalize{\Delta}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta} \cup \freevars{\tau} \right) \setminus \freevars{\Gamma} $$
 
     \end{mdframed}
     \caption{Typing rules}
