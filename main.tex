@@ -198,7 +198,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tau_1}}{\hastype{t}{\tau_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\varnothing}{\varnothing}{\tau_1}}}{\hastype{t}{\tau_2}}$}
         \RightLabel{(\textsc{T-Abstraction})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
       \end{prooftree}
