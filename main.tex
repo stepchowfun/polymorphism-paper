@@ -175,7 +175,7 @@
         & $\alpha$ & (type variable) \\
         $\sigma \Coloneqq $ & & (polymorphic type) \\
         & $\tau$ & (monomorphic type) \\
-        & $\tabs{\alpha}{\Delta}{\sigma}$ & (universal type) \\
+        & $\tabs{\overline{\alpha}}{\Delta}{\tau}$ & (universal type) \\
         $\Delta \Coloneqq $ & & (implicit context) \\
         & $\varnothing$ & (empty context) \\
         & $\left\{ \tau \right\}$ & (singleton context) \\
@@ -191,10 +191,10 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{\forall \alpha_1 \ldots \forall \alpha_n .\tau_1} \in \Gamma$}
-          \AxiomC{$\tau_2 = \sub{\tau_1}{\alpha_i}{\tau_i}$}
+          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
+          \AxiomC{$\Delta_1 \subseteq \Delta_2$}
         \RightLabel{(\textsc{T-Variable})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{x}{\tau_2}}$}
+        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -230,7 +230,7 @@
         \UnaryInfC{$\entails{\Delta \cup \left\{ \tau \right\}; \Gamma}{\hastype{@}{\tau}}$}
       \end{prooftree}
 
-      $$ \generalize{\Delta}{\tau} = \forall \alpha_1 \ldots \forall \alpha_n . \Delta \Rightarrow \tau \qquad \text{where } \left\{ \alpha_1, \ldots, \alpha_n\right\} = \freevars{\tau} - \freevars{\Gamma} $$
+      $$ \generalize{\Delta}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \freevars{\tau} - \freevars{\Gamma} $$
 
     \end{mdframed}
     \caption{Typing rules}
