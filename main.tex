@@ -191,11 +191,30 @@
     \begin{mdframed}
 
       \begin{prooftree}
+          \AxiomC{$\Delta_1 = \Delta_2 \cup \Delta_3$}
+        \RightLabel{(\textsc{R-Subset})}
+        \UnaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
+      \end{prooftree}
+
+      \begin{prooftree}
+        \AxiomC{$\Delta_2 = \Delta_4 \cup \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau} \right\}$}
+        \AxiomC{$\Delta_1 \sqsubseteq \Delta_2 \cup \left\{ \sub{\tau}{\overline{\alpha}}{\overline{\tau}} \right\}$}
+        \RightLabel{(\textsc{R-Elim})}
+        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{$\Delta_2 \sqsubseteq \Delta_3$}
+        \RightLabel{(\textsc{R-Transitive})}
+        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_3$}
+      \end{prooftree}
+
+      \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}} \in \Gamma$}
-          \noLine
-          \UnaryInfC{$\sub{\Delta_1}{\overline{\alpha_1}}{\overline{\tau_1}} \subseteq \Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\} \cup \left\{ \sub{\tau_2}{\overline{\alpha_2}}{\overline{\tau_2}} \right\}$}
+          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
         \RightLabel{(\textsc{T-Variable})}
-        \UnaryInfC{$\entails{\Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\}; \Gamma}{\hastype{x}{\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}}}}$}
+        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
