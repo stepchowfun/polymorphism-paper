@@ -191,10 +191,9 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{x}{\tau_1}}$}
-          \AxiomC{$\Delta_1 = \Delta_2 \cup \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau_3} \right\} \cup \left\{ \sub{\tau_3}{\overline{\alpha}}{\overline{\tau}} \right\}$}
+          \AxiomC{$\entails{\Delta_1 \cup \sub{\Delta_2}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_2}{\tau_2} \right\} \cup \left\{ \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}} \right\}; \Gamma}{\hastype{x}{\tau_1}}$}
         \RightLabel{(\textsc{T-ImplicitElim})}
-        \BinaryInfC{$\entails{\Delta_2 \cup \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau_3} \right\}; \Gamma}{\hastype{x}{\tau_1}}$}
+        \UnaryInfC{$\entails{\Delta_1 \cup \sub{\Delta_2}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_2}{\tau_2} \right\}; \Gamma}{\hastype{x}{\tau_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
