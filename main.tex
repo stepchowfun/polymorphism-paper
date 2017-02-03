@@ -192,9 +192,10 @@
 
       \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}} \in \Gamma$}
-          \AxiomC{$\sub{\Delta_1}{\overline{\alpha_1}}{\overline{\tau_1}} \subseteq \Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\} \cup \left\{ \sub{\tau_2}{\overline{\alpha_2}}{\overline{\tau_2}} \right\}$}
+          \noLine
+          \UnaryInfC{$\sub{\Delta_1}{\overline{\alpha_1}}{\overline{\tau_1}} \subseteq \Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\} \cup \left\{ \sub{\tau_2}{\overline{\alpha_2}}{\overline{\tau_2}} \right\}$}
         \RightLabel{(\textsc{T-Variable})}
-        \BinaryInfC{$\entails{\Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\}; \Gamma}{\hastype{x}{\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}}}}$}
+        \UnaryInfC{$\entails{\Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\}; \Gamma}{\hastype{x}{\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
