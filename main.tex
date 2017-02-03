@@ -191,16 +191,10 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta_1 \cup \sub{\Delta_2}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_2}{\tau_2} \right\} \cup \left\{ \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}} \right\}; \Gamma}{\hastype{t}{\tau_1}}$}
-        \RightLabel{(\textsc{T-ImplicitElim})}
-        \UnaryInfC{$\entails{\Delta_1 \cup \sub{\Delta_2}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_2}{\tau_2} \right\}; \Gamma}{\hastype{t}{\tau_1}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
-          \AxiomC{$\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}} \subseteq \Delta_2$}
+          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}} \in \Gamma$}
+          \AxiomC{$\sub{\Delta_1}{\overline{\alpha_1}}{\overline{\tau_1}} \subseteq \Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\} \cup \left\{ \sub{\tau_2}{\overline{\alpha_2}}{\overline{\tau_2}} \right\}$}
         \RightLabel{(\textsc{T-Variable})}
-        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
+        \BinaryInfC{$\entails{\Delta_2 \cup \sub{\Delta_3}{\overline{\alpha_2}}{\overline{\tau_2}} \cup \left\{ \tabs{\overline{\alpha_2}}{\Delta_3}{\tau_2} \right\}; \Gamma}{\hastype{x}{\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
