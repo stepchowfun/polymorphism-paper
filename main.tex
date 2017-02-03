@@ -191,7 +191,7 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 = \Delta_2 \cup \Delta_3$}
+          \AxiomC{$\Delta_1 \cup \Delta_3 = \Delta_2$}
         \RightLabel{(\textsc{R-Subset})}
         \UnaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
       \end{prooftree}
@@ -209,6 +209,14 @@
         \RightLabel{(\textsc{R-Transitive})}
         \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_3$}
       \end{prooftree}
+
+    \end{mdframed}
+    \caption{Relations on implicit contexts}
+    \label{fig:types_syntax}
+  \end{figure}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
 
       \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}} \in \Gamma$}
