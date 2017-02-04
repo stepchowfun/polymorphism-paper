@@ -178,10 +178,10 @@
         & $\tabs{\overline{\alpha}}{\Delta}{\tau}$ & (universal type) \\
         $\overline{\alpha} \Coloneqq$ & & (quantified variables) \\
         & $\varnothing$ & (empty quantification) \\
-        & $\alpha, \overline{\alpha}$ & (cons of type variables) \\
+        & $\alpha, \overline{\alpha}$ & (type variable cons) \\
         $\Delta \Coloneqq$ & & (implicit context) \\
         & $\varnothing$ & (empty context) \\
-        & $\left\{ \tau \right\} \cup \Delta$ & (cons of contexts)
+        & $\left\{ \tau \right\} \cup \Delta$ & (context cons)
       \end{tabular}
 
     \end{mdframed}
@@ -193,23 +193,43 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 \cup \Delta_3 = \Delta_2$}
-        \RightLabel{(\textsc{R-Subset})}
-        \UnaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{}
+        \RightLabel{(\textsc{R-Identity})}
+        \UnaryInfC{$\varnothing \sqsubseteq \varnothing$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 = \left\{ \sub{\tau}{\overline{\alpha}}{\overline{\tau}} \right\} \cup \Delta_2$}
-          \AxiomC{$\Delta_2 = \left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau} \right\} \cup \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}}$}
-        \RightLabel{(\textsc{R-Elim})}
-        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{}
+        \RightLabel{(\textsc{R-Contraction})}
+        \UnaryInfC{$\varnothing \cup \Delta \sqsubseteq \Delta$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{}
+        \RightLabel{(\textsc{R-Weakening})}
+        \UnaryInfC{$\Delta \sqsubseteq \left\{ \tau \right\} \cup \Delta$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\left\{ \tau_1 \right\} \cup \varnothing \sqsubseteq \Delta_2$}
+          \AxiomC{$\left\{ \tau_2 \right\} \cup \varnothing \sqsubseteq \Delta_1$}
+          \AxiomC{$\left\{ \tau_2 \right\} \cup \sub{\Delta_1}{\tau_2}{\tau_1} \sqsubseteq \left\{ \tau_1 \right\} \cup \sub{\Delta_2}{\tau_1}{\tau_2}$}
+        \RightLabel{(\textsc{R-Permutation})}
+        \TrinaryInfC{$\left\{ \tau_1 \right\} \cup \Delta_1 \sqsubseteq \left\{ \tau_2 \right\} \cup \Delta_2$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
           \AxiomC{$\Delta_2 \sqsubseteq \Delta_3$}
-        \RightLabel{(\textsc{R-Transitive})}
+        \RightLabel{(\textsc{R-Transitivity})}
         \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_3$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\Delta_1 \sqsubseteq \left\{ \sub{\tau}{\overline{\alpha}}{\overline{\tau}} \right\} \cup \Delta_2$}
+          \AxiomC{$\left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau} \right\} \cup \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$}
+        \RightLabel{(\textsc{R-Detachment})}
+        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
       \end{prooftree}
 
     \end{mdframed}
@@ -255,9 +275,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{}
+          \AxiomC{$\left\{ \tau \right\} \cup \Delta_1 \sqsubseteq \Delta_2$}
         \RightLabel{(\textsc{T-Implicit})}
-        \UnaryInfC{$\entails{\left\{ \tau \right\} \cup \Delta; \Gamma}{\hastype{@}{\tau}}$}
+        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{@}{\tau}}$}
       \end{prooftree}
 
       \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta} \cup \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
