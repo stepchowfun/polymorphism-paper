@@ -170,16 +170,18 @@
     \begin{mdframed}
 
       \begin{tabular}{l l l}
-        $\tau \Coloneqq $ & & (monomorphic type) \\
+        $\tau \Coloneqq$ & & (monomorphic type) \\
         & $\larrow{\tau}{\tau}$ & (arrow type) \\
         & $\alpha$ & (type variable) \\
-        $\sigma \Coloneqq $ & & (polymorphic type) \\
+        $\sigma \Coloneqq$ & & (polymorphic type) \\
         & $\tau$ & (monomorphic type) \\
         & $\tabs{\overline{\alpha}}{\Delta}{\tau}$ & (universal type) \\
-        $\Delta \Coloneqq $ & & (implicit context) \\
+        $\overline{\alpha} \Coloneqq$ & & (quantified variables) \\
+        & $\varnothing$ & (empty quantification) \\
+        & $\alpha, \overline{\alpha}$ & (cons of type variables) \\
+        $\Delta \Coloneqq$ & & (implicit context) \\
         & $\varnothing$ & (empty context) \\
-        & $\left\{ \tau \right\}$ & (singleton context) \\
-        & $\Delta \cup \Delta$ & (union of contexts)
+        & $\left\{ \tau \right\} \cup \Delta$ & (cons of contexts)
       \end{tabular}
 
     \end{mdframed}
@@ -197,8 +199,8 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_2 = \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \cup \left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau} \right\}$}
-          \AxiomC{$\Delta_1 = \Delta_2 \cup \left\{ \sub{\tau}{\overline{\alpha}}{\overline{\tau}} \right\}$}
+          \AxiomC{$\Delta_2 = \left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau} \right\} \cup \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}}$}
+          \AxiomC{$\Delta_1 = \left\{ \sub{\tau}{\overline{\alpha}}{\overline{\tau}} \right\} \cup \Delta_2$}
         \RightLabel{(\textsc{R-Elim})}
         \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
       \end{prooftree}
@@ -247,7 +249,7 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\Delta \cup \left\{ \tau_1 \right\}; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\left\{ \tau_1 \right\} \cup \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-Provide})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
@@ -255,10 +257,10 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{T-Implicit})}
-        \UnaryInfC{$\entails{\Delta \cup \left\{ \tau \right\}; \Gamma}{\hastype{@}{\tau}}$}
+        \UnaryInfC{$\entails{\left\{ \tau \right\} \cup \Delta; \Gamma}{\hastype{@}{\tau}}$}
       \end{prooftree}
 
-      $$ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta} \cup \freevars{\tau} \right) \setminus \freevars{\Gamma} $$
+      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta} \cup \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
 
     \end{mdframed}
     \caption{Typing rules}
