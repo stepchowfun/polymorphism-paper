@@ -199,6 +199,13 @@
       \end{prooftree}
 
       \begin{prooftree}
+          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{$\Delta_2 \sqsubseteq \Delta_3$}
+        \RightLabel{(\textsc{R-Transitivity})}
+        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_3$}
+      \end{prooftree}
+
+      \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Contraction})}
         \UnaryInfC{$\left\{ \tau \right\} \cup \left\{ \tau \right\} \cup \Delta \sqsubseteq \left\{ \tau \right\} \cup \Delta$}
@@ -216,13 +223,6 @@
           \AxiomC{$\left\{ \tau_2 \right\} \cup \sub{\Delta_1}{\tau_2}{\tau_1} \sqsubseteq \left\{ \tau_1 \right\} \cup \sub{\Delta_2}{\tau_1}{\tau_2}$}
         \RightLabel{(\textsc{R-Permutation})}
         \TrinaryInfC{$\left\{ \tau_1 \right\} \cup \Delta_1 \sqsubseteq \left\{ \tau_2 \right\} \cup \Delta_2$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
-          \AxiomC{$\Delta_2 \sqsubseteq \Delta_3$}
-        \RightLabel{(\textsc{R-Transitivity})}
-        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_3$}
       \end{prooftree}
 
       \begin{prooftree}
