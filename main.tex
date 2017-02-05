@@ -176,12 +176,12 @@
         $\sigma \Coloneqq$ & & (polymorphic type) \\
         & $\tau$ & (monomorphic type) \\
         & $\tabs{\overline{\alpha}}{\Delta}{\tau}$ & (universal type) \\
-        $\overline{\alpha} \Coloneqq$ & & (quantified variables) \\
+        $\overline{\alpha} \Coloneqq$ & & (quantified type variables) \\
         & $\epsilon$ & (empty quantification) \\
         & $\alpha, \overline{\alpha}$ & (type variable cons) \\
         $\Delta \Coloneqq$ & & (implicit context) \\
-        & $\varnothing$ & (empty context) \\
-        & $\left\{ \tau \right\} \cup \Delta$ & (context cons)
+        & $\epsilon$ & (empty context) \\
+        & $\tau, \Delta$ & (context cons)
       \end{tabular}
 
     \end{mdframed}
@@ -208,26 +208,26 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Contraction})}
-        \UnaryInfC{$\left\{ \tau \right\} \cup \left\{ \tau \right\} \cup \Delta \sqsubseteq \left\{ \tau \right\} \cup \Delta$}
+        \UnaryInfC{$\tau, \tau, \Delta \sqsubseteq \tau, \Delta$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Weakening})}
-        \UnaryInfC{$\Delta \sqsubseteq \left\{ \tau \right\} \cup \Delta$}
+        \UnaryInfC{$\Delta \sqsubseteq \tau, \Delta$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\left\{ \tau_1 \right\} \cup \varnothing \sqsubseteq \Delta_2$}
-          \AxiomC{$\left\{ \tau_2 \right\} \cup \varnothing \sqsubseteq \Delta_1$}
-          \AxiomC{$\left\{ \tau_2 \right\} \cup \sub{\Delta_1}{\tau_2}{\tau_1} \sqsubseteq \left\{ \tau_1 \right\} \cup \sub{\Delta_2}{\tau_1}{\tau_2}$}
+          \AxiomC{$\tau_1, \epsilon \sqsubseteq \Delta_2$}
+          \AxiomC{$\tau_2, \epsilon \sqsubseteq \Delta_1$}
+          \AxiomC{$\tau_2, \sub{\Delta_1}{\tau_2}{\tau_1} \sqsubseteq \tau_1, \sub{\Delta_2}{\tau_1}{\tau_2}$}
         \RightLabel{(\textsc{R-Permutation})}
-        \TrinaryInfC{$\left\{ \tau_1 \right\} \cup \Delta_1 \sqsubseteq \left\{ \tau_2 \right\} \cup \Delta_2$}
+        \TrinaryInfC{$\tau_1, \Delta_1 \sqsubseteq \tau_2, \Delta_2$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 \sqsubseteq \left\{ \sub{\tau}{\overline{\alpha}}{\overline{\tau}} \right\} \cup \Delta_2$}
-          \AxiomC{$\left\{ \tabs{\overline{\alpha}}{\Delta_3}{\tau} \right\} \cup \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$}
+          \AxiomC{$\Delta_1 \sqsubseteq \sub{\tau}{\overline{\alpha}}{\overline{\tau}}, \Delta_2$}
+          \AxiomC{$\tabs{\overline{\alpha}}{\Delta_3}{\tau}, \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$}
         \RightLabel{(\textsc{R-Detachment})}
         \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
       \end{prooftree}
@@ -248,7 +248,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\varnothing}{\tau_1}}}{\hastype{t}{\tau_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\hastype{t}{\tau_2}}$}
         \RightLabel{(\textsc{T-Abstraction})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
       \end{prooftree}
@@ -269,18 +269,18 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\left\{ \tau_1 \right\} \cup \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\tau_1, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
         \RightLabel{(\textsc{T-Provide})}
         \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\left\{ \tau \right\} \cup \Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{$\tau, \Delta_1 \sqsubseteq \Delta_2$}
         \RightLabel{(\textsc{T-Implicit})}
         \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{@}{\tau}}$}
       \end{prooftree}
 
-      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta} \cup \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
+      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
 
     \end{mdframed}
     \caption{Typing rules}
