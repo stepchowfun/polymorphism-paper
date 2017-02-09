@@ -1,7 +1,6 @@
 import qualified Data.Map.Strict as Map
 import Control.Monad.Trans.Maybe
 import Control.Monad.State
-import Data.Unique
 
 data Term = Variable String
           | Abstraction String Term
@@ -11,18 +10,17 @@ data Term = Variable String
           | Implicit
 
 data MonoType = Arrow MonoType MonoType
-              | TypeVar String
+              | TypeVar Int
               deriving Eq
 
 data PolyType = Mono MonoType
-              | Forall [String] MonoType
+              | Forall [Int] MonoType
 
-newtype TypeEnv = TypeEnv (Map.Map String PolyType)
+type TypeEnv = Map.Map String PolyType
+type Infer a = MaybeT (State Int) a
+type Subst = Map.Map Int MonoType
 
-type Infer a = MaybeT (State Unique) a
-type Subst = Map.Map String MonoType
-
-occurs :: String -> MonoType -> Bool
+occurs :: Int -> MonoType -> Bool
 occurs s1 (TypeVar s2) = s1 == s2
 occurs s1 (Arrow m1 m2) = occurs s1 m1 || occurs s1 m2
 
@@ -45,4 +43,40 @@ unify (Arrow m1 m2) (Arrow n1 n2) =
      sub2 <- unify m1 n1
      mgu sub1 sub2
 
-main = putStr "Hello Stephan"
+instantiate :: PolyType -> State Int MonoType
+instantiate (Mono m) = return m
+instantiate (Forall vars m) =
+  do freshVars <- mapM (\x -> newVar) vars
+     return (substitute (Map.fromList (zip vars freshVars)) m)
+
+lookupType :: String -> TypeEnv -> PolyType
+lookupType = undefined -- Map.lookup
+
+addType :: String -> PolyType -> TypeEnv -> TypeEnv
+addType = Map.insert
+
+newVar :: State Int MonoType
+newVar = state $ \x -> (TypeVar x, x+1)
+
+runInInfer :: (State Int a) -> Infer a
+runInInfer toRun =
+  do initState <- get
+     let (inst, st) = runState toRun initState
+     put st
+     return inst
+
+infer :: TypeEnv -> Term -> Infer (Subst, MonoType)
+infer g term = case term of
+  Variable s -> do
+    v <- runInInfer (instantiate $ lookupType s g)
+    return (Map.empty, v)
+  Abstraction s e -> do
+    v <- runInInfer newVar
+    (sub, tp) <- infer (addType s (Forall [] $ v) g) e
+    return (sub, substitute sub (Arrow v tp))
+  Application t1 t2 -> undefined
+  Let s t1 t2 -> undefined
+  Provide t1 t2 -> undefined
+  Implicit -> undefined
+
+main = putStrLn "Hello Stephan"
