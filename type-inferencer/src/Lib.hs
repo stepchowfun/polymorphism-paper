@@ -1,6 +1,10 @@
+module Lib where
+
 import qualified Data.Map.Strict as Map
 import Control.Monad.Trans.Maybe
-import Control.Monad.State
+import Control.Monad.Trans.State
+
+type Identifier = Int
 
 data Term = Variable String
           | Abstraction String Term
@@ -10,17 +14,17 @@ data Term = Variable String
           | Implicit
 
 data MonoType = Arrow MonoType MonoType
-              | TypeVar Int
+              | TypeVar Identifier
               deriving Eq
 
 data PolyType = Mono MonoType
-              | Forall [Int] MonoType
+              | Forall [Identifier] MonoType
 
 type TypeEnv = Map.Map String PolyType
-type Infer a = MaybeT (State Int) a
-type Subst = Map.Map Int MonoType
+type Infer a = MaybeT (State Identifier) a
+type Subst = Map.Map Identifier MonoType
 
-occurs :: Int -> MonoType -> Bool
+occurs :: Identifier -> MonoType -> Bool
 occurs s1 (TypeVar s2) = s1 == s2
 occurs s1 (Arrow m1 m2) = occurs s1 m1 || occurs s1 m2
 
@@ -43,7 +47,7 @@ unify (Arrow m1 m2) (Arrow n1 n2) =
      sub2 <- unify m1 n1
      mgu sub1 sub2
 
-instantiate :: PolyType -> State Int MonoType
+instantiate :: PolyType -> State Identifier MonoType
 instantiate (Mono m) = return m
 instantiate (Forall vars m) =
   do freshVars <- mapM (\x -> newVar) vars
@@ -55,15 +59,17 @@ lookupType = undefined -- Map.lookup
 addType :: String -> PolyType -> TypeEnv -> TypeEnv
 addType = Map.insert
 
-newVar :: State Int MonoType
-newVar = state $ \x -> (TypeVar x, x+1)
+newVar :: State Identifier MonoType
+newVar = state $ \x -> (TypeVar x, x + 1)
 
-runInInfer :: (State Int a) -> Infer a
-runInInfer toRun =
+runInInfer :: State Identifier a -> Infer a
+runInInfer toRun = undefined
+{-
   do initState <- get
-     let (inst, st) = runState toRun initState
+     let (inst, st) = undefined
      put st
      return inst
+-}
 
 infer :: TypeEnv -> Term -> Infer (Subst, MonoType)
 infer g term = case term of
@@ -78,5 +84,3 @@ infer g term = case term of
   Let s t1 t2 -> undefined
   Provide t1 t2 -> undefined
   Implicit -> undefined
-
-main = putStrLn "Hello Stephan"
