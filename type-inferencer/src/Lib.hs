@@ -1,8 +1,9 @@
 module Lib where
 
+import qualified Control.Monad.Trans.Maybe as MaybeT
+import qualified Control.Monad.Trans.State as StateT
 import qualified Data.Map.Strict as Map
-import Control.Monad.Trans.Maybe
-import Control.Monad.Trans.State
+import qualified Data.Maybe as Maybe
 
 type Identifier = Int
 
@@ -21,7 +22,7 @@ data PolyType = Mono MonoType
               | Forall [Identifier] MonoType
 
 type TypeEnv = Map.Map Identifier PolyType
-type Infer a = MaybeT (State Identifier) a
+type Infer a = MaybeT.MaybeT (StateT.State Identifier) a
 type Subst = Map.Map Identifier MonoType
 
 occurs :: Identifier -> MonoType -> Bool
@@ -47,34 +48,31 @@ unify (Arrow m1 m2) (Arrow n1 n2) =
      sub2 <- unify m1 n1
      mgu sub1 sub2
 
-instantiate :: PolyType -> State Identifier MonoType
+instantiate :: PolyType -> StateT.State Identifier MonoType
 instantiate (Mono m) = return m
 instantiate (Forall vars m) =
   do freshVars <- mapM (\x -> newVar) vars
      return (substitute (Map.fromList (zip vars freshVars)) m)
 
-lookupType :: Identifier -> TypeEnv -> PolyType
-lookupType = undefined -- Map.lookup
-
 addType :: Identifier -> PolyType -> TypeEnv -> TypeEnv
 addType = Map.insert
 
-newVar :: State Identifier MonoType
-newVar = state $ \x -> (TypeVar x, x + 1)
+newVar :: StateT.State Identifier MonoType
+newVar = StateT.state $ \x -> (TypeVar x, x + 1)
 
-runInInfer :: State Identifier a -> Infer a
+runInInfer :: StateT.State Identifier a -> Infer a
 runInInfer toRun = undefined
 {-
-  do initState <- get
-     let (inst, st) = runState toRun initState
-     put st
+  do initState <- StateT.get
+     let (inst, st) = StateT.runState toRun initState
+     StateT.put st
      return inst
 -}
 
 infer :: TypeEnv -> Term -> Infer (Subst, MonoType)
 infer g term = case term of
   Variable s -> do
-    v <- runInInfer (instantiate $ lookupType s g)
+    v <- runInInfer (instantiate $ Maybe.fromJust $ Map.lookup s g)
     return (Map.empty, v)
   Abstraction s e -> do
     v <- runInInfer newVar
