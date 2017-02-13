@@ -1,5 +1,6 @@
 module Lib where
 
+import qualified Control.Monad.Trans.Class as Trans
 import qualified Control.Monad.Trans.Maybe as MaybeT
 import qualified Control.Monad.Trans.State as StateT
 import qualified Data.Map.Strict as Map
@@ -61,13 +62,11 @@ newVar :: StateT.State Identifier MonoType
 newVar = StateT.state $ \x -> (TypeVar x, x + 1)
 
 runInInfer :: StateT.State Identifier a -> Infer a
-runInInfer toRun = undefined
-{-
-  do initState <- StateT.get
+runInInfer toRun =
+  do initState <- Trans.lift StateT.get
      let (inst, st) = StateT.runState toRun initState
-     StateT.put st
+     Trans.lift $ StateT.put st
      return inst
--}
 
 infer :: TypeEnv -> Term -> Infer (Subst, MonoType)
 infer g term = case term of
