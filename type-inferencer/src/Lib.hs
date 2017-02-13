@@ -58,6 +58,9 @@ instantiate (Forall vars m) =
 addType :: Identifier -> PolyType -> TypeEnv -> TypeEnv
 addType = Map.insert
 
+lookupType :: Identifier -> TypeEnv -> Maybe PolyType
+lookupType = Map.lookup
+
 newVar :: StateT.State Identifier MonoType
 newVar = StateT.state $ \x -> (TypeVar x, x + 1)
 
@@ -71,7 +74,7 @@ runInInfer toRun =
 infer :: TypeEnv -> Term -> Infer (Subst, MonoType)
 infer g term = case term of
   Variable s -> do
-    v <- runInInfer (instantiate $ Maybe.fromJust $ Map.lookup s g)
+    v <- runInInfer (instantiate $ Maybe.fromJust $ lookupType s g)
     return (Map.empty, v)
   Abstraction s e -> do
     v <- runInInfer newVar
