@@ -6,10 +6,10 @@ import Control.Monad.Trans.State
 
 type Identifier = Int
 
-data Term = Variable String
-          | Abstraction String Term
+data Term = Variable Identifier
+          | Abstraction Identifier Term
           | Application Term Term
-          | Let String Term Term
+          | Let Identifier Term Term
           | Provide Term Term
           | Implicit
 
@@ -20,7 +20,7 @@ data MonoType = Arrow MonoType MonoType
 data PolyType = Mono MonoType
               | Forall [Identifier] MonoType
 
-type TypeEnv = Map.Map String PolyType
+type TypeEnv = Map.Map Identifier PolyType
 type Infer a = MaybeT (State Identifier) a
 type Subst = Map.Map Identifier MonoType
 
@@ -53,10 +53,10 @@ instantiate (Forall vars m) =
   do freshVars <- mapM (\x -> newVar) vars
      return (substitute (Map.fromList (zip vars freshVars)) m)
 
-lookupType :: String -> TypeEnv -> PolyType
+lookupType :: Identifier -> TypeEnv -> PolyType
 lookupType = undefined -- Map.lookup
 
-addType :: String -> PolyType -> TypeEnv -> TypeEnv
+addType :: Identifier -> PolyType -> TypeEnv -> TypeEnv
 addType = Map.insert
 
 newVar :: State Identifier MonoType
