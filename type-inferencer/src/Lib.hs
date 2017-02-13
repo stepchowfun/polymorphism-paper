@@ -66,7 +66,7 @@ runInInfer :: State Identifier a -> Infer a
 runInInfer toRun = undefined
 {-
   do initState <- get
-     let (inst, st) = undefined
+     let (inst, st) = runState toRun initState
      put st
      return inst
 -}
