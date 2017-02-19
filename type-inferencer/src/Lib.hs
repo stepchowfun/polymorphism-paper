@@ -2,12 +2,18 @@ module Lib where
 
 import qualified Control.Monad.Trans.Class as Trans
 import qualified Control.Monad.Trans.Maybe as MaybeT
+import qualified Control.Monad.Trans.RWS.Lazy as RWS
 import qualified Control.Monad.Trans.State as StateT
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as Maybe
 
-type Identifier = Int
+------------
+-- Syntax --
+------------
+
+newtype Identifier = Identifier { runIdentifier :: Int }
+                   deriving (Eq, Ord, Show)
 
 data Term = Variable Identifier
           | Abstraction Identifier Term
@@ -15,89 +21,86 @@ data Term = Variable Identifier
           | Let Identifier Term Term
           | Provide Term Term
           | Implicit
+          deriving Show
 
 data MonoType = Arrow MonoType MonoType
               | TypeVar Identifier
-              deriving Eq
+              deriving (Eq, Show)
 
 data PolyType = Mono MonoType
               | Forall [Identifier] MonoType
+              deriving Show
 
-type TypeEnv = Map.Map Identifier PolyType
-type Infer a = MaybeT.MaybeT (StateT.State Identifier) a
-type Subst = Map.Map Identifier MonoType
+-------------------
+-- Substitutions --
+-------------------
 
-monoFree :: MonoType -> [Identifier]
-monoFree (Arrow t1 t2) = monoFree t1 ++ monoFree t2
-monoFree (TypeVar s) = [s]
+newtype Sub = Sub { runSub :: Map.Map Identifier MonoType }
 
-polyFree :: PolyType -> [Identifier]
-polyFree (Mono t) = monoFree t
-polyFree (Forall vars t) = monoFree t List.\\ vars
+freeVars :: MonoType -> [Identifier]
+freeVars (Arrow t1 t2) = freeVars t1 ++ freeVars t2
+freeVars (TypeVar s) = [s]
 
 occurs :: Identifier -> MonoType -> Bool
-occurs x1 (TypeVar x2) = x1 == x2
-occurs x (Arrow t1 t2) = occurs x t1 || occurs x t2
+occurs x expr = elem x $ freeVars expr
 
-mgu :: Subst -> Subst -> Maybe Subst
-mgu sub1 sub2 = if Map.intersection sub1 sub2 == Map.intersection sub2 sub1
-                then Just (Map.union sub1 sub2)
-                else Nothing
+mgu :: Sub -> Sub -> Maybe Sub
+mgu sub1 sub2 = if Map.intersection (runSub sub1) (runSub sub2) ==
+                   Map.intersection (runSub sub2) (runSub sub1)
+                  then Just $ Sub $ Map.union (runSub sub1) (runSub sub2)
+                  else Nothing
 
-substitute :: Subst -> MonoType -> MonoType
-substitute sub (Arrow m1 m2) = Arrow (substitute sub m1) (substitute sub m2)
-substitute sub (TypeVar s) = case Map.lookup s sub of
-                             Just m -> m
-                             Nothing -> TypeVar s
-
-unify :: MonoType -> MonoType -> Maybe Subst
-unify (TypeVar x) t = if occurs x t then Nothing else Just (Map.singleton x t)
+unify :: MonoType -> MonoType -> Maybe Sub
+unify (TypeVar x) t = if occurs x t
+                        then Nothing
+                        else Just $ Sub $ Map.singleton x t
 unify t (TypeVar x) = unify (TypeVar x) t
 unify (Arrow m1 m2) (Arrow n1 n2) =
   do sub1 <- unify m1 n1
      sub2 <- unify m1 n1
      mgu sub1 sub2
 
-generalize :: MonoType -> PolyType
-generalize t = Forall (monoFree t) t
+substitute :: Sub -> MonoType -> MonoType
+substitute sub (Arrow m1 m2) = Arrow (substitute sub m1) (substitute sub m2)
+substitute sub (TypeVar s) = case Map.lookup s (runSub sub) of
+                               Just m -> m
+                               Nothing -> TypeVar s
 
-instantiate :: PolyType -> StateT.State Identifier MonoType
+--------------------------------------
+-- Generalization and instantiation --
+--------------------------------------
+
+type FreshMonoType = StateT.State Identifier MonoType
+
+newVar :: FreshMonoType
+newVar = StateT.state $ \x -> (TypeVar x, Identifier $ (runIdentifier x) + 1)
+
+generalize :: MonoType -> PolyType
+generalize t = Forall (freeVars t) t
+
+instantiate :: PolyType -> FreshMonoType
 instantiate (Mono t) = return t
 instantiate (Forall vars t) =
   do freshVars <- mapM (const newVar) vars
-     return $ substitute (Map.fromList $ zip vars freshVars) t
+     return $ substitute (Sub $ Map.fromList $ zip vars freshVars) t
+
+-----------------------
+-- Type environments --
+-----------------------
+
+newtype TypeEnv = TypeEnv { runTypeEnv :: Map.Map Identifier PolyType }
+
+emptyEnv :: TypeEnv
+emptyEnv = TypeEnv Map.empty
 
 addType :: Identifier -> PolyType -> TypeEnv -> TypeEnv
-addType = Map.insert
+addType x t e = TypeEnv $ Map.insert x t $ runTypeEnv e
 
 lookupType :: Identifier -> TypeEnv -> Maybe PolyType
-lookupType = Map.lookup
+lookupType x e = Map.lookup x $ runTypeEnv e
 
-newVar :: StateT.State Identifier MonoType
-newVar = StateT.state $ \x -> (TypeVar x, x + 1)
+---------------
+-- Inference --
+---------------
 
-runInInfer :: StateT.State Identifier a -> Infer a
-runInInfer toRun =
-  do initState <- Trans.lift StateT.get
-     let (val, state) = StateT.runState toRun initState
-     Trans.lift $ StateT.put state
-     return val
-
-infer :: TypeEnv -> Term -> Infer MonoType
-infer ctx term = case term of
-  Variable x -> do
-    runInInfer $ instantiate $ Maybe.fromJust $ lookupType x ctx
-  Abstraction x t -> do
-    v <- runInInfer newVar
-    tp <- infer (addType x (Forall [] $ v) ctx) t
-    return $ Arrow v tp
-  Application t1 t2 -> do
-    v <- runInInfer newVar
-    tp1 <- infer ctx t1
-    tp2 <- infer ctx t2
-    return $ substitute (Maybe.fromJust $ unify tp1 $ Arrow tp2 v) v
-  Let x t1 t2 -> do
-    tp1 <- infer ctx t1
-    infer (addType x (generalize tp1) ctx) t2
-  Provide t1 t2 -> undefined
-  Implicit -> undefined
+type Infer = RWS.RWST TypeEnv Sub Identifier Maybe MonoType
