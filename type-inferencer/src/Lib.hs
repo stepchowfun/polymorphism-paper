@@ -106,3 +106,19 @@ infer (Let x t1 t2) = do
   return bodyType
 infer (Provide t1 t2) = undefined
 infer Implicit = undefined
+
+startIdentifier :: Term -> Identifier
+startIdentifier (Variable x) = Identifier $
+  1 + runIdentifier x
+startIdentifier (Abstraction x t) = Identifier $
+  1 + max (runIdentifier x) (runIdentifier $ startIdentifier t)
+startIdentifier (Application t1 t2) = Identifier $
+  1 + max (runIdentifier $ startIdentifier t1) (runIdentifier $ startIdentifier t2)
+startIdentifier (Let x t1 t2) = Identifier $
+  1 + max (runIdentifier x) (max (runIdentifier $ startIdentifier t1) (runIdentifier $ startIdentifier t2))
+startIdentifier (Provide t1 t2) = Identifier $
+  1 + max (runIdentifier $ startIdentifier t1) (runIdentifier $ startIdentifier t2)
+startIdentifier Implicit = Identifier 0
+
+runInfer :: Term -> Maybe MonoType
+runInfer t = fst <$> RWS.evalRWST (infer t) (TypeEnv Map.empty) (startIdentifier t)
