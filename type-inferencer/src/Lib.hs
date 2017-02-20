@@ -27,8 +27,7 @@ data MonoType = Arrow MonoType MonoType
               | TypeVar Identifier
               deriving (Eq, Show)
 
-data PolyType = Mono MonoType
-              | Forall [Identifier] MonoType
+data PolyType = ForAll [Identifier] MonoType
               deriving Show
 
 -------------------
@@ -44,63 +43,66 @@ freeVars (TypeVar s) = [s]
 occurs :: Identifier -> MonoType -> Bool
 occurs x expr = elem x $ freeVars expr
 
-mgu :: Sub -> Sub -> Maybe Sub
-mgu sub1 sub2 = if Map.intersection (runSub sub1) (runSub sub2) ==
-                   Map.intersection (runSub sub2) (runSub sub1)
-                  then Just $ Sub $ Map.union (runSub sub1) (runSub sub2)
-                  else Nothing
-
-unify :: MonoType -> MonoType -> Maybe Sub
-unify (TypeVar x) t = if occurs x t
-                        then Nothing
-                        else Just $ Sub $ Map.singleton x t
-unify t (TypeVar x) = unify (TypeVar x) t
-unify (Arrow m1 m2) (Arrow n1 n2) =
-  do sub1 <- unify m1 n1
-     sub2 <- unify m1 n1
-     mgu sub1 sub2
-
 substitute :: Sub -> MonoType -> MonoType
 substitute sub (Arrow m1 m2) = Arrow (substitute sub m1) (substitute sub m2)
 substitute sub (TypeVar s) = case Map.lookup s (runSub sub) of
                                Just m -> m
                                Nothing -> TypeVar s
 
---------------------------------------
--- Generalization and instantiation --
---------------------------------------
-
-type FreshMonoType = StateT.State Identifier MonoType
-
-newVar :: FreshMonoType
-newVar = StateT.state $ \x -> (TypeVar x, Identifier $ (runIdentifier x) + 1)
-
-generalize :: MonoType -> PolyType
-generalize t = Forall (freeVars t) t
-
-instantiate :: PolyType -> FreshMonoType
-instantiate (Mono t) = return t
-instantiate (Forall vars t) =
-  do freshVars <- mapM (const newVar) vars
-     return $ substitute (Sub $ Map.fromList $ zip vars freshVars) t
-
------------------------
--- Type environments --
------------------------
-
-newtype TypeEnv = TypeEnv { runTypeEnv :: Map.Map Identifier PolyType }
-
-emptyEnv :: TypeEnv
-emptyEnv = TypeEnv Map.empty
-
-addType :: Identifier -> PolyType -> TypeEnv -> TypeEnv
-addType x t e = TypeEnv $ Map.insert x t $ runTypeEnv e
-
-lookupType :: Identifier -> TypeEnv -> Maybe PolyType
-lookupType x e = Map.lookup x $ runTypeEnv e
-
 ---------------
 -- Inference --
 ---------------
 
-type Infer = RWS.RWST TypeEnv Sub Identifier Maybe MonoType
+newtype TypeEnv = TypeEnv { runTypeEnv :: Map.Map Identifier PolyType }
+
+type Constraint = (MonoType, MonoType)
+
+type Infer = RWS.RWST TypeEnv [Constraint] Identifier Maybe
+
+freshVar :: Infer MonoType
+freshVar = do
+  oldState <- RWS.get
+  let freshId = runIdentifier oldState
+  RWS.put $ Identifier $ freshId + 1
+  return $ TypeVar $ Identifier freshId
+
+lookupEnv :: Identifier -> Infer MonoType
+lookupEnv x = do
+  env <- RWS.ask
+  polytype <- Trans.lift $ Map.lookup x $ runTypeEnv env
+  instantiate polytype
+
+inExtendedEnv :: Identifier -> PolyType -> Infer a -> Infer a
+inExtendedEnv x polytype action = RWS.local (\env ->
+    TypeEnv $ Map.insert x polytype $ runTypeEnv env
+  ) action
+
+generalize :: MonoType -> TypeEnv -> PolyType
+generalize monotype env = ForAll (
+    (freeVars monotype) List.\\ (Map.keys $ runTypeEnv env)
+  ) monotype
+
+instantiate :: PolyType -> Infer MonoType
+instantiate (ForAll vars t) =
+  do freshVars <- mapM (const freshVar) vars
+     return $ substitute (Sub $ Map.fromList $ zip vars freshVars) t
+
+infer :: Term -> Infer MonoType
+infer (Variable x) = lookupEnv x
+infer (Abstraction x t) = do
+  argType <- freshVar
+  retType <- inExtendedEnv x (ForAll [] argType) (infer t)
+  return $ Arrow argType retType
+infer (Application t1 t2) = do
+  absType <- infer t1
+  argType <- infer t2
+  retType <- freshVar
+  RWS.tell [(absType, Arrow argType retType)]
+  return retType
+infer (Let x t1 t2) = do
+  env <- RWS.ask
+  defType <- infer t1
+  bodyType <- inExtendedEnv x (generalize defType env) (infer t2)
+  return bodyType
+infer (Provide t1 t2) = undefined
+infer Implicit = undefined
