@@ -13,7 +13,7 @@ import qualified Data.Maybe as Maybe
 ------------
 
 newtype Identifier = Identifier { runIdentifier :: Int }
-                   deriving (Eq, Ord, Show)
+                   deriving (Eq, Ord)
 
 data Term = Variable Identifier
           | Abstraction Identifier Term
@@ -29,6 +29,13 @@ data MonoType = Arrow MonoType MonoType
 
 data PolyType = ForAll [Identifier] MonoType
               deriving Show
+
+
+-----------------------
+-- Utility Functions --
+-----------------------
+instance Show Identifier where
+  show (Identifier x) = "Identifier " ++ show x
 
 -------------------
 -- Substitutions --
