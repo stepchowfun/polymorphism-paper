@@ -62,9 +62,11 @@ substitute sub (TypeVar s) = case Map.lookup s (runSub sub) of
 
 newtype TypeEnv = TypeEnv { runTypeEnv :: Map.Map Identifier PolyType }
 
-type Constraint = (MonoType, MonoType)
+newtype ImplicitEnv = ImplicitEnv { runImplicitEnv :: [MonoType] }
 
-type Infer = RWS.RWST TypeEnv [Constraint] Identifier Maybe
+type Constraint = (MonoType, [MonoType])
+
+type Infer = RWS.RWST (TypeEnv, ImplicitEnv) [Constraint] Identifier Maybe
 
 freshVar :: Infer MonoType
 freshVar = do
@@ -75,13 +77,18 @@ freshVar = do
 
 lookupEnv :: Identifier -> Infer MonoType
 lookupEnv x = do
-  env <- RWS.ask
+  (env, _) <- RWS.ask
   polytype <- Trans.lift $ Map.lookup x $ runTypeEnv env
   instantiate polytype
 
-inExtendedEnv :: Identifier -> PolyType -> Infer a -> Infer a
-inExtendedEnv x polytype action = RWS.local (\env ->
-    TypeEnv $ Map.insert x polytype $ runTypeEnv env
+inExtendedTypeEnv :: Identifier -> PolyType -> Infer a -> Infer a
+inExtendedTypeEnv x polytype action = RWS.local (\(typeEnv, implicitEnv) ->
+    (TypeEnv $ Map.insert x polytype $ runTypeEnv typeEnv, implicitEnv)
+  ) action
+
+inExtendedImplicitEnv :: MonoType -> Infer a -> Infer a
+inExtendedImplicitEnv monotype action = RWS.local (\(typeEnv, implicitEnv) ->
+    (typeEnv, ImplicitEnv $ monotype : (runImplicitEnv implicitEnv))
   ) action
 
 generalize :: MonoType -> TypeEnv -> PolyType
@@ -98,21 +105,28 @@ infer :: Term -> Infer MonoType
 infer (Variable x) = lookupEnv x
 infer (Abstraction x t) = do
   argType <- freshVar
-  retType <- inExtendedEnv x (ForAll [] argType) (infer t)
+  retType <- inExtendedTypeEnv x (ForAll [] argType) (infer t)
   return $ Arrow argType retType
 infer (Application t1 t2) = do
   absType <- infer t1
   argType <- infer t2
   retType <- freshVar
-  RWS.tell [(absType, Arrow argType retType)]
+  RWS.tell [(absType, [Arrow argType retType])]
   return retType
 infer (Let x t1 t2) = do
-  env <- RWS.ask
+  (env, _) <- RWS.ask
   defType <- infer t1
-  bodyType <- inExtendedEnv x (generalize defType env) (infer t2)
+  bodyType <- inExtendedTypeEnv x (generalize defType env) (infer t2)
   return bodyType
-infer (Provide t1 t2) = undefined
-infer Implicit = undefined
+infer (Provide t1 t2) = do
+  providedType <- infer t1
+  bodyType <- inExtendedImplicitEnv providedType (infer t2)
+  return bodyType
+infer Implicit = do
+  implicitType <- freshVar
+  (_, implicitEnv) <- RWS.ask
+  RWS.tell [(implicitType, runImplicitEnv implicitEnv)]
+  return implicitType
 
 startIdentifier :: Term -> Identifier
 startIdentifier (Variable x) = Identifier $
@@ -128,4 +142,4 @@ startIdentifier (Provide t1 t2) = Identifier $
 startIdentifier Implicit = Identifier 0
 
 runInfer :: Term -> Maybe MonoType
-runInfer t = fst <$> RWS.evalRWST (infer t) (TypeEnv Map.empty) (startIdentifier t)
+runInfer t = fst <$> RWS.evalRWST (infer t) (TypeEnv Map.empty, ImplicitEnv []) (startIdentifier t)
