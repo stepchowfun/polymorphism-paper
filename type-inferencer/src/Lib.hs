@@ -30,16 +30,15 @@ data MonoType = Arrow MonoType MonoType
 data PolyType = ForAll [Identifier] MonoType
               deriving Show
 
-
 -----------------------
 -- Utility Functions --
 -----------------------
 instance Show Identifier where
   show (Identifier x) = "Identifier " ++ show x
 
--------------------
--- Substitutions --
--------------------
+------------------
+-- Substitution --
+------------------
 
 newtype Sub = Sub { runSub :: Map.Map Identifier MonoType }
 
@@ -134,12 +133,21 @@ startIdentifier (Variable x) = Identifier $
 startIdentifier (Abstraction x t) = Identifier $
   1 + max (runIdentifier x) (runIdentifier $ startIdentifier t)
 startIdentifier (Application t1 t2) = Identifier $
-  1 + max (runIdentifier $ startIdentifier t1) (runIdentifier $ startIdentifier t2)
+  1 + max
+    (runIdentifier $ startIdentifier t1)
+    (runIdentifier $ startIdentifier t2)
 startIdentifier (Let x t1 t2) = Identifier $
-  1 + max (runIdentifier x) (max (runIdentifier $ startIdentifier t1) (runIdentifier $ startIdentifier t2))
+  1 + max
+  (runIdentifier x)
+  (max
+    (runIdentifier $ startIdentifier t1)
+    (runIdentifier $ startIdentifier t2)
+  )
 startIdentifier (Provide t1 t2) = Identifier $
-  1 + max (runIdentifier $ startIdentifier t1) (runIdentifier $ startIdentifier t2)
+  1 + max
+    (runIdentifier $ startIdentifier t1)
+    (runIdentifier $ startIdentifier t2)
 startIdentifier Implicit = Identifier 0
 
-runInfer :: Term -> Maybe MonoType
-runInfer t = fst <$> RWS.evalRWST (infer t) (TypeEnv Map.empty, ImplicitEnv []) (startIdentifier t)
+runInfer :: Term -> Maybe (MonoType, [Constraint])
+runInfer t = RWS.evalRWST (infer t) (TypeEnv Map.empty, ImplicitEnv []) (startIdentifier t)
