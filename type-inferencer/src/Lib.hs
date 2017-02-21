@@ -31,8 +31,9 @@ data PolyType = ForAll [Identifier] MonoType
               deriving Show
 
 -----------------------
--- Utility Functions --
+-- Utility functions --
 -----------------------
+
 instance Show Identifier where
   show (Identifier x) = "Identifier " ++ show x
 

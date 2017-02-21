@@ -2,16 +2,18 @@
 -- Typeclasses --
 -----------------
 
-Numeric = {
+Numeric = forall a . {
   multiply : a -> a -> a
 }
 
+multiply : forall a . Numeric a => a -> a -> a
 multiply = @.multiply
 
-Squarable = {
+Squarable = forall a . {
   square : a -> a
 }
 
+square : forall a . Numeric a => a -> a -> a
 square = @.square
 
 ---------------
@@ -30,8 +32,8 @@ provide {
 -- Examples --
 --------------
 
--- forall a . implicit Squarable a . a -> a
+tesseract : forall a . Squarable a => a -> a
 tesseract = x -> square (square x)
 
--- forall a . implicit Squarable a . a -> a
+sixteenth : forall a . Squarable a => a -> a
 sixteenth = x -> tesseract (tesseract x)
