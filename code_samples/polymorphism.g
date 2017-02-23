@@ -30,8 +30,6 @@ provide {
 -- Examples --
 --------------
 
-tesseract : forall a . Squarable a => a -> a
 tesseract = x -> square (square x)
 
-sixteenth : forall a . Squarable a => a -> a
 sixteenth = x -> tesseract (tesseract x)
