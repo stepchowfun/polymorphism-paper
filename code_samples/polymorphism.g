@@ -6,15 +6,13 @@ Numeric = forall a . {
   multiply : a -> a -> a
 }
 
-multiply : forall a . Numeric a => a -> a -> a
-multiply = @.multiply
+multiply = @(Numeric a).multiply
 
 Squarable = forall a . {
   square : a -> a
 }
 
-square : forall a . Numeric a => a -> a -> a
-square = @.square
+square = @(Squarable a).square
 
 ---------------
 -- Instances --
