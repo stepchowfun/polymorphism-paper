@@ -56,7 +56,7 @@
 \newcommand\labs[2]{\lambda #1 \ . \ #2}
 \newcommand\app[2]{#1 \ #2}
 \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
-\newcommand\provide[2]{\text{provide } #1 \text{ in } #2}
+\newcommand\provide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
 \newcommand\implicit[1]{ @ \left( #1 \right) }
 
 % Types
@@ -158,7 +158,7 @@
         & $\labs{x}{t}$ & (abstraction) \\
         & $\app{t}{t}$ & (application) \\
         & $\llet{x}{t}{t}$ & (let binding) \\
-        & $\provide{t}{t}$ & (provide binding) \\
+        & $\provide{t}{\tau}{t}$ & (provide binding) \\
         & $\implicit{\tau}$ & (implicit parameter)
       \end{tabular}
 
@@ -175,14 +175,13 @@
         & $\larrow{\tau}{\tau}$ & (arrow type) \\
         & $\alpha$ & (type variable) \\
         $\sigma \Coloneqq$ & & (polymorphic type) \\
-        & $\tau$ & (monomorphic type) \\
         & $\tabs{\overline{\alpha}}{\Delta}{\tau}$ & (universal type) \\
         $\overline{\alpha} \Coloneqq$ & & (quantified type variables) \\
         & $\epsilon$ & (empty quantification) \\
         & $\alpha, \overline{\alpha}$ & (type variable cons) \\
         $\Delta \Coloneqq$ & & (implicit context) \\
         & $\epsilon$ & (empty context) \\
-        & $\tau, \Delta$ & (context cons)
+        & $\sigma, \Delta$ & (context cons)
       \end{tabular}
 
     \end{mdframed}
@@ -209,27 +208,27 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Contraction})}
-        \UnaryInfC{$\tau, \tau, \Delta \sqsubseteq \tau, \Delta$}
+        \UnaryInfC{$\sigma, \sigma, \Delta \sqsubseteq \sigma, \Delta$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Weakening})}
-        \UnaryInfC{$\Delta \sqsubseteq \tau, \Delta$}
+        \UnaryInfC{$\Delta \sqsubseteq \sigma, \Delta$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\tau_1, \epsilon \sqsubseteq \Delta_2$}
-          \AxiomC{$\tau_2, \epsilon \sqsubseteq \Delta_1$}
-          \AxiomC{$\tau_2, \sub{\Delta_1}{\tau_2}{\tau_1} \sqsubseteq \tau_1, \sub{\Delta_2}{\tau_1}{\tau_2}$}
+          \AxiomC{$\sigma_1, \epsilon \sqsubseteq \Delta_2$}
+          \AxiomC{$\sigma_2, \epsilon \sqsubseteq \Delta_1$}
+          \AxiomC{$\sigma_2, \sub{\Delta_1}{\sigma_2}{\sigma_1} \sqsubseteq \sigma_1, \sub{\Delta_2}{\sigma_1}{\sigma_2}$}
         \RightLabel{(\textsc{R-Permutation})}
-        \TrinaryInfC{$\tau_1, \Delta_1 \sqsubseteq \tau_2, \Delta_2$}
+        \TrinaryInfC{$\sigma_1, \Delta_1 \sqsubseteq \sigma_2, \Delta_2$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 \sqsubseteq \sub{\tau}{\overline{\alpha}}{\overline{\tau}}, \Delta_2$}
+        \AxiomC{$\Delta_1 \sqsubseteq \sub{\tabs{\epsilon}{\epsilon}{\tau}}{\overline{\alpha}}{\overline{\tau}}, \Delta_2$}
           \AxiomC{$\tabs{\overline{\alpha}}{\Delta_3}{\tau}, \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$}
-        \RightLabel{(\textsc{R-Detachment})}
+        \RightLabel{(\textsc{R-Specialization})}
         \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
       \end{prooftree}
 
@@ -242,10 +241,10 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}} \in \Gamma$}
+          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
           \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
         \RightLabel{(\textsc{T-Variable})}
-        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}}}}$}
+        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -269,16 +268,15 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\tau_1, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau}}$}
         \RightLabel{(\textsc{T-Provide})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{t_2}}{\tau_2}}$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\tau, \Delta_1 \sqsubseteq \Delta_2$}
+        \AxiomC{$\tabs{\epsilon}{\epsilon}{\tau}, \epsilon \sqsubseteq \Delta$}
         \RightLabel{(\textsc{T-Implicit})}
-        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
       \end{prooftree}
 
       \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
