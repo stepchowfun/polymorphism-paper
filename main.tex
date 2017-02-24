@@ -269,8 +269,9 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau}}$}
+          \AxiomC{$\forall i \ . \ \text{mgu}\left( \sigma, \Delta_i \right) = \bot$}
         \RightLabel{(\textsc{T-Provide})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau}}$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau}}$}
       \end{prooftree}
 
       \begin{prooftree}
