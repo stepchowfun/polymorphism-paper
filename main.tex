@@ -44,7 +44,7 @@
 
 
 % Misc
-\newcommand\lambdaarobase{\lambda_{\implicit{\tau}}}
+\newcommand\lambdaarobase{\lambda_@}
 \newcommand\entails[2]{#1 \vdash #2}
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\evalsto[2]{#1 \longrightarrow #2}
@@ -57,7 +57,7 @@
 \newcommand\app[2]{#1 \ #2}
 \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
 \newcommand\provide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
-\newcommand\implicit[1]{ @ \left( #1 \right) }
+\newcommand\implicit[1]{ @ \! \left( #1 \right) }
 
 % Types
 \newcommand\larrow[2]{#1 \rightarrow #2}
