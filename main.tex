@@ -301,9 +301,10 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\hastype{t}{\tau_2}}$}
+          \AxiomC{$\entails{\theta; \Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\alpha}}}{\hastype{t}{\tau}}$}
+          \AxiomC{$\alpha$ new}
         \RightLabel{(\textsc{I-Abstraction})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
+        \BinaryInfC{$\entails{\theta; \Delta; \Gamma}{\hastype{\labs{x}{t}}{\theta \left( \larrow{\alpha}{\tau}} \right) }$}
       \end{prooftree}
 
       \begin{prooftree}
