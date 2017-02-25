@@ -292,6 +292,55 @@
     \begin{mdframed}
 
       \begin{prooftree}
+          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
+          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
+        \RightLabel{(\textsc{T-Variable})}
+        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\hastype{t}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Abstraction})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Application})}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta_2; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\entails{\Delta_1; \Gamma, \hastype{x}{\generalize{\Delta_2}{\Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Let})}
+        \BinaryInfC{$\entails{\Delta_1; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{\Shortstack[c]{{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\forall i \ . \ \text{mgu}\left(\inst{\sigma}, \inst{\Delta_i}\right) = \bot$}}}
+        \RightLabel{(\textsc{T-Provide})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+        \AxiomC{$\tabs{\epsilon}{\epsilon}{\tau}, \epsilon \sqsubseteq \Delta$}
+        \RightLabel{(\textsc{T-Implicit})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
+      \end{prooftree}
+
+      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
+
+    \end{mdframed}
+    \caption{Inference rules}
+    \label{fig:inference_rules}
+  \end{figure}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
+
+      \begin{prooftree}
           \AxiomC{$\evalsto{t_1}{t_1'}$}
         \RightLabel{(\textsc{E-App1})}
         \UnaryInfC{$\evalsto{\app{t_1}{t_2}}{\app{t'_1}{t_2}}$}
