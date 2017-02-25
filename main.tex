@@ -328,9 +328,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{$\tabs{\epsilon}{\epsilon}{\tau}, \epsilon \sqsubseteq \Delta$}
+        \AxiomC{}
         \RightLabel{(\textsc{I-Implicit})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
+        \UnaryInfC{$\entails{\epsilon; \tabs{\epsilon}{\epsilon}{\tau}, \epsilon; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
       \end{prooftree}
 
       \[ \inst{\tabs{\overline{\alpha_1}}{\epsilon}{\tau}} = \sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}} \qquad \text{where } \overline{\alpha_2} \text{ new} \]
