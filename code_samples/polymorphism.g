@@ -6,13 +6,13 @@ Numeric = forall a . {
   multiply : a -> a -> a
 }
 
-multiply = @(Numeric).multiply
+multiply = @(Numeric a).multiply
 
 Squarable = forall a . {
   square : a -> a
 }
 
-square = @(Squarable).square
+square = @(Squarable a).square
 
 ---------------
 -- Instances --
@@ -24,7 +24,7 @@ provide {
 
 provide {
   square = x -> multiply x x
-} as Squarable Int
+} as forall a . Numeric a => Squarable a
 
 --------------
 -- Examples --
