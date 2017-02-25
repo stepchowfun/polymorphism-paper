@@ -269,12 +269,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{
-            {$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
-            {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
-            {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \text{inst}(\sigma)$}
-            {$\forall i \ . \ \text{mgu}\left( \sigma, \Delta_i \right) = \bot$}
-          }}
+          \AxiomC{\Shortstack[c]{{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \text{inst}(\sigma)$} {$\forall i \ . \ \text{mgu}\left( \sigma, \Delta_i \right) = \bot$}}}
         \RightLabel{(\textsc{T-Provide})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
       \end{prooftree}
