@@ -268,10 +268,12 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau}}$}
+          \AxiomC{$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \text{specialize}(\sigma)$}
           \AxiomC{$\forall i \ . \ \text{mgu}\left( \sigma, \Delta_i \right) = \bot$}
         \RightLabel{(\textsc{T-Provide})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau}}$}
+        \QuaternaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
