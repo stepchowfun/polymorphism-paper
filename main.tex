@@ -163,7 +163,7 @@
         & $\labs{x}{t}$ & (abstraction) \\
         & $\app{t}{t}$ & (application) \\
         & $\llet{x}{t}{t}$ & (let binding) \\
-        & $\provide{t}{\tau}{t}$ & (provide binding) \\
+        & $\provide{t}{\sigma}{t}$ & (provide binding) \\
         & $\implicit{\tau}$ & (implicit parameter)
       \end{tabular}
 
@@ -184,6 +184,9 @@
         $\overline{\alpha} \Coloneqq$ & & (quantified type variables) \\
         & $\epsilon$ & (empty quantification) \\
         & $\alpha, \overline{\alpha}$ & (type variable cons) \\
+        $\Gamma \Coloneqq$ & & (type context) \\
+        & $\epsilon$ & (empty context) \\
+        & $x : \sigma, \Gamma$ & (context cons) \\
         $\Delta \Coloneqq$ & & (implicit context) \\
         & $\epsilon$ & (empty context) \\
         & $\sigma, \Delta$ & (context cons)
