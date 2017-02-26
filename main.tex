@@ -48,7 +48,6 @@
 \newcommand\lambdaarobase{\lambda_@}
 \newcommand\entails[2]{#1 \vdash #2}
 \newcommand\hastype[2]{#1 : #2}
-\newcommand\evalsto[2]{#1 \longrightarrow #2}
 \newcommand\freevars[1]{\text{free} \left( #1 \right)}
 \newcommand\generalize[3]{\text{gen}\left( #1, #2, #3 \right)}
 \newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
@@ -72,11 +71,11 @@
 % Document starts
 \begin{document}
 % Title portion
-\title{Deconstructing Type Classes into Orthogonal Language Features}
+\title{Ad hoc polymorphism}
 \author{Stephan Boyer}
 \orcid{1234-5678-9012-3456}
 \affiliation{%
-  \institution{Airbnb, Inc.}
+  \institution{Airbnb}
   \streetaddress{888 Brannan St.}
   \city{San Francisco}
   \state{CA}
@@ -85,7 +84,7 @@
 }
 \author{Esther Wang}
 \affiliation{%
-  \institution{Airbnb, Inc.}
+  \institution{Airbnb}
   \streetaddress{888 Brannan St.}
   \city{San Francisco}
   \state{CA}
@@ -139,7 +138,7 @@
 % We no longer use \terms command
 \terms{}
 
-\keywords{Ad hoc polymorphism, Implicit parameters, Type classes}
+\keywords{Ad hoc polymorphism, Implicit parameters, Overloading, Type classes}
 
 
 \thanks{
@@ -381,32 +380,14 @@
     \begin{mdframed}
 
       \begin{prooftree}
-          \AxiomC{$\evalsto{t_1}{t_1'}$}
-        \RightLabel{(\textsc{E-App1})}
-        \UnaryInfC{$\evalsto{\app{t_1}{t_2}}{\app{t'_1}{t_2}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\evalsto{t}{t'}$}
-        \RightLabel{(\textsc{E-App2})}
-        \UnaryInfC{$\evalsto{\app{v}{t}}{\app{v}{t'}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{}
-        \RightLabel{(\textsc{E-AppAbs})}
-        \UnaryInfC{$\evalsto{\app{\left(\labs{x}{t}\right)}{v}}{\sub{t}{x}{v}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{}
-        \RightLabel{(\textsc{E-Let})}
-        \UnaryInfC{$\evalsto{\llet{x}{v}{t}}{\sub{t}{x}{v}}$}
+        \AxiomC{}
+        \RightLabel{(\textsc{T-Coherence1})}
+        \UnaryInfC{$\epsilon$ coherent}
       \end{prooftree}
 
     \end{mdframed}
-    \caption{Operational semantics}
-    \label{fig:semantics}
+    \caption{Translation semantics}
+    \label{fig:translation_semantics}
   \end{figure}
 
 \section{Conclusion}
