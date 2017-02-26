@@ -64,6 +64,7 @@
 \newcommand\larrow[2]{#1 \rightarrow #2}
 \newcommand\tabs[3]{\forall #1 \ . \ #2 \Rightarrow #3}
 \newcommand\inst[1]{\text{inst}(#1)}
+\newcommand\mgu[2]{\text{mgu}\left(#1, #2\right)}
 
 % Inference
 \newcommand\lub[2]{#1 \vee #2}
@@ -272,7 +273,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\forall i \ . \ \text{mgu}\left(\inst{\sigma}, \inst{\Delta_i}\right) = \bot$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\forall i \ . \ \mgu{\inst{\sigma}}{\inst{\Delta_i}} = \bot$}}}
         \RightLabel{(\textsc{T-Provide})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
       \end{prooftree}
@@ -310,10 +311,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_1; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$} {$\entails{\theta_2; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\left( \theta_3, \Delta_3 \right) = \mgu{\Delta_1}{\Delta_2}$} {$\theta_4 = \lub{\lub{\lub{\theta_1}{\theta_2}}{\theta_3}}{\mgu{\tau_1}{\tau_2}}$}}}
         \RightLabel{(\textsc{I-Application})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
+        \UnaryInfC{$\entails{\theta_4; \theta_4 \Delta_3; \Gamma}{\hastype{\app{t_1}{t_2}}{\theta_4 \tau_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -325,7 +325,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\forall i \ . \ \text{mgu}\left(\inst{\sigma}, \inst{\Delta_i}\right) = \bot$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\forall i \ . \ \mgu{\inst{\sigma}}{\inst{\Delta_i}} = \bot$}}}
         \RightLabel{(\textsc{I-Provide})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
       \end{prooftree}
