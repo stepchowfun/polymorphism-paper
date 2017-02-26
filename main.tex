@@ -341,7 +341,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\theta_3 = \lub{\lub{\theta_1}{\theta_2}}{\mgu{\tau_1}{\tau_2}}$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\larrow{\tau_3}{\tau_1}}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\theta_3 = \lub{\lub{\theta_1}{\theta_2}}{\mgu{\tau_3}{\tau_2}}$}}}
         \RightLabel{(\textsc{I-Application})}
         \UnaryInfC{$\entails{\theta_3; \theta_3 \left( \Delta_4, \Delta_5 \right); \theta_3 \left( \Delta_1, \Delta_2\right); \Gamma}{\hastype{\app{t_1}{t_2}}{\theta_3 \tau_1}}$}
       \end{prooftree}
