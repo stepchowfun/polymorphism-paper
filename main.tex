@@ -446,12 +446,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\tau_1 = \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}}$}
-          \AxiomC{$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_2}$}
-          \AxiomC{$\sigma \in \Delta_2$}
-          \AxiomC{$\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$}
+          \AxiomC{\Shortstack[c]{{$\tau_1 = \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}}$} {$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_2}$} {$\sigma \in \Delta_2$} {$\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$} {$\entails{\Delta_2; \Gamma}{\trans{\hastype{\left<\sigma\right>}{\tau_3}}{\left<\sigma\right>'}}$}}}
         \RightLabel{(\textsc{S-Implicit})}
-        \QuaternaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{\implicit{\tau_1}}{\tau_1}}{\left<\sigma\right>}}$}
+        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{\implicit{\tau_1}}{\tau_1}}{\left<\sigma\right>'}}$}
       \end{prooftree}
 
       \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
