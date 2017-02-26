@@ -319,9 +319,9 @@
       \begin{prooftree}
           \AxiomC{$\entails{\theta_1; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$}
           \AxiomC{$\entails{\theta_2; \Delta_2; \Gamma, \hastype{x}{\generalize{\Delta_1}{\theta_1 \Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
-          \AxiomC{$\theta = \lub{\theta_1}{\theta_2}$}
+          \AxiomC{$\theta_3 = \lub{\theta_1}{\theta_2}$}
         \RightLabel{(\textsc{I-Let})}
-        \TrinaryInfC{$\entails{\theta; \theta \Delta_2; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\theta \tau_2}}$}
+        \TrinaryInfC{$\entails{\theta_3; \theta_3 \Delta_2; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\theta_3 \tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
