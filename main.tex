@@ -355,7 +355,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma = \tabs{\overline{\alpha_2}}{\Delta}{\tau}$} {$\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}} = \sub{\tau}{\overline{\alpha_2}}{\overline{\tau_2}}$} {$\Delta_3 = \{ \tabs{\overline{\alpha}}{\Delta}{\tau} \in \Delta_2 | \ \mgu{\tau}{\tau_1} = \bot \}$} {$\theta_3 = \lub{\theta_1}{\theta_2}$} {$\theta_3 \left( \sigma, \Delta_4, \Delta_5 \right)$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma = \tabs{\overline{\alpha_2}}{\Delta_6}{\tau_3}$} {$\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}} = \sub{\tau_3}{\overline{\alpha_2}}{\overline{\tau_2}}$} {$\Delta_3 = \{ \tabs{\overline{\alpha}}{\Delta}{\tau} \in \Delta_2 | \ \mgu{\tau}{\tau_1} = \bot \}$} {$\theta_3 = \lub{\theta_1}{\theta_2}$} {$\theta_3 \left( \sigma, \Delta_4, \Delta_5 \right)$ coherent}}}
         \RightLabel{(\textsc{I-Provide})}
         \UnaryInfC{$\entails{\theta_3; \theta_3 \left( \sigma, \Delta_4, \Delta_5 \right); \theta_3 \Delta_3; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\theta_3 \tau_2}}$}
       \end{prooftree}
