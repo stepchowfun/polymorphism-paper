@@ -65,6 +65,8 @@
 \newcommand\tabs[3]{\forall #1 \ . \ #2 \Rightarrow #3}
 \newcommand\inst[1]{\text{inst}(#1)}
 
+% Inference
+\newcommand\lub[2]{#1 \vee #2}
 
 % Document starts
 \begin{document}
@@ -315,10 +317,11 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta_2; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\Delta_1; \Gamma, \hastype{x}{\generalize{\Delta_2}{\Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\theta_1; \Delta_2; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\entails{\theta_2; \Delta_1; \Gamma, \hastype{x}{\generalize{\Delta_2}{\theta_1 \Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\theta = \lub{\theta_1}{\theta_2}$}
         \RightLabel{(\textsc{I-Let})}
-        \BinaryInfC{$\entails{\Delta_1; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}$}
+        \TrinaryInfC{$\entails{\theta; \theta \Delta_1; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\theta \tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
