@@ -330,40 +330,40 @@
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta}{\tau}} \in \Gamma$}
           \AxiomC{$\overline{\alpha_2}$ new}
         \RightLabel{(\textsc{I-Variable})}
-        \BinaryInfC{$\entails{\epsilon; \inst{\sub{\Delta}{\overline{\alpha_1}}{\overline{\alpha_2}}}; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}}}}$}
+        \BinaryInfC{$\entails{\epsilon; \epsilon; \inst{\sub{\Delta}{\overline{\alpha_1}}{\overline{\alpha_2}}}; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\theta; \Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\alpha}}}{\hastype{t}{\tau}}$}
+          \AxiomC{$\entails{\theta; \Delta_1; \Delta_2; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\alpha}}}{\hastype{t}{\tau}}$}
           \AxiomC{$\alpha$ new}
         \RightLabel{(\textsc{I-Abstraction})}
-        \BinaryInfC{$\entails{\theta; \Delta; \Gamma}{\hastype{\labs{x}{t}}{\theta \left( \larrow{\alpha}{\tau}} \right) }$}
+        \BinaryInfC{$\entails{\theta; \theta \left( \Delta_1; \Delta_2 \right); \Gamma}{\hastype{\labs{x}{t}}{\theta \left( \larrow{\alpha}{\tau}} \right) }$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_1; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$} {$\entails{\theta_2; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\left( \theta_3, \Delta_3 \right) = \mgu{\Delta_1}{\Delta_2}$} {$\theta_4 = \lub{\lub{\lub{\theta_1}{\theta_2}}{\theta_3}}{\mgu{\tau_1}{\tau_2}}$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\left( \theta_3, \Delta_3 \right) = \mgu{\Delta_1}{\Delta_2}$} {$\theta_4 = \lub{\lub{\lub{\theta_1}{\theta_2}}{\theta_3}}{\mgu{\tau_1}{\tau_2}}$}}}
         \RightLabel{(\textsc{I-Application})}
-        \UnaryInfC{$\entails{\theta_4; \theta_4 \Delta_3; \Gamma}{\hastype{\app{t_1}{t_2}}{\theta_4 \tau_1}}$}
+        \UnaryInfC{$\entails{\theta_4; \theta_4 \left( \Delta_4, \Delta_5 \right); \theta_4 \Delta_3; \Gamma}{\hastype{\app{t_1}{t_2}}{\theta_4 \tau_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\theta_1; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\theta_2; \Delta_2; \Gamma, \hastype{x}{\generalize{\Delta_1}{\theta_1 \Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\theta_1; \Delta_3; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\entails{\theta_2; \Delta_4; \Delta_2; \Gamma, \hastype{x}{\generalize{\Delta_1}{\theta_1 \Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
           \AxiomC{$\theta_3 = \lub{\theta_1}{\theta_2}$}
         \RightLabel{(\textsc{I-Let})}
-        \TrinaryInfC{$\entails{\theta_3; \theta_3 \Delta_2; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\theta_3 \tau_2}}$}
+        \TrinaryInfC{$\entails{\theta_3; \theta_3 \left( \Delta_3, \Delta_4 \right); \theta_3 \Delta_2; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\theta_3 \tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\theta_2; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\Delta_3 = \{ \tabs{\overline{\alpha}}{\Delta}{\tau} \in \Delta_2 | \ \mgu{\tau}{\tau_1} = \bot \}$} {$\theta_3 = \lub{\theta_1}{\theta_2}$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma = \tabs{\overline{\alpha_2}}{\Delta}{\tau}$} {$\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}} = \sub{\tau}{\overline{\alpha_2}}{\overline{\tau_2}}$} {$\Delta_3 = \{ \tabs{\overline{\alpha}}{\Delta}{\tau} \in \Delta_2 | \ \mgu{\tau}{\tau_1} = \bot \}$} {$\theta_3 = \lub{\theta_1}{\theta_2}$} {$\theta_3 \left( \sigma, \Delta_4, \Delta_5 \right)$ coherent}}}
         \RightLabel{(\textsc{I-Provide})}
-        \UnaryInfC{$\entails{\theta_3; \theta_3 \Delta_3; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\theta_3 \tau_2}}$}
+        \UnaryInfC{$\entails{\theta_3; \theta_3 \left( \sigma, \Delta_4, \Delta_5 \right); \theta_3 \Delta_3; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\theta_3 \tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
         \AxiomC{}
         \RightLabel{(\textsc{I-Implicit})}
-        \UnaryInfC{$\entails{\epsilon; \tabs{\epsilon}{\epsilon}{\tau}, \epsilon; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
+        \UnaryInfC{$\entails{\epsilon; \epsilon; \tabs{\epsilon}{\epsilon}{\tau}, \epsilon; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
       \end{prooftree}
 
       \[ \inst{\tabs{\overline{\alpha_1}}{\epsilon}{\tau}} = \sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}} \qquad \text{where } \overline{\alpha_2} \text{ new} \]
