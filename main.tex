@@ -68,6 +68,9 @@
 % Inference
 \newcommand\lub[2]{#1 \vee #2}
 
+% Translation
+\newcommand\trans[2]{#1 \leadsto #2}
+
 % Document starts
 \begin{document}
 % Title portion
@@ -249,20 +252,20 @@
 
       \begin{prooftree}
         \AxiomC{}
-        \RightLabel{(\textsc{T-Coherence1})}
+        \RightLabel{(\textsc{C-Empty})}
         \UnaryInfC{$\epsilon$ coherent}
       \end{prooftree}
 
       \begin{prooftree}
         \AxiomC{}
-        \RightLabel{(\textsc{T-Coherence2})}
+        \RightLabel{(\textsc{C-Singleton})}
         \UnaryInfC{$\sigma, \epsilon$ coherent}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\mgu{\tau_1}{\tau_2} = \bot$}
           \AxiomC{$\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}, \Delta$ coherent}
-        \RightLabel{(\textsc{T-Coherence3})}
+        \RightLabel{(\textsc{C-Coherence})}
         \BinaryInfC{$\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}, \tabs{\overline{\alpha_2}}{\Delta_2}{\tau_2}, \Delta$ coherent}
       \end{prooftree}
 
@@ -380,9 +383,41 @@
     \begin{mdframed}
 
       \begin{prooftree}
-        \AxiomC{}
-        \RightLabel{(\textsc{T-Coherence1})}
-        \UnaryInfC{$\epsilon$ coherent}
+          \AxiomC{$x:\tabs{\epsilon}{\epsilon}{\tau} \in \Gamma$}
+        \RightLabel{(\textsc{T-Variable})}
+        \UnaryInfC{$\trans{x}{x:\tau}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+        \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\hastype{\trans{t}{t'}}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Abstraction})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\trans{\labs{x}{t}}\hastype{\labs{x}{t'}}}{\larrow{\tau_1}{\tau_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+        \AxiomC{$\entails{\Delta; \Gamma}{\hastype{\trans{t_1}{t_1'}}{\larrow{\tau_2}{\tau_1}}}$}
+        \AxiomC{$\entails{\Delta; \Gamma}{\hastype{\trans{t_2}{t_2'}}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Application})}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\trans{\app{t_1}{t_2}}{\app{t_1'}{t_2'}}}{\tau_1}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$}
+          \AxiomC{$\entails{\Delta_2; \Gamma, \hastype{x}{\generalize{\Delta_1}{\Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+        \RightLabel{(\textsc{T-Let})}
+        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{\Shortstack[c]{{$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_1}$} {$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}}}}$} {$\entails{\sigma, \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma, \Delta_2$ coherent}}}
+        \RightLabel{(\textsc{T-Provide})}
+        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+        \AxiomC{$\tabs{\epsilon}{\epsilon}{\tau}, \epsilon \sqsubseteq \Delta$}
+        \RightLabel{(\textsc{T-Implicit})}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
       \end{prooftree}
 
     \end{mdframed}
