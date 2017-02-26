@@ -251,13 +251,19 @@
       \begin{prooftree}
         \AxiomC{}
         \RightLabel{(\textsc{T-Coherence1})}
+        \UnaryInfC{$\epsilon$ coherent}
+      \end{prooftree}
+
+      \begin{prooftree}
+        \AxiomC{}
+        \RightLabel{(\textsc{T-Coherence2})}
         \UnaryInfC{$\sigma, \epsilon$ coherent}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\sub{\tau_1}{\overline{\alpha_1}}{\overline{\alpha_3}} = \sub{\tau_2}{\overline{\alpha_2}}{\overline{\alpha_4}}$}
           \AxiomC{$\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}, \Delta$ coherent}
-        \RightLabel{(\textsc{T-Coherence2})}
+        \RightLabel{(\textsc{T-Coherence3})}
         \BinaryInfC{$\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}, \tabs{\overline{\alpha_2}}{\Delta_2}{\tau_2}, \Delta$ coherent}
       \end{prooftree}
 
@@ -297,7 +303,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_1}$} {$\entails{\Delta_2; \Gamma}{\hastype{t_1}{\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}}}}$} {$\entails{\sigma, \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma, \Delta_2$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_1}$} {$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}}}}$} {$\entails{\sigma, \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma, \Delta_2$ coherent}}}
         \RightLabel{(\textsc{T-Provide})}
         \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
       \end{prooftree}
