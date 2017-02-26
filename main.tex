@@ -355,9 +355,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\Delta; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\sigma, \Delta; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\forall i \ . \ \mgu{\inst{\sigma}}{\inst{\Delta_i}} = \bot$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\theta_2; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}} = \inst{\sigma}$} {$\Delta_3 = \{ \Delta_{2_i} | \ \mgu{\inst{\Delta_{2_i}}}{\tau_1} = \bot \}$} {$\theta_3 = \lub{\theta_1}{\theta_2}$}}}
         \RightLabel{(\textsc{I-Provide})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
+        \UnaryInfC{$\entails{\theta_3; \theta_3 \Delta_3; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\theta_3 \tau_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
