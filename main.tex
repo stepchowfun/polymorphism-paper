@@ -446,9 +446,12 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\tabs{\epsilon}{\epsilon}{\tau}, \epsilon \sqsubseteq \Delta$}
+          \AxiomC{$\tau_1 = \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}}$}
+          \AxiomC{$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_2}$}
+          \AxiomC{$\sigma \in \Delta_2$}
+          \AxiomC{$\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$}
         \RightLabel{(\textsc{S-Implicit})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
+        \QuaternaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{\implicit{\tau_1}}{\tau_1}}{\left<\sigma\right>}}$}
       \end{prooftree}
 
       \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
