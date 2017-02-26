@@ -407,7 +407,7 @@
     \begin{mdframed}
 
       \begin{center}
-        \framebox{$\entails{\Delta; \Gamma}{\hastype{\trans{t}{t}}{\tau}}$}
+        \framebox{$\entails{\Delta; \Gamma}{\trans{\hastype{t}{\tau}}{t}}$}
       \end{center}
 
       \medskip
@@ -416,23 +416,21 @@
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
           \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
         \RightLabel{(\textsc{S-Variable})}
-        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\trans{x}{x}}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
+        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}{x}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\hastype{\trans{t}{t'}}{\tau_2}}$}
+        \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\trans{\hastype{t}{\tau_2}}{t'}}$}
         \RightLabel{(\textsc{S-Abstraction})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\trans{\labs{x}{t}}\hastype{\labs{x}{t'}}}{\larrow{\tau_1}{\tau_2}}$}
+        \UnaryInfC{$\entails{\Delta; \Gamma}{\trans{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}{\labs{x}{t'}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{\trans{t_1}{t_1'}}{\larrow{\tau_2}{\tau_1}}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{\trans{t_2}{t_2'}}{\tau_2}}$}
+        \AxiomC{$\entails{\Delta; \Gamma}{\trans{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}{t_1'}}$}
+        \AxiomC{$\entails{\Delta; \Gamma}{\trans{\hastype{t_2}{\tau_2}}}{t_2'}$}
         \RightLabel{(\textsc{S-Application})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\trans{\app{t_1}{t_2}}{\app{t_1'}{t_2'}}}{\tau_1}}$}
+        \BinaryInfC{$\entails{\Delta; \Gamma}{\trans{\hastype{\app{t_1}{t_2}}{\tau_1}}{\app{t_1'}{t_2'}}}$}
       \end{prooftree}
-
-
 
       \begin{prooftree}
           \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$}
@@ -452,6 +450,8 @@
         \RightLabel{(\textsc{S-Implicit})}
         \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
       \end{prooftree}
+
+      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
 
     \end{mdframed}
     \caption{Translation semantics}
