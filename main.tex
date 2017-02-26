@@ -202,6 +202,12 @@
   \begin{figure}[h!]
     \begin{mdframed}
 
+      \begin{center}
+        \framebox{$\Delta \sqsubseteq \Delta$}
+      \end{center}
+
+      \medskip
+
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Reflexivity})}
@@ -250,6 +256,12 @@
   \begin{figure}[h!]
     \begin{mdframed}
 
+      \begin{center}
+        \framebox{$\Delta$ coherent}
+      \end{center}
+
+      \medskip
+
       \begin{prooftree}
         \AxiomC{}
         \RightLabel{(\textsc{C-Empty})}
@@ -276,6 +288,12 @@
 
   \begin{figure}[h!]
     \begin{mdframed}
+
+      \begin{center}
+        \framebox{$\entails{\Delta; \Gamma}{\hastype{t}{\tau}}$}
+      \end{center}
+
+      \medskip
 
       \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
@@ -327,6 +345,12 @@
 
   \begin{figure}[h!]
     \begin{mdframed}
+
+      \begin{center}
+        \framebox{$\entails{\theta; \Delta; \Delta; \Gamma}{\hastype{t}{\tau}}$}
+      \end{center}
+
+      \medskip
 
       \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta}{\tau}} \in \Gamma$}
@@ -382,10 +406,16 @@
   \begin{figure}[h!]
     \begin{mdframed}
 
+      \begin{center}
+        \framebox{$\entails{\Delta; \Gamma}{\hastype{\trans{t}{t}}{\tau}}$}
+      \end{center}
+
+      \medskip
+
       \begin{prooftree}
           \AxiomC{$x:\tabs{\epsilon}{\epsilon}{\tau} \in \Gamma$}
         \RightLabel{(\textsc{T-Variable})}
-        \UnaryInfC{$\trans{x}{x:\tau}$}
+        \UnaryInfC{$\hastype{\trans{x}{x}}{\tau}$}
       \end{prooftree}
 
       \begin{prooftree}
