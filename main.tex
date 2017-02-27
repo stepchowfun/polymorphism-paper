@@ -254,10 +254,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\preorder{\icontext_1}{\icontext_3}$}
-          \AxiomC{$\preorder{\icontext_2}{\icontext_4}$}
+          \AxiomC{$\preorder{\iconcat{\icontext_1}{\tpoly_1, \tpoly_2, \icontext_2}}{\iconcat{\icontext_3}{\tpoly_1, \tpoly_2, \icontext_4}}$}
         \RightLabel{(\textsc{R-Permutation})}
-        \BinaryInfC{$\preorder{\iconcat{\icontext_1}{\tpoly_1, \tpoly_2, \icontext_3}}{\iconcat{\icontext_3}{\tpoly_2, \tpoly_1, \icontext_4}}$}
+        \UnaryInfC{$\preorder{\iconcat{\icontext_1}{\tpoly_1, \tpoly_2, \icontext_2}}{\iconcat{\icontext_3}{\tpoly_2, \tpoly_1, \icontext_4}}$}
       \end{prooftree}
 
       \begin{prooftree}
