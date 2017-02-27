@@ -458,7 +458,7 @@
           \AxiomC{$\entails{\icontext; \gcontext}{\trans{\hastype{\lterm_1}{\tarrow{\tmono_2}{\tmono_1}}}{\lterm_1'}}$}
           \AxiomC{$\entails{\icontext; \gcontext}{\trans{\hastype{\lterm_2}{\tmono_2}}}{\lterm_2'}$}
         \RightLabel{(\textsc{S-Application})}
-        \BinaryInfC{$\entails{\icontext; \gcontext}{\trans{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_1}}{\lapp{\lterm_1'}{\lterm_2'}}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\trans{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_1}}{\lapp{\lterm_1'}{(\labs{\parens}{\lterm_2'})}}}$}
       \end{prooftree}
 
       \begin{prooftree}
