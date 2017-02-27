@@ -248,10 +248,10 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
-          \AxiomC{$\preorder{\Delta_2}{\Delta_3}$}
+          \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
+          \AxiomC{$\preorder{\icontext_2}{\icontext_3}$}
         \RightLabel{(\textsc{R-Transitivity})}
-        \BinaryInfC{$\preorder{\Delta_1}{\Delta_3}$}
+        \BinaryInfC{$\preorder{\icontext_1}{\icontext_3}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -434,6 +434,14 @@
   \begin{figure}[h!]
     \begin{mdframed}
       \begin{center}
+        \framebox{$\utrans{\icontext}{d}$}
+      \end{center}
+
+      \[ \utrans{\tpoly_1, \tpoly_2, \ldots, \tpoly_n}{(\langle \tpoly_1 \rangle, \langle \tpoly_2 \rangle, \ldots, \langle \tpoly_n \rangle)} \]
+
+      \vspace{0.3cm}
+
+      \begin{center}
         \framebox{$\uelab{d}{d'}$}
       \end{center}
 
@@ -452,14 +460,14 @@
       \begin{prooftree}
           \AxiomC{$\tpoly = \tforall{\overline{\tvar}}{\icontext_2}{\tmono}$}
           \AxiomC{$\utrans{\icontext_2}{d}$}
-          \AxiomC{$\tpoly \in \icontext$}
+          \AxiomC{$\tpoly \in \icontext_1$}
           \AxiomC{$\entails{\icontext_1}{\uelab{d}{e}}$}
         \RightLabel{\textsc{(E-Application)}}
         \QuaternaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly}}{\lapp{\utovar{\tpoly}}{e}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_1 \not \in \icontext_1$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\tmono_2 \in \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
+          \AxiomC{\Shortstack[c]{{$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_1 \not \in \icontext_1$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\tpoly_2 \in \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
         \RightLabel{(\textsc{E-Lookup})}
         \UnaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly_1}}}{t}$}
       \end{prooftree}
@@ -488,8 +496,10 @@
       \begin{prooftree}
           \AxiomC{$\hastype{\lvar}{\tforall{\overline{\tvar}}{\icontext_1}{\tmono}} \in \gcontext$}
           \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
+          \AxiomC{$\utrans{\icontext_1}{d}$}
+          \AxiomC{$\entails{\icontext_2}{\uelab{d}{e}}$}
         \RightLabel{(\textsc{S-Variable})}
-        \BinaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\lvar}{\sub{\tmono}{\overline{\tvar}}{\overline{\tmono}}}}{\lvar}}$}
+\QuaternaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\lvar}{\sub{\tmono}{\overline{\tvar}}{\overline{\tmono}}}}{\lapp{\lvar}{e}}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -502,25 +512,27 @@
           \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_1}{\tarrow{\tmono_2}{\tmono_1}}}{\lterm_1'}}$}
           \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}}{\lterm_2'}$}
         \RightLabel{(\textsc{S-Application})}
-        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_1}}{\lapp{\lterm_1'}{(\labs{\parens}{\lterm_2'})}}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_1}}{\lapp{\lterm_1'}{(\labs{\parens{}}{\lterm_2'})}}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{\Shortstack[c]{{$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}}{\lterm_1'}$} {$\utrans{\icontext_1}{d}$} {$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\gcontext}{\tmono_1}}}{\utrans{\hastype{\lterm_2}{\tmono_2}}}{\lterm_2'}$}}}
         \RightLabel{(\textsc{S-Let})}
-        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}{\llet{\lvar}{\labs{d}{\lterm_1'}}{\lterm_2'}}}$}
+        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}{\lapp{(\labs{\lvar}{\lterm_2'})}{(\labs{d}{\lterm_1'})}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_1}$} {$\utrans{\icontext_1}{d}$} {$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\sub{\tmono_1}{\overline{\tvar}}{\overline{\tmono}}}}{\lterm_1'}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{\lterm_2'}}$}}}
+          \AxiomC{\Shortstack[c]{{$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_1}$} {$\utrans{\icontext_1}{d}$} {$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\sub{\tmono_1}{\overline{\tvar}}{\overline{\tmono}}}}{\lterm_1'}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{\lterm_2'}}$} {$\tpoly, \icontext_2$ coherent}}}
         \RightLabel{(\textsc{S-Provide})}
         \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}{(\labs{\langle \tpoly \rangle}{\lterm_2'}) (\labs{d}{\lterm_1'})}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tmono_1 = \sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}}$} {$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_2}$} {$\tpoly \in \icontext_2$} {$\preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_2}$} {$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\left<\tpoly\right>}{\tmono_3}}{\left<\tpoly\right>'}}$}}}
+         % \AxiomC{\Shortstack[c]{{$\tmono_1 = \sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}}$} {$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_2}$} {$\tpoly \in \icontext_2$} {$\preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_2}$} {$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\utovar{\tpoly}}{\tmono_3}}{\utovar{\tpoly'}}}$}}}
+          \AxiomC{$\preorder{\tforall{\tvarempty}{\iempty}{\tmono}, \iempty}{\icontext}$}
+          \AxiomC{$\entails{\icontext}{\uelab{\utovar{\tforall{\tvarempty}{\iempty}{\tmono}}}{d}}$}
         \RightLabel{(\textsc{S-Implicit})}
-        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\limplicit{\tmono_1}}{\tmono_1}}{\left<\tpoly\right>'}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\limplicit{\tmono}}{\tmono}}{d}}$}
       \end{prooftree}
 
       \[ \tgen{\icontext}{\gcontext}{\tmono} = \tforall{\overline{\tvar}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \freevars{\gcontext} \]
