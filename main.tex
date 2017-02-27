@@ -69,7 +69,7 @@
 
 
 \begin{abstract}
-  We introduce $\lambdaarobase$.
+  We introduce $\thesystem$.
 \end{abstract}
 
 
@@ -113,20 +113,21 @@
 
 
 % Misc
-\newcommand\lambdaarobase{\lambda_@}
+\newcommand\thesystem{\left\langle\lambda\right\rangle}
 \newcommand\entails[2]{#1 \vdash #2}
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\freevars[1]{\text{free} \left( #1 \right)}
 \newcommand\generalize[3]{\text{gen}\left( #1, #2, #3 \right)}
 \newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
 \newcommand\concat[2]{#1 \mathbin{+\!+} #2}
+\newcommand\preorder[2]{#1 \sqsubseteq #2}
 
 % Terms
 \newcommand\labs[2]{\lambda #1 \ . \ #2}
 \newcommand\app[2]{#1 \ #2}
 \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
 \newcommand\provide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
-\newcommand\implicit[1]{ @ \! \left( #1 \right) }
+\newcommand\implicit[1]{ \left\langle #1 \right\rangle }
 
 % Types
 \newcommand\larrow[2]{#1 \rightarrow #2}
@@ -156,7 +157,7 @@
 
 \section{Introduction}
 
-  We introduce $\lambdaarobase$.
+  We introduce $\thesystem$.
 
 \section{Implicit parameters}
 
@@ -210,7 +211,7 @@
     \begin{mdframed}
 
       \begin{center}
-        \framebox{$\Delta \sqsubseteq \Delta$}
+        \framebox{$\preorder{\Delta}{\Delta}$}
       \end{center}
 
       \medskip
@@ -218,34 +219,34 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Reflexivity})}
-        \UnaryInfC{$\Delta \sqsubseteq \Delta$}
+        \UnaryInfC{$\preorder{\Delta}{\Delta}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
-          \AxiomC{$\Delta_2 \sqsubseteq \Delta_3$}
+          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
+          \AxiomC{$\preorder{\Delta_2}{\Delta_3}$}
         \RightLabel{(\textsc{R-Transitivity})}
-        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_3$}
+        \BinaryInfC{$\preorder{\Delta_1}{\Delta_3}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
         \RightLabel{(\textsc{R-Weakening})}
-        \UnaryInfC{$\Delta_1 \sqsubseteq \sigma, \Delta_2$}
+        \UnaryInfC{$\preorder{\Delta_1}{\sigma, \Delta_2}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\Delta_1 \sqsubseteq \Delta_3$}
-          \AxiomC{$\Delta_2 \sqsubseteq \Delta_4$}
+          \AxiomC{$\preorder{\Delta_1}{\Delta_3}$}
+          \AxiomC{$\preorder{\Delta_2}{\Delta_4}$}
         \RightLabel{(\textsc{R-Permutation})}
-        \BinaryInfC{$\concat{\Delta_1}{\sigma_1, \sigma_2, \Delta_3} \sqsubseteq \concat{\Delta_3}{\sigma_2, \sigma_1, \Delta_4}$}
+        \BinaryInfC{$\preorder{\concat{\Delta_1}{\sigma_1, \sigma_2, \Delta_3}}{\concat{\Delta_3}{\sigma_2, \sigma_1, \Delta_4}}$}
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{$\Delta_1 \sqsubseteq \sub{\tabs{\epsilon}{\epsilon}{\tau}}{\overline{\alpha}}{\overline{\tau}}, \Delta_2$}
-          \AxiomC{$\tabs{\overline{\alpha}}{\Delta_3}{\tau}, \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$}
+        \AxiomC{$\preorder{\Delta_1}{\sub{\tabs{\epsilon}{\epsilon}{\tau}}{\overline{\alpha}}{\overline{\tau}}, \Delta_2}$}
+          \AxiomC{$\preorder{\tabs{\overline{\alpha}}{\Delta_3}{\tau}, \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}}}{\Delta_2}$}
         \RightLabel{(\textsc{R-Specialization})}
-        \BinaryInfC{$\Delta_1 \sqsubseteq \Delta_2$}
+        \BinaryInfC{$\preorder{\Delta_1}{\Delta_2}$}
       \end{prooftree}
 
     \end{mdframed}
@@ -297,7 +298,7 @@
 
       \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
-          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
         \RightLabel{(\textsc{T-Variable})}
         \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
       \end{prooftree}
@@ -329,7 +330,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\tabs{\epsilon}{\epsilon}{\tau}, \epsilon \sqsubseteq \Delta$}
+          \AxiomC{$\preorder{\tabs{\epsilon}{\epsilon}{\tau}, \epsilon}{\Delta}$}
         \RightLabel{(\textsc{T-Implicit})}
           \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
       \end{prooftree}
@@ -421,7 +422,7 @@
 
       \begin{prooftree}
           \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
-          \AxiomC{$\Delta_1 \sqsubseteq \Delta_2$}
+          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
         \RightLabel{(\textsc{S-Variable})}
         \BinaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}{x}}$}
       \end{prooftree}
@@ -452,7 +453,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tau_1 = \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}}$} {$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_2}$} {$\sigma \in \Delta_2$} {$\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}} \sqsubseteq \Delta_2$} {$\entails{\Delta_2; \Gamma}{\trans{\hastype{\left<\sigma\right>}{\tau_3}}{\left<\sigma\right>'}}$}}}
+          \AxiomC{\Shortstack[c]{{$\tau_1 = \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}}$} {$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_2}$} {$\sigma \in \Delta_2$} {$\preorder{\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}}}{\Delta_2}$} {$\entails{\Delta_2; \Gamma}{\trans{\hastype{\left<\sigma\right>}{\tau_3}}{\left<\sigma\right>'}}$}}}
         \RightLabel{(\textsc{S-Implicit})}
         \UnaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{\implicit{\tau_1}}{\tau_1}}{\left<\sigma\right>'}}$}
       \end{prooftree}
