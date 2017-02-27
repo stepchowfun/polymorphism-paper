@@ -353,14 +353,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{
-            {$\overline{\tvar_3} \text{ new}$}
-            {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$}
-            {$\entails{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_3}}; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
-            {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
-            {$\tgen{\parens{\iconcat{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_3}}}{\icontext_2}}}{\gcontext}{\tmono_1} = \tforall{\overline{\tvar_2}}{\icontext_3}{\tmono_4}$}
-            {$\sub{\tmono_3}{\overline{\tvar_1}}{\overline{\tvar_3}} = \sub{\tmono_4}{\overline{\tvar_2}}{\overline{\tau_6}}$}
-            {$\tpoly, \icontext_2$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\overline{\tvar_3} \text{ new}$} {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$} {$\entails{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_3}}; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tgen{\parens{\iconcat{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_3}}}{\icontext_2}}}{\gcontext}{\tmono_1} = \tforall{\overline{\tvar_2}}{\icontext_3}{\tmono_4}$} {$\sub{\tmono_3}{\overline{\tvar_1}}{\overline{\tvar_3}} = \sub{\tmono_4}{\overline{\tvar_2}}{\overline{\tau_6}}$} {$\tpoly, \icontext_2$ coherent}}}
         \RightLabel{(\textsc{T-Provide})}
         \UnaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
