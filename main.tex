@@ -114,31 +114,49 @@
 
 % Misc
 \newcommand\thesystem{\left\langle\lambda\right\rangle}
+\newcommand\parens[1]{\left(#1\right)}
 \newcommand\entails[2]{#1 \vdash #2}
 \newcommand\hastype[2]{#1 : #2}
-\newcommand\freevars[1]{\text{free} \left( #1 \right)}
-\newcommand\generalize[3]{\text{gen}\left( #1, #2, #3 \right)}
-\newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
-\newcommand\concat[2]{#1 \mathbin{+\!+} #2}
+\newcommand\freevars[1]{\text{free}\parens{#1}}
 \newcommand\preorder[2]{#1 \sqsubseteq #2}
 
 % Terms
+\newcommand\lterm{t}
+\newcommand\lvar{x}
 \newcommand\labs[2]{\lambda #1 \ . \ #2}
-\newcommand\app[2]{#1 \ #2}
+\newcommand\lapp[2]{#1 \ #2}
 \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
-\newcommand\provide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
-\newcommand\implicit[1]{ \left\langle #1 \right\rangle }
+\newcommand\lprovide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
+\newcommand\limplicit[1]{\left\langle #1 \right\rangle}
 
 % Types
-\newcommand\larrow[2]{#1 \rightarrow #2}
-\newcommand\tabs[3]{\forall #1 \ . \ #2 \Rightarrow #3}
-\newcommand\inst[1]{\text{inst}(#1)}
-\newcommand\mgu[2]{\text{mgu}\left(#1, #2\right)}
+\newcommand\tmono{\tau}
+\newcommand\tpoly{\sigma}
+\newcommand\tvarempty{\epsilon_{\tpoly}}
+\newcommand\tvar{\alpha}
+\newcommand\tarrow[2]{#1 \rightarrow #2}
+\newcommand\tforall[3]{\forall #1 \ . \ #2 \Rightarrow #3}
+\newcommand\tgen[3]{\text{gen}\parens{#1, #2, #3}}
+\newcommand\tinst[1]{\text{inst}(#1)}
+\newcommand\tmgu[2]{\text{mgu}\parens{#1, #2}}
 
-% Inference
-\newcommand\lub[2]{#1 \vee #2}
+% Type contexts
+\newcommand\gcontext{\Gamma}
+\newcommand\gempty{\epsilon_{\gcontext}}
+\newcommand\gconcat[2]{#1 \mathbin{+\!+} #2}
 
-% Translation
+% Implicit contexts
+\newcommand\icontext{\Delta}
+\newcommand\iempty{\epsilon_{\icontext}}
+\newcommand\iconcat[2]{#1 \mathbin{+\!+} #2}
+
+% Substitutions
+\newcommand\ssub{\theta}
+\newcommand\sempty{\epsilon_{\ssub}}
+\newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
+\newcommand\slub[2]{#1 \vee #2}
+
+% Translation semantics
 \newcommand\trans[2]{#1 \leadsto #2}
 
 
@@ -165,13 +183,13 @@
     \begin{mdframed}
 
       \begin{tabular}{l l l}
-        $t \Coloneqq $ & & (term) \\
-        & $x$ & (variable) \\
-        & $\labs{x}{t}$ & (abstraction) \\
-        & $\app{t}{t}$ & (application) \\
-        & $\llet{x}{t}{t}$ & (let binding) \\
-        & $\provide{t}{\sigma}{t}$ & (provide binding) \\
-        & $\implicit{\tau}$ & (implicit parameter)
+        $\lterm \Coloneqq $ & & (term) \\
+        & $\lvar$ & (variable) \\
+        & $\labs{\lvar}{\lterm}$ & (abstraction) \\
+        & $\lapp{\lterm}{\lterm}$ & (application) \\
+        & $\llet{\lvar}{\lterm}{\lterm}$ & (let binding) \\
+        & $\lprovide{\lterm}{\tpoly}{\lterm}$ & (provide binding) \\
+        & $\limplicit{\tmono}$ & (implicit parameter)
       \end{tabular}
 
     \end{mdframed}
@@ -183,20 +201,20 @@
     \begin{mdframed}
 
       \begin{tabular}{l l l}
-        $\tau \Coloneqq$ & & (monomorphic type) \\
-        & $\larrow{\tau}{\tau}$ & (arrow type) \\
-        & $\alpha$ & (type variable) \\
-        $\sigma \Coloneqq$ & & (polymorphic type) \\
-        & $\tabs{\overline{\alpha}}{\Delta}{\tau}$ & (universal type) \\
-        $\overline{\alpha} \Coloneqq$ & & (quantified type variables) \\
-        & $\epsilon$ & (empty quantification) \\
-        & $\alpha, \overline{\alpha}$ & (type variable cons) \\
-        $\Gamma \Coloneqq$ & & (type context) \\
-        & $\epsilon$ & (empty context) \\
-        & $x : \sigma, \Gamma$ & (context cons) \\
-        $\Delta \Coloneqq$ & & (implicit context) \\
-        & $\epsilon$ & (empty context) \\
-        & $\sigma, \Delta$ & (context cons)
+        $\tmono \Coloneqq$ & & (monomorphic type) \\
+        & $\tarrow{\tmono}{\tmono}$ & (arrow type) \\
+        & $\tvar$ & (type variable) \\
+        $\tpoly \Coloneqq$ & & (polymorphic type) \\
+        & $\tforall{\overline{\tvar}}{\icontext}{\tmono}$ & (universal type) \\
+        $\overline{\tvar} \Coloneqq$ & & (quantified type variables) \\
+        & $\tvarempty$ & (empty quantification) \\
+        & $\tvar, \overline{\tvar}$ & (type variable cons) \\
+        $\gcontext \Coloneqq$ & & (type context) \\
+        & $\gempty$ & (empty context) \\
+        & $\hastype{\lvar}{\tpoly}, \gcontext$ & (context cons) \\
+        $\icontext \Coloneqq$ & & (implicit context) \\
+        & $\iempty$ & (empty context) \\
+        & $\tpoly, \icontext$ & (context cons)
       \end{tabular}
 
     \end{mdframed}
@@ -204,14 +222,14 @@
     \label{fig:types_syntax}
   \end{figure}
 
-  \[ \concat{\epsilon}{\Delta} = \Delta \]
-  \[ \concat{\left(\sigma, \Delta_1\right)}{\Delta_2} = \sigma, \left(\concat{\Delta_1}{\Delta_2}\right) \]
+  \[ \iconcat{\iempty}{\icontext} = \icontext \]
+  \[ \iconcat{\parens{\tpoly, \icontext_1}}{\icontext_2} = \tpoly, \parens{\iconcat{\icontext_1}{\icontext_2}} \]
 
   \begin{figure}[h!]
     \begin{mdframed}
 
       \begin{center}
-        \framebox{$\preorder{\Delta}{\Delta}$}
+        \framebox{$\preorder{\icontext}{\icontext}$}
       \end{center}
 
       \medskip
@@ -219,34 +237,34 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{R-Reflexivity})}
-        \UnaryInfC{$\preorder{\Delta}{\Delta}$}
+        \UnaryInfC{$\preorder{\icontext}{\icontext}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
-          \AxiomC{$\preorder{\Delta_2}{\Delta_3}$}
+          \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
+          \AxiomC{$\preorder{\icontext_2}{\icontext_3}$}
         \RightLabel{(\textsc{R-Transitivity})}
-        \BinaryInfC{$\preorder{\Delta_1}{\Delta_3}$}
+        \BinaryInfC{$\preorder{\icontext_1}{\icontext_3}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
+          \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
         \RightLabel{(\textsc{R-Weakening})}
-        \UnaryInfC{$\preorder{\Delta_1}{\sigma, \Delta_2}$}
+        \UnaryInfC{$\preorder{\icontext_1}{\tpoly, \icontext_2}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\preorder{\Delta_1}{\Delta_3}$}
-          \AxiomC{$\preorder{\Delta_2}{\Delta_4}$}
+          \AxiomC{$\preorder{\icontext_1}{\icontext_3}$}
+          \AxiomC{$\preorder{\icontext_2}{\icontext_4}$}
         \RightLabel{(\textsc{R-Permutation})}
-        \BinaryInfC{$\preorder{\concat{\Delta_1}{\sigma_1, \sigma_2, \Delta_3}}{\concat{\Delta_3}{\sigma_2, \sigma_1, \Delta_4}}$}
+        \BinaryInfC{$\preorder{\iconcat{\icontext_1}{\tpoly_1, \tpoly_2, \icontext_3}}{\iconcat{\icontext_3}{\tpoly_2, \tpoly_1, \icontext_4}}$}
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{$\preorder{\Delta_1}{\sub{\tabs{\epsilon}{\epsilon}{\tau}}{\overline{\alpha}}{\overline{\tau}}, \Delta_2}$}
-          \AxiomC{$\preorder{\tabs{\overline{\alpha}}{\Delta_3}{\tau}, \sub{\Delta_3}{\overline{\alpha}}{\overline{\tau}}}{\Delta_2}$}
+        \AxiomC{$\preorder{\icontext_1}{\sub{\tforall{\tvarempty}{\iempty}{\tmono}}{\overline{\tvar}}{\overline{\tmono}}, \icontext_2}$}
+          \AxiomC{$\preorder{\tforall{\overline{\tvar}}{\icontext_3}{\tmono}, \sub{\icontext_3}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_2}$}
         \RightLabel{(\textsc{R-Specialization})}
-        \BinaryInfC{$\preorder{\Delta_1}{\Delta_2}$}
+        \BinaryInfC{$\preorder{\icontext_1}{\icontext_2}$}
       \end{prooftree}
 
     \end{mdframed}
@@ -258,7 +276,7 @@
     \begin{mdframed}
 
       \begin{center}
-        \framebox{$\Delta$ coherent}
+        \framebox{$\icontext$ coherent}
       \end{center}
 
       \medskip
@@ -266,20 +284,20 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{C-Empty})}
-        \UnaryInfC{$\epsilon$ coherent}
+        \UnaryInfC{$\iempty$ coherent}
       \end{prooftree}
 
       \begin{prooftree}
         \AxiomC{}
           \RightLabel{(\textsc{C-Singleton})}
-        \UnaryInfC{$\sigma, \epsilon$ coherent}
+        \UnaryInfC{$\tpoly, \iempty$ coherent}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\mgu{\tau_1}{\tau_2} = \bot$}
-          \AxiomC{$\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}, \Delta$ coherent}
+          \AxiomC{$\tmgu{\tmono_1}{\tmono_2} = \bot$}
+          \AxiomC{$\tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_1}, \icontext$ coherent}
         \RightLabel{(\textsc{C-Coherence})}
-        \BinaryInfC{$\tabs{\overline{\alpha_1}}{\Delta_1}{\tau_1}, \tabs{\overline{\alpha_2}}{\Delta_2}{\tau_2}, \Delta$ coherent}
+        \BinaryInfC{$\tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_1}, \tforall{\overline{\tvar_2}}{\icontext_2}{\tmono_2}, \icontext$ coherent}
       \end{prooftree}
 
     \end{mdframed}
@@ -291,53 +309,53 @@
     \begin{mdframed}
 
       \begin{center}
-        \framebox{$\entails{\Delta; \Gamma}{\hastype{t}{\tau}}$}
+        \framebox{$\entails{\icontext; \gcontext}{\hastype{\lterm}{\tmono}}$}
       \end{center}
 
       \medskip
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
-          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
+          \AxiomC{$\hastype{\lvar}{\tforall{\overline{\tvar}}{\icontext_1}{\tmono}} \in \gcontext$}
+          \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
         \RightLabel{(\textsc{T-Variable})}
-        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}$}
+        \BinaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lvar}{\sub{\tmono}{\overline{\tvar}}{\overline{\tmono}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\hastype{t}{\tau_2}}$}
+          \AxiomC{$\entails{\icontext; \gcontext, \hastype{\lvar}{\tforall{\tvarempty}{\iempty}{\tmono_1}}}{\hastype{\lterm}{\tmono_2}}$}
         \RightLabel{(\textsc{T-Abstraction})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}$}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\labs{\lvar}{\lterm}}{\tarrow{\tmono_1}{\tmono_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tarrow{\tmono_2}{\tmono_1}}}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
         \RightLabel{(\textsc{T-Application})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\hastype{\app{t_1}{t_2}}{\tau_1}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\Delta_2; \Gamma, \hastype{x}{\generalize{\Delta_1}{\Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
+          \AxiomC{$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+          \AxiomC{$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\gcontext}{\tmono_1}}}{\hastype{\lterm_2}{\tmono_2}}$}
         \RightLabel{(\textsc{T-Let})}
-        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}$}
+        \BinaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_1}$} {$\entails{\Delta_1; \Gamma}{\hastype{t_1}{\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}}}}$} {$\entails{\sigma, \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma, \Delta_2$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_1}$} {$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\sub{\tmono_1}{\overline{\tvar}}{\overline{\tmono}}}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly, \icontext_2$ coherent}}}
         \RightLabel{(\textsc{T-Provide})}
-        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}$}
+        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\preorder{\tabs{\epsilon}{\epsilon}{\tau}, \epsilon}{\Delta}$}
+          \AxiomC{$\preorder{\tforall{\tvarempty}{\iempty}{\tmono}, \iempty}{\icontext}$}
         \RightLabel{(\textsc{T-Implicit})}
-          \UnaryInfC{$\entails{\Delta; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
+          \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
       \end{prooftree}
 
-      \[ \inst{\tabs{\overline{\alpha_1}}{\epsilon}{\tau}} = \sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}} \qquad \text{where } \overline{\alpha_2} \text{ new} \]
+      \[ \tinst{\tforall{\overline{\tvar_1}}{\iempty}{\tmono}} = \sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
-      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
+      \[ \tgen{\icontext}{\gcontext}{\tmono} = \tforall{\overline{\tvar}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \freevars{\gcontext} \]
 
     \end{mdframed}
     \caption{Typing rules}
@@ -348,56 +366,56 @@
     \begin{mdframed}
 
       \begin{center}
-        \framebox{$\entails{\theta; \Delta; \Delta; \Gamma}{\hastype{t}{\tau}}$}
+        \framebox{$\entails{\ssub; \icontext; \icontext; \gcontext}{\hastype{\lterm}{\tmono}}$}
       \end{center}
 
       \medskip
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha_1}}{\Delta}{\tau}} \in \Gamma$}
-          \AxiomC{$\overline{\alpha_2}$ new}
+          \AxiomC{$\hastype{\lvar}{\tforall{\overline{\tvar_1}}{\icontext}{\tmono}} \in \gcontext$}
+          \AxiomC{$\overline{\tvar_2}$ new}
         \RightLabel{(\textsc{I-Variable})}
-        \BinaryInfC{$\entails{\epsilon; \epsilon; \inst{\sub{\Delta}{\overline{\alpha_1}}{\overline{\alpha_2}}}; \Gamma}{\hastype{x}{\sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}}}}$}
+        \BinaryInfC{$\entails{\sempty; \iempty; \tinst{\sub{\icontext}{\overline{\tvar_1}}{\overline{\tvar_2}}}; \gcontext}{\hastype{\lvar}{\sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\theta; \Delta_1; \Delta_2; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\alpha}}}{\hastype{t}{\tau}}$}
-          \AxiomC{$\alpha$ new}
+          \AxiomC{$\entails{\ssub; \icontext_1; \icontext_2; \gcontext, \hastype{\lvar}{\tforall{\tvarempty}{\iempty}{\tvar}}}{\hastype{\lterm}{\tmono}}$}
+          \AxiomC{$\tvar$ new}
         \RightLabel{(\textsc{I-Abstraction})}
-        \BinaryInfC{$\entails{\theta; \theta \left( \Delta_1; \Delta_2 \right); \Gamma}{\hastype{\labs{x}{t}}{\theta \left( \larrow{\alpha}{\tau}} \right) }$}
+        \BinaryInfC{$\entails{\ssub; \ssub \parens{\icontext_1; \icontext_2}; \gcontext}{\hastype{\labs{\lvar}{\lterm}}{\ssub \parens{\tarrow{\tvar}{\tmono}}} }$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\larrow{\tau_3}{\tau_1}}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\theta_3 = \lub{\lub{\theta_1}{\theta_2}}{\mgu{\tau_3}{\tau_2}}$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tarrow{\tmono_3}{\tmono_1}}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\ssub_3 = \slub{\slub{\ssub_1}{\ssub_2}}{\tmgu{\tmono_3}{\tmono_2}}$}}}
         \RightLabel{(\textsc{I-Application})}
-        \UnaryInfC{$\entails{\theta_3; \theta_3 \left( \Delta_4, \Delta_5 \right); \theta_3 \left( \Delta_1, \Delta_2\right); \Gamma}{\hastype{\app{t_1}{t_2}}{\theta_3 \tau_1}}$}
+        \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_4, \icontext_5}; \ssub_3 \parens{\icontext_1, \icontext_2}; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\ssub_3 \tmono_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\theta_1; \Delta_3; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$}
-          \AxiomC{$\entails{\theta_2; \Delta_4; \Delta_2; \Gamma, \hastype{x}{\generalize{\Delta_1}{\theta_1 \Gamma}{\tau_1}}}{\hastype{t_2}{\tau_2}}$}
-          \AxiomC{$\theta_3 = \lub{\theta_1}{\theta_2}$}
+          \AxiomC{$\entails{\ssub_1; \icontext_3; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+          \AxiomC{$\entails{\ssub_2; \icontext_4; \icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\ssub_1 \gcontext}{\tmono_1}}}{\hastype{\lterm_2}{\tmono_2}}$}
+          \AxiomC{$\ssub_3 = \slub{\ssub_1}{\ssub_2}$}
         \RightLabel{(\textsc{I-Let})}
-        \TrinaryInfC{$\entails{\theta_3; \theta_3 \left( \Delta_3, \Delta_4 \right); \theta_3 \Delta_2; \Gamma}{\hastype{\llet{x}{t_1}{t_2}}{\theta_3 \tau_2}}$}
+        \TrinaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_3, \icontext_4}; \ssub_3 \icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\ssub_3 \tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\theta_1; \Delta_4; \Delta_1; \Gamma}{\hastype{t_1}{\tau_1}}$} {$\entails{\theta_2; \Delta_5; \Delta_2; \Gamma}{\hastype{t_2}{\tau_2}}$} {$\sigma = \tabs{\overline{\alpha_2}}{\Delta_6}{\tau_3}$} {$\sub{\tau_1}{\overline{\alpha_1}}{\overline{\tau_1}} = \sub{\tau_3}{\overline{\alpha_2}}{\overline{\tau_2}}$} {$\Delta_3 = \{ \tabs{\overline{\alpha}}{\Delta}{\tau} \in \Delta_2 | \ \mgu{\tau}{\tau_1} = \bot \}$} {$\theta_3 = \lub{\theta_1}{\theta_2}$} {$\theta_3 \left( \sigma, \Delta_4, \Delta_5 \right)$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly = \tforall{\overline{\tvar_2}}{\icontext_6}{\tmono_3}$} {$\sub{\tmono_1}{\overline{\tvar_1}}{\overline{\tmono_1}} = \sub{\tmono_3}{\overline{\tvar_2}}{\overline{\tmono_2}}$} {$\icontext_3 = \{ \tforall{\overline{\tvar}}{\icontext}{\tmono} \in \icontext_2 | \ \tmgu{\tmono}{\tmono_1} = \bot \}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}$ coherent}}}
         \RightLabel{(\textsc{I-Provide})}
-        \UnaryInfC{$\entails{\theta_3; \theta_3 \left( \sigma, \Delta_4, \Delta_5 \right); \theta_3 \Delta_3; \Gamma}{\hastype{\provide{t_1}{\sigma}{t_2}}{\theta_3 \tau_2}}$}
+        \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}; \ssub_3 \icontext_3; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\ssub_3 \tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{I-Implicit})}
-        \UnaryInfC{$\entails{\epsilon; \epsilon; \tabs{\epsilon}{\epsilon}{\tau}, \epsilon; \Gamma}{\hastype{\implicit{\tau}}{\tau}}$}
+        \UnaryInfC{$\entails{\sempty; \iempty; \tforall{\tvarempty}{\iempty}{\tmono}, \iempty; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
       \end{prooftree}
 
-      \[ \inst{\tabs{\overline{\alpha_1}}{\epsilon}{\tau}} = \sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}} \qquad \text{where } \overline{\alpha_2} \text{ new} \]
+      \[ \tinst{\tforall{\overline{\tvar_1}}{\iempty}{\tmono}} = \sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
-      \[ \inst{\tabs{\overline{\alpha_1}}{\Delta_1}{\tau}, \Delta_2} = \tabs{\epsilon}{\epsilon}{\sub{\tau}{\overline{\alpha_1}}{\overline{\alpha_2}}}, \inst{\sub{\Delta_1}{\overline{\alpha_1}}{\overline{\alpha_2}}}, \inst{\Delta_2} \qquad \text{where } \overline{\alpha_2} \text{ new} \]
+      \[ \tinst{\tforall{\overline{\tvar_1}}{\icontext_1}{\tmono}, \icontext_2} = \tforall{\tvarempty}{\iempty}{\sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tinst{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tinst{\icontext_2} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
-      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
+      \[ \tgen{\icontext}{\gcontext}{\tmono} = \tforall{\overline{\tvar}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \freevars{\gcontext} \]
 
     \end{mdframed}
     \caption{Inference rules}
@@ -407,58 +425,58 @@
   \begin{figure}[h!]
     \begin{mdframed}
       \begin{center}
-        \framebox{$\trans{\Delta}{d}$}
+        \framebox{$\trans{\icontext}{d}$}
       \end{center}
 
-      \[ \trans{\sigma_1, \sigma_2, \ldots, \sigma_n}{(\langle \sigma_1 \rangle, \langle \sigma_2 \rangle, \ldots, \langle \sigma_n \rangle)} \]
+      \[ \trans{\tpoly_1, \tpoly_2, \ldots, \tpoly_n}{(\langle \tpoly_1 \rangle, \langle \tpoly_2 \rangle, \ldots, \langle \tpoly_n \rangle)} \]
 
       \vspace{0.3cm}
 
       \begin{center}
-        \framebox{$\entails{\Delta; \Gamma}{\trans{\hastype{t}{\tau}}{t}}$}
+        \framebox{$\entails{\icontext; \gcontext}{\trans{\hastype{\lterm}{\tmono}}{\lterm}}$}
       \end{center}
 
       \medskip
 
       \begin{prooftree}
-          \AxiomC{$\hastype{x}{\tabs{\overline{\alpha}}{\Delta_1}{\tau}} \in \Gamma$}
-          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
+          \AxiomC{$\hastype{\lvar}{\tforall{\overline{\tvar}}{\icontext_1}{\tmono}} \in \gcontext$}
+          \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
         \RightLabel{(\textsc{S-Variable})}
-        \BinaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{x}{\sub{\tau}{\overline{\alpha}}{\overline{\tau}}}}{x}}$}
+        \BinaryInfC{$\entails{\icontext_2; \gcontext}{\trans{\hastype{\lvar}{\sub{\tmono}{\overline{\tvar}}{\overline{\tmono}}}}{\lvar}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma, \hastype{x}{\tabs{\epsilon}{\epsilon}{\tau_1}}}{\trans{\hastype{t}{\tau_2}}{t'}}$}
+          \AxiomC{$\entails{\icontext; \gcontext, \hastype{\lvar}{\tforall{\tvarempty}{\iempty}{\tmono_1}}}{\trans{\hastype{\lterm}{\tmono_2}}{\lterm'}}$}
         \RightLabel{(\textsc{S-Abstraction})}
-        \UnaryInfC{$\entails{\Delta; \Gamma}{\trans{\hastype{\labs{x}{t}}{\larrow{\tau_1}{\tau_2}}}{\labs{x}{t'}}}$}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\trans{\hastype{\labs{\lvar}{\lterm}}{\tarrow{\tmono_1}{\tmono_2}}}{\labs{\lvar}{\lterm'}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\Delta; \Gamma}{\trans{\hastype{t_1}{\larrow{\tau_2}{\tau_1}}}{t_1'}}$}
-          \AxiomC{$\entails{\Delta; \Gamma}{\trans{\hastype{t_2}{\tau_2}}}{t_2'}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\trans{\hastype{\lterm_1}{\tarrow{\tmono_2}{\tmono_1}}}{\lterm_1'}}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\trans{\hastype{\lterm_2}{\tmono_2}}}{\lterm_2'}$}
         \RightLabel{(\textsc{S-Application})}
-        \BinaryInfC{$\entails{\Delta; \Gamma}{\trans{\hastype{\app{t_1}{t_2}}{\tau_1}}{\app{t_1'}{t_2'}}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\trans{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_1}}{\lapp{\lterm_1'}{\lterm_2'}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\Delta_1; \Gamma}{\trans{\hastype{t_1}{\tau_1}}}{t_1'}$} {$\trans{\Delta_1}{d}$} {$\entails{\Delta_2; \Gamma, \hastype{x}{\generalize{\Delta_1}{\Gamma}{\tau_1}}}{\trans{\hastype{t_2}{\tau_2}}}{t_2'}$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\icontext_1; \gcontext}{\trans{\hastype{\lterm_1}{\tmono_1}}}{\lterm_1'}$} {$\trans{\icontext_1}{d}$} {$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\gcontext}{\tmono_1}}}{\trans{\hastype{\lterm_2}{\tmono_2}}}{\lterm_2'}$}}}
         \RightLabel{(\textsc{S-Let})}
-        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{\llet{x}{t_1}{t_2}}{\tau_2}}{\llet{x}{\labs{d}{t_1'}}{t_2'}}}$}
+        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\trans{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}{\llet{\lvar}{\labs{d}{\lterm_1'}}{\lterm_2'}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_1}$} {$\trans{\Delta_1}{d}$} {$\entails{\Delta_1; \Gamma}{\trans{\hastype{t_1}{\sub{\tau_1}{\overline{\alpha}}{\overline{\tau}}}}{t_1'}}$} {$\entails{\sigma, \Delta_2; \Gamma}{\trans{\hastype{t_2}{\tau_2}}{t_2'}}$}}}
+          \AxiomC{\Shortstack[c]{{$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_1}$} {$\trans{\icontext_1}{d}$} {$\entails{\icontext_1; \gcontext}{\trans{\hastype{\lterm_1}{\sub{\tmono_1}{\overline{\tvar}}{\overline{\tmono}}}}{\lterm_1'}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\trans{\hastype{\lterm_2}{\tmono_2}}{\lterm_2'}}$}}}
         \RightLabel{(\textsc{S-Provide})}
-        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{\provide{t_1}{\sigma}{t_2}}{\tau_2}}{(\labs{\langle \sigma \rangle}{t_2'}) (\labs{d}{t_1'})}}$}
+        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\trans{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}{(\labs{\langle \tpoly \rangle}{\lterm_2'}) (\labs{d}{\lterm_1'})}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tau_1 = \sub{\tau_2}{\overline{\alpha}}{\overline{\tau}}$} {$\sigma = \tabs{\overline{\alpha}}{\Delta_1}{\tau_2}$} {$\sigma \in \Delta_2$} {$\preorder{\sub{\Delta_1}{\overline{\alpha}}{\overline{\tau}}}{\Delta_2}$} {$\entails{\Delta_2; \Gamma}{\trans{\hastype{\left<\sigma\right>}{\tau_3}}{\left<\sigma\right>'}}$}}}
+          \AxiomC{\Shortstack[c]{{$\tmono_1 = \sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}}$} {$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_2}$} {$\tpoly \in \icontext_2$} {$\preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_2}$} {$\entails{\icontext_2; \gcontext}{\trans{\hastype{\left<\tpoly\right>}{\tmono_3}}{\left<\tpoly\right>'}}$}}}
         \RightLabel{(\textsc{S-Implicit})}
-        \UnaryInfC{$\entails{\Delta_2; \Gamma}{\trans{\hastype{\implicit{\tau_1}}{\tau_1}}{\left<\sigma\right>'}}$}
+        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\trans{\hastype{\limplicit{\tmono_1}}{\tmono_1}}{\left<\tpoly\right>'}}$}
       \end{prooftree}
 
-      \[ \generalize{\Delta}{\Gamma}{\tau} = \tabs{\overline{\alpha}}{\Delta}{\tau} \qquad \text{where } \overline{\alpha} = \left( \freevars{\Delta}, \freevars{\tau} \right) \setminus \freevars{\Gamma} \]
+      \[ \tgen{\icontext}{\gcontext}{\tmono} = \tforall{\overline{\tvar}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \freevars{\gcontext} \]
 
     \end{mdframed}
     \caption{Translation semantics}
