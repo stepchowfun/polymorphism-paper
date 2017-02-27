@@ -112,13 +112,18 @@
 
 
 
+\newtheorem{case}{Case}
+
+
+
 % Misc
 \newcommand\thesystem{\left\langle\lambda\right\rangle}
 \newcommand\parens[1]{\left(#1\right)}
 \newcommand\entails[2]{#1 \vdash #2}
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\freevars[1]{\text{free}\parens{#1}}
-\newcommand\preorder[2]{#1 \sqsubseteq #2}
+\newcommand\preordersym{\sqsubseteq}
+\newcommand\preorder[2]{#1 \preordersym #2}
 
 % Terms
 \newcommand\lterm{t}
@@ -238,6 +243,13 @@
           \AxiomC{}
         \RightLabel{(\textsc{R-Reflexivity})}
         \UnaryInfC{$\preorder{\icontext}{\icontext}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\preorder{\Delta_1}{\Delta_2}$}
+          \AxiomC{$\preorder{\Delta_2}{\Delta_3}$}
+        \RightLabel{(\textsc{R-Transitivity})}
+        \BinaryInfC{$\preorder{\Delta_1}{\Delta_3}$}
       \end{prooftree}
 
       \begin{prooftree}
