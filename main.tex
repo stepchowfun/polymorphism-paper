@@ -43,35 +43,6 @@
 % Paper history
 \received{February 2017}
 
-
-% Misc
-\newcommand\lambdaarobase{\lambda_@}
-\newcommand\entails[2]{#1 \vdash #2}
-\newcommand\hastype[2]{#1 : #2}
-\newcommand\freevars[1]{\text{free} \left( #1 \right)}
-\newcommand\generalize[3]{\text{gen}\left( #1, #2, #3 \right)}
-\newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
-\newcommand\concat[2]{#1 \mathbin{+\!+} #2}
-
-% Terms
-\newcommand\labs[2]{\lambda #1 \ . \ #2}
-\newcommand\app[2]{#1 \ #2}
-\newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
-\newcommand\provide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
-\newcommand\implicit[1]{ @ \! \left( #1 \right) }
-
-% Types
-\newcommand\larrow[2]{#1 \rightarrow #2}
-\newcommand\tabs[3]{\forall #1 \ . \ #2 \Rightarrow #3}
-\newcommand\inst[1]{\text{inst}(#1)}
-\newcommand\mgu[2]{\text{mgu}\left(#1, #2\right)}
-
-% Inference
-\newcommand\lub[2]{#1 \vee #2}
-
-% Translation
-\newcommand\trans[2]{#1 \leadsto #2}
-
 % Document starts
 \begin{document}
 % Title portion
@@ -138,6 +109,38 @@
 %
 % End generated code
 %
+
+
+
+% Misc
+\newcommand\lambdaarobase{\lambda_@}
+\newcommand\entails[2]{#1 \vdash #2}
+\newcommand\hastype[2]{#1 : #2}
+\newcommand\freevars[1]{\text{free} \left( #1 \right)}
+\newcommand\generalize[3]{\text{gen}\left( #1, #2, #3 \right)}
+\newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
+\newcommand\concat[2]{#1 \mathbin{+\!+} #2}
+
+% Terms
+\newcommand\labs[2]{\lambda #1 \ . \ #2}
+\newcommand\app[2]{#1 \ #2}
+\newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
+\newcommand\provide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
+\newcommand\implicit[1]{ @ \! \left( #1 \right) }
+
+% Types
+\newcommand\larrow[2]{#1 \rightarrow #2}
+\newcommand\tabs[3]{\forall #1 \ . \ #2 \Rightarrow #3}
+\newcommand\inst[1]{\text{inst}(#1)}
+\newcommand\mgu[2]{\text{mgu}\left(#1, #2\right)}
+
+% Inference
+\newcommand\lub[2]{#1 \vee #2}
+
+% Translation
+\newcommand\trans[2]{#1 \leadsto #2}
+
+
 
 % We no longer use \terms command
 \terms{}
