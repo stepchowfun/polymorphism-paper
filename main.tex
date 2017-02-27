@@ -242,13 +242,6 @@
 
       \begin{prooftree}
           \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
-          \AxiomC{$\preorder{\icontext_2}{\icontext_3}$}
-        \RightLabel{(\textsc{R-Transitivity})}
-        \BinaryInfC{$\preorder{\icontext_1}{\icontext_3}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
         \RightLabel{(\textsc{R-Weakening})}
         \UnaryInfC{$\preorder{\icontext_1}{\tpoly, \icontext_2}$}
       \end{prooftree}
@@ -260,10 +253,9 @@
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{$\preorder{\icontext_1}{\sub{\tforall{\tvarempty}{\iempty}{\tmono}}{\overline{\tvar}}{\overline{\tmono}}, \icontext_2}$}
-          \AxiomC{$\preorder{\tforall{\overline{\tvar}}{\icontext_3}{\tmono}, \sub{\icontext_3}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_2}$}
+          \AxiomC{$\tforall{\overline{\tvar}}{\icontext_1}{\tmono}, \preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}, \icontext_2}{\icontext_3}$}
         \RightLabel{(\textsc{R-Specialization})}
-        \BinaryInfC{$\preorder{\icontext_1}{\icontext_2}$}
+        \UnaryInfC{$\sub{\tforall{\tvarempty}{\iempty}{\tmono}}{\overline{\tvar}}{\overline{\tmono}}, \tforall{\overline{\tvar}}{\icontext_1}{\tmono}, \preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}, \icontext_2}{\icontext_3}$}
       \end{prooftree}
 
     \end{mdframed}
