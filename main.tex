@@ -148,12 +148,12 @@
 % Type contexts
 \newcommand\gcontext{\Gamma}
 \newcommand\gempty{\epsilon_{\gcontext}}
-\newcommand\gconcat[2]{#1 \mathbin{+\!+} #2}
+\newcommand\gconcat[2]{#1, #2}
 
 % Implicit contexts
 \newcommand\icontext{\Delta}
 \newcommand\iempty{\epsilon_{\icontext}}
-\newcommand\iconcat[2]{#1 \mathbin{+\!+} #2}
+\newcommand\iconcat[2]{#1, #2}
 
 % Substitutions
 \newcommand\ssub{\theta}
@@ -182,7 +182,13 @@
 
 \section{Introduction}
 
-  We introduce $\thesystem$.
+  Suppose we wish to write a polymorphic function
+
+  \[ \text{square } x = x \cdot x \]
+
+  \noindent defined over any type of value supporting multiplication. What type should we ascribe to this function?
+
+  The idea of providing a separate definition for multiplication over various types is called \emph{ad hoc polymorphism}.
 
 \section{Types for implicit parameters}
 
@@ -347,7 +353,14 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_1}$} {$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\sub{\tmono_1}{\overline{\tvar}}{\overline{\tmono}}}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly, \icontext_2$ coherent}}}
+          \AxiomC{\Shortstack[c]{
+            {$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+            {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
+            {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$}
+            {$\tgen{\icontext_2}{\gcontext}{\tmono_1} = \tforall{\overline{\tvar_2}}{\icontext_3}{\tmono_4}$}
+            {$\tmono_3 = \sub{\tmono_4}{\overline{\tvar_2}}{\overline{\tau_6}}$}
+            {$\overline{\alpha_1} \notin \freevars{\tforall{\overline{\tvar_2}}{\icontext_3}{\tmono_4}}$}
+            {$\tpoly, \icontext_2$ coherent}}}
         \RightLabel{(\textsc{T-Provide})}
         \UnaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
