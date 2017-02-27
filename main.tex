@@ -164,7 +164,7 @@
 % Translation semantics
 \newcommand\utrans[2]{#1 \leadsto #2}
 \newcommand\uelab[2]{#1 \hookrightarrow #2}
-\newcommand\utovar[1]{\langle #1 \rangle}
+\newcommand\utovar[1]{\| #1 \|}
 
 
 
@@ -407,7 +407,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly = \tforall{\overline{\tvar_2}}{\icontext_6}{\tmono_3}$} {$\sub{\tmono_1}{\overline{\tvar_1}}{\overline{\tmono_1}} = \sub{\tmono_3}{\overline{\tvar_2}}{\overline{\tmono_2}}$} {$\icontext_3 = \{ \tforall{\overline{\tvar}}{\icontext}{\tmono} \in \icontext_2 | \ \tmgu{\tmono}{\tmono_1} = \bot \}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}$ coherent}}}
+        \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly = \tforall{\overline{\tvar_2}}{\icontext_6}{\tmono_3}$} {$\sub{\tmono_1}{\overline{\tvar_1}}{\overline{\tmono_1}} = \sub{\tmono_3}{\overline{\tvar_2}}{\overline{\tmono_2}}$} {$\icontext_3 = \{\preorder{\tforall{\overline{\tvar}}{\icontext}{\tmono}}{\icontext_2} | \ \tmgu{\tmono}{\tmono_1} = \bot \}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}$ coherent}}}
         \RightLabel{(\textsc{I-Provide})}
         \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}; \ssub_3 \icontext_3; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\ssub_3 \tmono_2}}$}
       \end{prooftree}
@@ -437,7 +437,7 @@
         \framebox{$\utrans{\icontext}{d}$}
       \end{center}
 
-      \[ \utrans{\tpoly_1, \tpoly_2, \ldots, \tpoly_n}{(\langle \tpoly_1 \rangle, \langle \tpoly_2 \rangle, \ldots, \langle \tpoly_n \rangle)} \]
+      \[ \utrans{\tpoly_1, \tpoly_2, \ldots, \tpoly_n}{(\utovar{\tpoly_1}, \utovar{\tpoly_2}, \ldots, \utovar{\tpoly_n})} \]
 
       \vspace{0.3cm}
 
@@ -460,14 +460,14 @@
       \begin{prooftree}
           \AxiomC{$\tpoly = \tforall{\overline{\tvar}}{\icontext_2}{\tmono}$}
           \AxiomC{$\utrans{\icontext_2}{d}$}
-          \AxiomC{$\tpoly \in \icontext_1$}
+          \AxiomC{$\iconcat{\icontext_3}{\tpoly,\icontext_4} = \icontext_1$}
           \AxiomC{$\entails{\icontext_1}{\uelab{d}{e}}$}
         \RightLabel{\textsc{(E-Application)}}
         \QuaternaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly}}{\lapp{\utovar{\tpoly}}{e}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_1 \not \in \icontext_1$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\tpoly_2 \in \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
+        \AxiomC{\Shortstack[c]{{\textsc{E-Application} does not apply} {$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\iconcat{\icontext_3}{\tpoly_2,\icontext_4} = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
         \RightLabel{(\textsc{E-Lookup})}
         \UnaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly_1}}}{t}$}
       \end{prooftree}
@@ -483,7 +483,7 @@
         \framebox{$\utrans{\icontext}{d}$}
       \end{center}
 
-      \[ \utrans{\tpoly_1, \tpoly_2, \ldots, \tpoly_n}{(\langle \tpoly_1 \rangle, \langle \tpoly_2 \rangle, \ldots, \langle \tpoly_n \rangle)} \]
+      \[ \utrans{\tpoly_1, \tpoly_2, \ldots, \tpoly_n}{(\utovar{\tpoly_1}, \utovar{\tpoly_2}, \ldots, \utovar{\tpoly_n})} \]
 
       \vspace{0.3cm}
 
@@ -524,7 +524,7 @@
       \begin{prooftree}
           \AxiomC{\Shortstack[c]{{$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_1}$} {$\utrans{\icontext_1}{d}$} {$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\sub{\tmono_1}{\overline{\tvar}}{\overline{\tmono}}}}{\lterm_1'}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{\lterm_2'}}$} {$\tpoly, \icontext_2$ coherent}}}
         \RightLabel{(\textsc{S-Provide})}
-        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}{(\labs{\langle \tpoly \rangle}{\lterm_2'}) (\labs{d}{\lterm_1'})}}$}
+        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}{(\labs{\utovar{\tpoly}}{\lterm_2'}) (\labs{d}{\lterm_1'})}}$}
       \end{prooftree}
 
       \begin{prooftree}
