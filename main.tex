@@ -183,9 +183,9 @@
 
   Suppose we wish to write a polymorphic function {\tt square x = x * x} defined over any type supporting multiplication. This paper is concerned with the age-old question: what type should we ascribe to this function?
 
-  One would like to be able to define multiplication on integers differently than multiplication on matrices, for example. Christopher Strachey called this kind of overloading \emph{ad hoc polymorphism}, and Haskell's type classes \cite{typeclasses} offer a principled approach.
+  One would like to be able to define multiplication on integers differently than multiplication on matrices, for example, and furthermore one should be able to define generic functions in terms of these overloaded operations. Haskell's type classes \cite{typeclasses} offer a principled approach to this kind of overloading. However, type classes are a complex system that we seek to generalize into simpler language features.
 
-
+  To that end, we introduce a conservative extension to Hindley-Milner that supports type-based implicit parameters.
 
 \section{Types for implicit parameters}
 
