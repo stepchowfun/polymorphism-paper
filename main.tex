@@ -181,9 +181,9 @@
 
 \section{Introduction}
 
-  Suppose we wish to write a polymorphic function {\tt square x = x * x} defined over any type supporting multiplication. This paper is concerned with the question: what type should we ascribe to this function?
+  Suppose we wish to write a polymorphic function {\tt square x = x * x} defined over any type supporting multiplication. This paper is concerned with the age-old question: what type should we ascribe to this function?
 
-  One would like to be able to define multiplication on integers differently than multiplication on matrices, for example. This kind of overloading is called ad hoc polymorphism.
+  One would like to be able to define multiplication on integers differently than multiplication on matrices, for example. Christopher Strachey called this kind of overloading \emph{ad hoc polymorphism}, and Haskell's type classes \cite{typeclasses} offer a principled approach.
 
 
 
