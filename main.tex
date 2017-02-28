@@ -409,17 +409,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{
-            {$\entails{\ssub_1; \icontext_1; \icontext_2; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
-            {$\entails{\ssub_2; \icontext_3; \icontext_4; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
-            {$\ssub_3 \parens{\icontext_1, \icontext_3, \tpoly}$ coherent}
-            {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_5}{\tmono_3}$}
-            {$\tmono_3 = \sub{\tmono_1}{\overline{\tvar_2}}{\overline{\tmono_4}}$}
-            {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$}
-            {$\preorder{\icontext_2}{\icontext_5}$}
-            {$\overline{\tvar_2} = \freevars{\tmono_1} \setminus \freevars{\gcontext}$}
-            {$\icontext_6 = \{\tforall{\overline{\tvar_3}}{\icontext_7}{\tmono_5} : \icontext_4 | \ \tmgu{\tmono_5}{\tmono_1} = \bot \}$}
-          }}
+          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_1; \icontext_2; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_3; \icontext_4; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\ssub_3 \parens{\icontext_1, \icontext_3, \tpoly}$ coherent} {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_5}{\tmono_3}$} {$\tmono_3 = \sub{\tmono_1}{\overline{\tvar_2}}{\overline{\tmono_4}}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\preorder{\icontext_2}{\icontext_5}$} {$\overline{\tvar_2} = \freevars{\tmono_1} \setminus \freevars{\gcontext}$} {$\icontext_6 = \{\tforall{\overline{\tvar_3}}{\icontext_7}{\tmono_5} : \icontext_4 | \ \tmgu{\tmono_5}{\tmono_1} = \bot \}$}}}
         \RightLabel{(\textsc{I-Provide})}
         \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_1, \icontext_3, \tpoly}; \ssub_3 \icontext_6; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\ssub_3 \tmono_2}}$}
       \end{prooftree}
