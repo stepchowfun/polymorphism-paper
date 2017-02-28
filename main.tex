@@ -6,6 +6,7 @@
 \usepackage{mdframed}
 \usepackage{mathtools}
 \usepackage{stackengine} % For stacking axioms
+\usepackage{listings} % For typesetting code
 
 \usepackage[ruled]{algorithm2e} % For algorithms
 \renewcommand{\algorithmcfname}{ALGORITHM}
@@ -184,11 +185,13 @@
 
   Suppose we wish to write a polymorphic function
 
-  \[ \text{square } x = x \cdot x \]
+  \[ \texttt{square x = x * x} \]
 
   \noindent defined over any type of value supporting multiplication. What type should we ascribe to this function?
 
-  The idea of providing a separate definition for multiplication over various types is called \emph{ad hoc polymorphism}.
+  The idea of being able to provide a separate definition for multiplication over various types is called \emph{ad hoc polymorphism}.
+
+
 
 \section{Types for implicit parameters}
 
@@ -410,7 +413,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly = \tforall{\overline{\tvar_2}}{\icontext_6}{\tmono_3}$} {$\sub{\tmono_1}{\overline{\tvar_1}}{\overline{\tmono_1}} = \sub{\tmono_3}{\overline{\tvar_2}}{\overline{\tmono_2}}$} {$\icontext_3 = \{\preorder{\tforall{\overline{\tvar}}{\icontext}{\tmono}}{\icontext_2} | \ \tmgu{\tmono}{\tmono_1} = \bot \}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly = \tforall{\overline{\tvar_2}}{\icontext_6}{\tmono_3}$} {$\sub{\tmono_1}{\overline{\tvar_1}}{\overline{\tmono_1}} = \sub{\tmono_3}{\overline{\tvar_2}}{\overline{\tmono_2}}$} {$\icontext_3 = \{\preorder{\tforall{\overline{\tvar}}{\icontext}{\tmono}}{\icontext_2} | \ \tmgu{\tmono}{\tmono_1} = \bot \}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}$ coherent}}}
         \RightLabel{(\textsc{I-Provide})}
         \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}; \ssub_3 \icontext_3; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\ssub_3 \tmono_2}}$}
       \end{prooftree}
@@ -470,7 +473,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{\Shortstack[c]{{\textsc{E-Application} does not apply} {$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\iconcat{\icontext_3}{\tpoly_2,\icontext_4} = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
+          \AxiomC{\Shortstack[c]{{\textsc{E-Application} does not apply} {$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\iconcat{\icontext_3}{\tpoly_2,\icontext_4} = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
         \RightLabel{(\textsc{E-Lookup})}
         \UnaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly_1}}}{t}$}
       \end{prooftree}
