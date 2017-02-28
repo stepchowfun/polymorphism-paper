@@ -181,13 +181,9 @@
 
 \section{Introduction}
 
-  Suppose we wish to write a polymorphic function
+  Suppose we wish to write a polymorphic function {\tt square x = x * x} defined over any type supporting multiplication. This paper is concerned with the question: what type should we ascribe to this function?
 
-  \[ \texttt{square x = x * x} \]
-
-  \noindent defined over any type of value supporting multiplication. What type should we ascribe to this function?
-
-  The idea of being able to provide a separate definition for multiplication over various types is called \emph{ad hoc polymorphism}.
+  One would like to be able to define multiplication on integers differently than multiplication on matrices, for example. This kind of overloading is called ad hoc polymorphism.
 
 
 
