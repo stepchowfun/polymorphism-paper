@@ -459,20 +459,18 @@
 
       \begin{prooftree}
           \AxiomC{$\tpoly = \tforall{\overline{\tvar}}{\icontext_2}{\tmono}$}
-          \AxiomC{$\icontext_3, \tpoly,\icontext_4 = \icontext_1$}
           \AxiomC{$\utrans{\icontext_2}{d}$}
+          \AxiomC{$\icontext_3, \tpoly,\icontext_4 = \icontext_1$}
           \AxiomC{$\entails{\icontext_1}{\uelab{d}{e}}$}
         \RightLabel{\textsc{(E-Application)}}
         \QuaternaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly}}{\lapp{\utovar{\tpoly}}{e}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\icontext_3, \tpoly_2,\icontext_4 = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$} {$\entails{\icontext_1}{\uelab{\utovar{\tpoly_2}}{t}}$}}}
+          \AxiomC{\Shortstack[c]{{$\icontext_5, \tpoly_1, \icontext_6 \neq \icontext_1$ for any $\icontext_5, \icontext_6$} {$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\icontext_3, \tpoly_2,\icontext_4 = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$} {$\entails{\icontext_1}{\uelab{\utovar{\tpoly_2}}{t}}$}}}
         \RightLabel{(\textsc{E-Lookup})}
         \UnaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly_1}}}{t}$}
       \end{prooftree}
-
-      \[ \text{\textsc{E-Lookup} applies only if \textsc{E-Application} does not} \]
 
     \end{mdframed}
     \caption{Elaboration(?) semantics}
@@ -524,13 +522,12 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_1}$} {$\utrans{\icontext_1}{d}$} {$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\sub{\tmono_1}{\overline{\tvar}}{\overline{\tmono}}}}{\lterm_1'}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{\lterm_2'}}$} {$\tpoly, \icontext_2$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\overline{\tvar_1} \text{ new}$} {$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}{t_1'}}$} {$\entails{\icontext_2, \tpoly; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{t_2'}}$} {$\icontext_2, \tpoly$ coherent} {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$} {$\tmono_3 = \sub{\tmono_1}{\overline{\tvar_2}}{\overline{\tmono_4}}$} {$\overline{\tvar_2} = \freevars{\tmono_1} \setminus \parens{\freevars{\icontext_1}, \freevars{\gcontext}}$}}}
         \RightLabel{(\textsc{S-Provide})}
         \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}{(\labs{\utovar{\tpoly}}{\lterm_2'}) (\labs{d}{\lterm_1'})}}$}
       \end{prooftree}
 
       \begin{prooftree}
-         % \AxiomC{\Shortstack[c]{{$\tmono_1 = \sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}}$} {$\tpoly = \tforall{\overline{\tvar}}{\icontext_1}{\tmono_2}$} {$\tpoly \in \icontext_2$} {$\preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_2}$} {$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\utovar{\tpoly}}{\tmono_3}}{\utovar{\tpoly'}}}$}}}
           \AxiomC{$\preorder{\tforall{\tvarempty}{\iempty}{\tmono}, \iempty}{\icontext}$}
           \AxiomC{$\entails{\icontext}{\uelab{\utovar{\tforall{\tvarempty}{\iempty}{\tmono}}}{d}}$}
         \RightLabel{(\textsc{S-Implicit})}
