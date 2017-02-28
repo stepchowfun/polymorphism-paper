@@ -347,13 +347,20 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
-          \AxiomC{$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\gcontext}{\tmono_1}}}{\hastype{\lterm_2}{\tmono_2}}$}
+          \AxiomC{$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\tmono_1}{\freevars{\gcontext}}}}{\hastype{\lterm_2}{\tmono_2}}$}
         \RightLabel{(\textsc{T-Let})}
         \BinaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\overline{\tvar_3} \text{ new}$} {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$} {$\entails{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_3}}; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tgen{\parens{\iconcat{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_3}}}{\icontext_2}}}{\gcontext}{\tmono_1} = \tforall{\overline{\tvar_2}}{\icontext_3}{\tmono_4}$} {$\sub{\tmono_3}{\overline{\tvar_1}}{\overline{\tvar_3}} = \sub{\tmono_4}{\overline{\tvar_2}}{\overline{\tau_6}}$} {$\tpoly, \icontext_2$ coherent}}}
+          \AxiomC{\Shortstack[c]{
+            {$\overline{\tvar_1} \text{ new}$}
+            {$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+            {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
+            {$\tpoly, \icontext_2$ coherent}
+            {$\tvar_2 = \parens{\freevars{\icontext_1}, \freevars{\tmono_1}} \setminus \freevars{\gcontext}$}
+            {$\tpoly = \tforall{\overline{\tvar_1}}{\sub{\icontext_1}{\tvar_2}{\overline{\tmono_3}}}{\sub{\tmono_1}{\tvar_2}{\overline{\tmono_3}}}$}
+          }}
         \RightLabel{(\textsc{T-Provide})}
         \UnaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
@@ -366,7 +373,7 @@
 
       \[ \tinst{\tforall{\overline{\tvar_1}}{\iempty}{\tmono}} = \sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
-      \[ \tgen{\icontext}{\gcontext}{\tmono} = \tforall{\overline{\tvar}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \freevars{\gcontext} \]
+      \[ \tgen{\icontext}{\tmono}{\overline{\tvar_1}} = \tforall{\overline{\tvar_2}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar_2} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \overline{\tvar_1} \]
 
     \end{mdframed}
     \caption{Typing rules}
@@ -406,7 +413,7 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\ssub_1; \icontext_3; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
-          \AxiomC{$\entails{\ssub_2; \icontext_4; \icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\ssub_1 \gcontext}{\tmono_1}}}{\hastype{\lterm_2}{\tmono_2}}$}
+          \AxiomC{$\entails{\ssub_2; \icontext_4; \icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\tmono_1}{\freevars{\ssub_1 \gcontext}}}}{\hastype{\lterm_2}{\tmono_2}}$}
           \AxiomC{$\ssub_3 = \slub{\ssub_1}{\ssub_2}$}
         \RightLabel{(\textsc{I-Let})}
         \TrinaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_3, \icontext_4}; \ssub_3 \icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\ssub_3 \tmono_2}}$}
@@ -428,7 +435,7 @@
 
       \[ \tinst{\tforall{\overline{\tvar_1}}{\icontext_1}{\tmono}, \icontext_2} = \tforall{\tvarempty}{\iempty}{\sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tinst{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tinst{\icontext_2} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
-      \[ \tgen{\icontext}{\gcontext}{\tmono} = \tforall{\overline{\tvar}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \freevars{\gcontext} \]
+      \[ \tgen{\icontext}{\tmono}{\overline{\tvar_1}} = \tforall{\overline{\tvar_2}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar_2} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \overline{\tvar_1} \]
 
     \end{mdframed}
     \caption{Inference rules}
@@ -522,7 +529,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}}{\lterm_1'}$} {$\utrans{\icontext_1}{d}$} {$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\gcontext}{\tmono_1}}}{\utrans{\hastype{\lterm_2}{\tmono_2}}}{\lterm_2'}$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\icontext_1; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}}{\lterm_1'}$} {$\utrans{\icontext_1}{d}$} {$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\tmono_1}{\freevars{\gcontext}}}}{\utrans{\hastype{\lterm_2}{\tmono_2}}}{\lterm_2'}$}}}
         \RightLabel{(\textsc{S-Let})}
         \UnaryInfC{$\entails{\icontext_2; \gcontext}{\utrans{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}{\lapp{(\labs{\lvar}{\lterm_2'})}{(\labs{d}{\lterm_1'})}}}$}
       \end{prooftree}
@@ -541,7 +548,7 @@
         \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\limplicit{\tmono}}{\tmono}}{d}}$}
       \end{prooftree}
 
-      \[ \tgen{\icontext}{\gcontext}{\tmono} = \tforall{\overline{\tvar}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \freevars{\gcontext} \]
+      \[ \tgen{\icontext}{\tmono}{\overline{\tvar_1}} = \tforall{\overline{\tvar_2}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar_2} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \overline{\tvar_1} \]
 
     \end{mdframed}
     \caption{Translation semantics}

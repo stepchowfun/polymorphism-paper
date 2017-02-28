@@ -8,7 +8,7 @@ Numeric = forall a . {
 
 multiply = @(Numeric a).multiply
 
-Squarable = forall a . {
+Squarable = forall a . Numeric a => {
   square : a -> a
 }
 
