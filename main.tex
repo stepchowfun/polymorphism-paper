@@ -347,9 +347,10 @@
 
       \begin{prooftree}
           \AxiomC{$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
-          \AxiomC{$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\tmono_1}{\freevars{\gcontext}}}}{\hastype{\lterm_2}{\tmono_2}}$}
+          \AxiomC{$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tforall{\overline{\tvar}}{\icontext}{\tmono_1}}}{\hastype{\lterm_2}{\tmono_2}}$}
+          \AxiomC{$\overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono_1}} \setminus \freevars{\gcontext}$}
         \RightLabel{(\textsc{T-Let})}
-        \BinaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}$}
+        \TrinaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -363,10 +364,6 @@
         \RightLabel{(\textsc{T-Implicit})}
           \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
       \end{prooftree}
-
-      \[ \tinst{\tforall{\overline{\tvar_1}}{\iempty}{\tmono}} = \sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
-
-      \[ \tgen{\icontext}{\tmono}{\overline{\tvar_1}} = \tforall{\overline{\tvar_2}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar_2} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \overline{\tvar_1} \]
 
     \end{mdframed}
     \caption{Typing rules}
