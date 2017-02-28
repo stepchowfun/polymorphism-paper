@@ -409,7 +409,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly = \tforall{\overline{\tvar_2}}{\icontext_6}{\tmono_3}$} {$\sub{\tmono_1}{\overline{\tvar_1}}{\overline{\tmono_1}} = \sub{\tmono_3}{\overline{\tvar_2}}{\overline{\tmono_2}}$} {$\icontext_3 = \{\preorder{\tforall{\overline{\tvar}}{\icontext}{\tmono}}{\icontext_2} | \ \tmgu{\tmono}{\tmono_1} = \bot \}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}$ coherent}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly = \tforall{\overline{\tvar_2}}{\icontext_6}{\tmono_3}$} {$\sub{\tmono_1}{\overline{\tvar_1}}{\overline{\tmono_1}} = \sub{\tmono_3}{\overline{\tvar_2}}{\overline{\tmono_2}}$} {$\icontext_3 = \{\preorder{\tforall{\overline{\tvar}}{\icontext}{\tmono}}{\icontext_2} | \ \tmgu{\tmono}{\tmono_1} = \bot \}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$} {$\ssub_3 \parens{\icontext_4, \icontext_5, \tpoly}$ coherent}}}
         \RightLabel{(\textsc{I-Provide})}
         \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\tpoly, \icontext_4, \icontext_5}; \ssub_3 \icontext_3; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\ssub_3 \tmono_2}}$}
       \end{prooftree}
@@ -417,7 +417,7 @@
       \begin{prooftree}
           \AxiomC{}
         \RightLabel{(\textsc{I-Implicit})}
-        \UnaryInfC{$\entails{\sempty; \iempty; \tforall{\tvarempty}{\iempty}{\tmono}, \iempty; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
+        \UnaryInfC{$\entails{\sempty; \iempty; \iempty, \tforall{\tvarempty}{\iempty}{\tmono}; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
       \end{prooftree}
 
       \[ \tinst{\tforall{\overline{\tvar_1}}{\iempty}{\tmono}} = \sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
