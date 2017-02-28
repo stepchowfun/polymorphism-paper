@@ -149,12 +149,10 @@
 % Type contexts
 \newcommand\gcontext{\Gamma}
 \newcommand\gempty{\epsilon_{\gcontext}}
-\newcommand\gconcat[2]{#1, #2}
 
 % Implicit contexts
 \newcommand\icontext{\Delta}
 \newcommand\iempty{\epsilon_{\icontext}}
-\newcommand\iconcat[2]{#1, #2}
 
 % Substitutions
 \newcommand\ssub{\theta}
@@ -224,13 +222,13 @@
         & $\tforall{\overline{\tvar}}{\icontext}{\tmono}$ & (universal type) \\
         $\overline{\tvar} \Coloneqq$ & & (quantified type variables) \\
         & $\tvarempty$ & (empty quantification) \\
-        & $\tvar, \overline{\tvar}$ & (type variable cons) \\
+        & $\overline{\tvar}, {\tvar}$ & (type variable cons) \\
         $\gcontext \Coloneqq$ & & (type context) \\
         & $\gempty$ & (empty context) \\
-        & $\hastype{\lvar}{\tpoly}, \gcontext$ & (context cons) \\
+        & $\gcontext, \hastype{\lvar}{\tpoly}$ & (context cons) \\
         $\icontext \Coloneqq$ & & (implicit context) \\
         & $\iempty$ & (empty context) \\
-        & $\tpoly, \icontext$ & (context cons)
+        & $\icontext, \tpoly$ & (context cons)
       \end{tabular}
 
     \end{mdframed}
@@ -238,8 +236,8 @@
     \label{fig:types_syntax}
   \end{figure}
 
-  \[ \iconcat{\iempty}{\icontext} = \icontext \]
-  \[ \iconcat{\parens{\tpoly, \icontext_1}}{\icontext_2} = \tpoly, \parens{\iconcat{\icontext_1}{\icontext_2}} \]
+  \[ \icontext, \iempty = \icontext \]
+  \[ \icontext_1, \parens{\icontext_2, \tpoly} = \parens{\icontext_1, \icontext_2}, \tpoly \]
 
   \begin{figure}[h!]
     \begin{mdframed}
@@ -266,19 +264,19 @@
       \begin{prooftree}
           \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
         \RightLabel{(\textsc{R-Weakening})}
-        \UnaryInfC{$\preorder{\icontext_1}{\tpoly, \icontext_2}$}
+        \UnaryInfC{$\preorder{\icontext_1}{\icontext_2, \tpoly}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\preorder{\iconcat{\icontext_1}{\tpoly_1, \tpoly_2, \icontext_2}}{\iconcat{\icontext_3}{\tpoly_1, \tpoly_2, \icontext_4}}$}
+          \AxiomC{$\preorder{\icontext_1, \tpoly_1, \tpoly_2, \icontext_2}{\icontext_3, \tpoly_1, \tpoly_2, \icontext_4}$}
         \RightLabel{(\textsc{R-Permutation})}
-        \UnaryInfC{$\preorder{\iconcat{\icontext_1}{\tpoly_1, \tpoly_2, \icontext_2}}{\iconcat{\icontext_3}{\tpoly_2, \tpoly_1, \icontext_4}}$}
+        \UnaryInfC{$\preorder{\icontext_1, \tpoly_1, \tpoly_2, \icontext_2}{\icontext_3, \tpoly_2, \tpoly_1, \icontext_4}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\tforall{\overline{\tvar}}{\icontext_1}{\tmono}, \preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}, \icontext_2}{\icontext_3}$}
+          \AxiomC{$\preorder{\icontext_1, \sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}, \tforall{\overline{\tvar}}{\icontext_2}{\tmono}}{\icontext_3}$}
         \RightLabel{(\textsc{R-Specialization})}
-        \UnaryInfC{$\sub{\tforall{\tvarempty}{\iempty}{\tmono}}{\overline{\tvar}}{\overline{\tmono}}, \tforall{\overline{\tvar}}{\icontext_1}{\tmono}, \preorder{\sub{\icontext_1}{\overline{\tvar}}{\overline{\tmono}}, \icontext_2}{\icontext_3}$}
+        \UnaryInfC{$\preorder{\icontext_1, \sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}, \tforall{\overline{\tvar}}{\icontext_2}{\tmono}, \sub{\tforall{\tvarempty}{\iempty}{\tmono}}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_3}$}
       \end{prooftree}
 
     \end{mdframed}
@@ -309,9 +307,9 @@
 
       \begin{prooftree}
           \AxiomC{$\tmgu{\tmono_1}{\tmono_2} = \bot$}
-          \AxiomC{$\tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_1}, \icontext$ coherent}
+          \AxiomC{$\icontext, \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_1}$ coherent}
         \RightLabel{(\textsc{C-Coherence})}
-        \BinaryInfC{$\tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_1}, \tforall{\overline{\tvar_2}}{\icontext_2}{\tmono_2}, \icontext$ coherent}
+        \BinaryInfC{$\icontext, \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_1}, \tforall{\overline{\tvar_2}}{\icontext_2}{\tmono_2}$ coherent}
       \end{prooftree}
 
     \end{mdframed}
@@ -357,7 +355,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\overline{\tvar_1} \text{ new}$} {$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\tpoly, \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\tpoly, \icontext_2$ coherent} {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$} {$\tmono_3 = \sub{\tmono_1}{\overline{\tvar_2}}{\overline{\tmono_4}}$} {$\overline{\tvar_2} = \freevars{\tmono_1} \setminus \parens{\freevars{\icontext_1}, \freevars{\gcontext}}$}}}
+          \AxiomC{\Shortstack[c]{{$\overline{\tvar_1} \text{ new}$} {$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\icontext_2, \tpoly; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\icontext_2, \tpoly$ coherent} {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$} {$\tmono_3 = \sub{\tmono_1}{\overline{\tvar_2}}{\overline{\tmono_4}}$} {$\overline{\tvar_2} = \freevars{\tmono_1} \setminus \parens{\freevars{\icontext_1}, \freevars{\gcontext}}$}}}
         \RightLabel{(\textsc{T-Provide})}
         \UnaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
@@ -466,14 +464,14 @@
       \begin{prooftree}
           \AxiomC{$\tpoly = \tforall{\overline{\tvar}}{\icontext_2}{\tmono}$}
           \AxiomC{$\utrans{\icontext_2}{d}$}
-          \AxiomC{$\iconcat{\icontext_3}{\tpoly,\icontext_4} = \icontext_1$}
+          \AxiomC{$\icontext_3, \tpoly,\icontext_4 = \icontext_1$}
           \AxiomC{$\entails{\icontext_1}{\uelab{d}{e}}$}
         \RightLabel{\textsc{(E-Application)}}
         \QuaternaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly}}{\lapp{\utovar{\tpoly}}{e}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{\textsc{E-Application} does not apply} {$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\iconcat{\icontext_3}{\tpoly_2,\icontext_4} = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
+          \AxiomC{\Shortstack[c]{{\textsc{E-Application} does not apply} {$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\icontext_3, \tpoly_2, \icontext_4 = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
         \RightLabel{(\textsc{E-Lookup})}
         \UnaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly_1}}}{t}$}
       \end{prooftree}
