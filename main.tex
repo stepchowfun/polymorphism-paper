@@ -454,23 +454,25 @@
       \begin{prooftree}
           \AxiomC{$\entails{\icontext_1}{\uelab{d_1}{e_1}, \ldots, \uelab{d_n}{e_n}}$}
         \RightLabel{\textsc{(E-Tuple)}}
-        \UnaryInfC{$\entails{\icontext}{\uelab{\parens{d_1, \ldots, d_n}}{\parens{e_1, \ldots, e_n}}}$}
+        \UnaryInfC{$\entails{\icontext_1}{\uelab{\parens{d_1, \ldots, d_n}}{\parens{e_1, \ldots, e_n}}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\tpoly = \tforall{\overline{\tvar}}{\icontext_2}{\tmono}$}
-          \AxiomC{$\utrans{\icontext_2}{d}$}
           \AxiomC{$\icontext_3, \tpoly,\icontext_4 = \icontext_1$}
+          \AxiomC{$\utrans{\icontext_2}{d}$}
           \AxiomC{$\entails{\icontext_1}{\uelab{d}{e}}$}
         \RightLabel{\textsc{(E-Application)}}
         \QuaternaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly}}{\lapp{\utovar{\tpoly}}{e}}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{\textsc{E-Application} does not apply} {$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\icontext_3, \tpoly_2, \icontext_4 = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$}}}
+          \AxiomC{\Shortstack[c]{{$\tpoly_1 = \tforall{\tvarempty}{\iempty}{\tmono_1}$} {$\tpoly_2 = \tforall{\overline{\tvar}}{\icontext_2}{\tmono_2}$} {$\icontext_3, \tpoly_2,\icontext_4 = \icontext_1$} {$\sub{\tmono_2}{\overline{\tvar}}{\overline{\tmono}} = \tmono_1$} {$\preorder{\sub{\icontext_2}{\overline{\tvar}}{\overline{\tmono}}}{\icontext_1}$} {$\entails{\icontext_1}{\uelab{\utovar{\tpoly_2}}{t}}$}}}
         \RightLabel{(\textsc{E-Lookup})}
         \UnaryInfC{$\entails{\icontext_1}{\uelab{\utovar{\tpoly_1}}}{t}$}
       \end{prooftree}
+
+      \[ \text{\textsc{E-Lookup} applies only if \textsc{E-Application} does not} \]
 
     \end{mdframed}
     \caption{Elaboration(?) semantics}
