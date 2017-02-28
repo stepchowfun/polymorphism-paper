@@ -397,17 +397,15 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_4; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tarrow{\tmono_3}{\tmono_1}}}$} {$\entails{\ssub_2; \icontext_5; \icontext_2; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\ssub_3 = \slub{\slub{\ssub_1}{\ssub_2}}{\tmgu{\tmono_3}{\tmono_2}}$}}}
+          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_1; \icontext_2; \gcontext}{\hastype{\lterm_1}{\tarrow{\tmono_3}{\tmono_1}}}$} {$\entails{\ssub_2; \icontext_3; \icontext_4; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\ssub_3 = \slub{\slub{\ssub_1}{\ssub_2}}{\tmgu{\tmono_3}{\tmono_2}}$}}}
         \RightLabel{(\textsc{I-Application})}
-        \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_4, \icontext_5}; \ssub_3 \parens{\icontext_1, \icontext_2}; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\ssub_3 \tmono_1}}$}
+        \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_1, \icontext_3}; \ssub_3 \parens{\icontext_2, \icontext_4}; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\ssub_3 \tmono_1}}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\entails{\ssub_1; \icontext_3; \icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
-          \AxiomC{$\entails{\ssub_2; \icontext_4; \icontext_2; \gcontext, \hastype{\lvar}{\tgen{\icontext_1}{\tmono_1}{\freevars{\ssub_1 \gcontext}}}}{\hastype{\lterm_2}{\tmono_2}}$}
-          \AxiomC{$\ssub_3 = \slub{\ssub_1}{\ssub_2}$}
+          \AxiomC{\Shortstack[c]{{$\entails{\ssub_1; \icontext_1; \icontext_2; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\ssub_2; \icontext_3; \icontext_4; \gcontext, \hastype{\lvar}{\tforall{\overline{\tvar}}{\icontext_2}{\tmono_1}}}{\hastype{\lterm_2}{\tmono_2}}$} {$\overline{\tvar} = \parens{\freevars{\icontext_2}, \freevars{\tmono_1}} \setminus \freevars{\ssub_1 \gcontext}$} {$\ssub_3 = \slub{\ssub_1}{\ssub_2}$}}}
         \RightLabel{(\textsc{I-Let})}
-        \TrinaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_3, \icontext_4}; \ssub_3 \icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\ssub_3 \tmono_2}}$}
+        \UnaryInfC{$\entails{\ssub_3; \ssub_3 \parens{\icontext_1, \icontext_3}; \ssub_3 \icontext_4; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\ssub_3 \tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -424,7 +422,7 @@
 
       \[ \tinst{\tforall{\overline{\tvar_1}}{\iempty}{\tmono}} = \sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
-      \[ \tinst{\tforall{\overline{\tvar_1}}{\icontext_1}{\tmono}, \icontext_2} = \tforall{\tvarempty}{\iempty}{\sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tinst{\sub{\icontext_1}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tinst{\icontext_2} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
+      \[ \tinst{\icontext_1, \tforall{\overline{\tvar_1}}{\icontext_2}{\tmono}} = \tinst{\icontext_1}, \tinst{\sub{\icontext_2}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tforall{\tvarempty}{\iempty}{\sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
       \[ \tgen{\icontext}{\tmono}{\overline{\tvar_1}} = \tforall{\overline{\tvar_2}}{\icontext}{\tmono} \qquad \text{where } \overline{\tvar_2} = \parens{\freevars{\icontext}, \freevars{\tmono}} \setminus \overline{\tvar_1} \]
 
