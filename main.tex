@@ -363,7 +363,61 @@
       \end{prooftree}
 
     \end{mdframed}
-    \caption{Typing rules}
+    \caption{Typing rules (Hindley-Milner version)}
+    \label{fig:typing_rules}
+  \end{figure}
+
+  \begin{figure}[h!]
+    \begin{mdframed}
+
+      \begin{center}
+        \framebox{$\entails{\icontext; \gcontext}{\hastype{\lterm}{\tmono}}$}
+      \end{center}
+
+      \medskip
+
+      \begin{prooftree}
+          \AxiomC{$\hastype{\lvar}{\tforall{\overline{\tvar}}{\icontext_1}{\tmono}} \in \gcontext$}
+          \AxiomC{$\preorder{\icontext_1}{\icontext_2}$}
+        \RightLabel{(\textsc{T-Variable})}
+        \BinaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lvar}{\sub{\tmono}{\overline{\tvar}}{\overline{\tmono}}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext, \hastype{\lvar}{\tforall{\tvarempty}{\iempty}{\tmono_1}}}{\hastype{\lterm}{\tmono_2}}$}
+        \RightLabel{(\textsc{T-Abstraction})}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\labs{\lvar}{\lterm}}{\tarrow{\tmono_1}{\tmono_2}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tarrow{\tmono_2}{\tmono_1}}}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
+        \RightLabel{(\textsc{T-Application})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_1}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+          \AxiomC{$\entails{\icontext_2; \gcontext, \hastype{\lvar}{\tforall{\overline{\tvar}}{\icontext}{\tmono_1}}}{\hastype{\lterm_2}{\tmono_2}}$}
+          \AxiomC{$\overline{\tvar} = \parens{\freevars{\icontext}, \freevars{\tmono_1}} \setminus \freevars{\gcontext}$}
+        \RightLabel{(\textsc{T-Let})}
+        \TrinaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\llet{\lvar}{\lterm_1}{\lterm_2}}{\tmono_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{\Shortstack[c]{{$\overline{\tvar_1} \text{ new}$} {$\entails{\icontext_1; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$} {$\entails{\icontext_2, \tpoly; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$} {$\icontext_2, \tpoly$ coherent} {$\tpoly = \tforall{\overline{\tvar_1}}{\icontext_1}{\tmono_3}$} {$\tmono_3 = \sub{\tmono_1}{\overline{\tvar_2}}{\overline{\tmono_4}}$} {$\overline{\tvar_2} = \freevars{\tmono_1} \setminus \parens{\freevars{\icontext_1}, \freevars{\gcontext}}$}}}
+        \RightLabel{(\textsc{T-Provide})}
+        \UnaryInfC{$\entails{\icontext_2; \gcontext}{\hastype{\lprovide{\lterm_1}{\tpoly}{\lterm_2}}{\tmono_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\preorder{\tforall{\tvarempty}{\iempty}{\tmono}, \iempty}{\icontext}$}
+        \RightLabel{(\textsc{T-Implicit})}
+          \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
+      \end{prooftree}
+
+    \end{mdframed}
+    \caption{Typing rules (System F version)}
     \label{fig:typing_rules}
   \end{figure}
 
@@ -421,7 +475,7 @@
       \[ \tinst{\icontext_1, \tforall{\overline{\tvar_1}}{\icontext_2}{\tmono}} = \tinst{\icontext_1}, \tinst{\sub{\icontext_2}{\overline{\tvar_1}}{\overline{\tvar_2}}}, \tforall{\tvarempty}{\iempty}{\sub{\tmono}{\overline{\tvar_1}}{\overline{\tvar_2}}} \qquad \text{where } \overline{\tvar_2} \text{ new} \]
 
     \end{mdframed}
-    \caption{Inference rules}
+    \caption{Inference algorithm}
     \label{fig:inference_rules}
   \end{figure}
 

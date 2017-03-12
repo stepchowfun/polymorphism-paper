@@ -56,6 +56,20 @@ substitute sub (TypeVar s) = case Map.lookup s (runSub sub) of
                                Just m -> m
                                Nothing -> TypeVar s
 
+unify :: MonoType -> MonoType -> Maybe Sub
+unify = undefined
+
+lub :: Sub -> Sub -> Maybe Sub
+lub (Sub s1) (Sub s2) = fmap Sub $ traverse (\monotypes ->
+    case monotypes of
+      a : [] -> Just a
+      a : b : [] -> fmap (\sub -> substitute sub a) (unify a b)
+  ) (Map.unionWith (++) (fmap return $ s1) (fmap return $ s2))
+
+instance Monoid Sub where
+  mempty = Sub Map.empty
+  mappend s1 s2 = Maybe.fromJust $ lub s1 s2
+
 ---------------
 -- Inference --
 ---------------
