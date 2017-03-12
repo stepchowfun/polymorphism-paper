@@ -57,7 +57,14 @@ substitute sub (TypeVar s) = case Map.lookup s (runSub sub) of
                                Nothing -> TypeVar s
 
 unify :: MonoType -> MonoType -> Maybe Sub
-unify = undefined
+unify (TypeVar x) t = if occurs x t
+                        then Nothing
+                        else Just $ Sub $ Map.singleton x t
+unify t (TypeVar x) = unify (TypeVar x) t
+unify (Arrow m1 m2) (Arrow n1 n2) =
+  do sub1 <- unify m1 n1
+     sub2 <- unify m1 n1
+     lub sub1 sub2
 
 lub :: Sub -> Sub -> Maybe Sub
 lub (Sub s1) (Sub s2) = fmap Sub $ traverse (\monotypes ->
