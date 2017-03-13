@@ -7,6 +7,7 @@ import qualified Control.Monad.Trans.State as StateT
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import qualified Data.Maybe as Maybe
+import qualified Data.Set as Set
 
 ------------
 -- Syntax --
@@ -66,7 +67,16 @@ unify (Arrow m1 m2) (Arrow n1 n2) =
      sub2 <- unify m1 n1
      lub sub1 sub2
 
-lub :: Sub -> Sub -> Maybe Sub
+-- Law: substitute (compose s1 s2) t = substitute s1 (substitute s2 t)
+compose :: Sub -> Sub -> Sub
+compose s1 s2 = Sub $ Map.filterWithKey (\k -> \v -> TypeVar k /= v) $
+  Map.union
+    (Map.map (substitute s1) (runSub s2))
+    (Map.filterWithKey
+      (\k -> \v -> Maybe.isNothing $ Map.lookup k (runSub s2))
+      (runSub s1)
+    )
+
 lub (Sub s1) (Sub s2) = fmap Sub $ traverse (\monotypes ->
     case monotypes of
       [a] -> Just a
@@ -166,4 +176,7 @@ startIdentifier (Provide t1 t2) = Identifier $
 startIdentifier Implicit = Identifier 0
 
 runInfer :: Term -> Maybe (MonoType, Sub)
-runInfer t = RWS.evalRWST (infer t) (TypeEnv Map.empty, ImplicitEnv []) (startIdentifier t)
+runInfer t = RWS.evalRWST
+  (infer t)
+  (TypeEnv Map.empty, ImplicitEnv [])
+  (startIdentifier t)
