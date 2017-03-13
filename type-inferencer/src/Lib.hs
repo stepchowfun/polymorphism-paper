@@ -73,7 +73,7 @@ compose s1 s2 = Sub $ Map.filterWithKey (\k -> \v -> TypeVar k /= v) $
   Map.union
     (Map.map (substitute s1) (runSub s2))
     (Map.filterWithKey
-      (\k -> \v -> Maybe.isNothing $ Map.lookup k (runSub s2))
+      (\k -> \v -> Map.notMember k (runSub s2))
       (runSub s1)
     )
 
