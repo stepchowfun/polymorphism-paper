@@ -79,7 +79,7 @@ compose s1 s2 = Sub $ Map.filterWithKey (\k -> \v -> TypeVar k /= v) $
 
 instance Monoid Sub where
   mempty = Sub Map.empty
-  mappend  = compose
+  mappend = compose
 
 ---------------
 -- Inference --
