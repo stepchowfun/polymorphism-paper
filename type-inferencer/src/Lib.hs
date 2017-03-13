@@ -87,7 +87,7 @@ instance Monoid Sub where
 
 newtype TypeEnv = TypeEnv { runTypeEnv :: Map.Map Identifier PolyType }
 
-newtype ImplicitEnv = ImplicitEnv { runImplicitEnv :: [MonoType] }
+newtype ImplicitEnv = ImplicitEnv { runImplicitEnv :: [PolyType] }
 
 type Infer = RWS.RWST (TypeEnv, ImplicitEnv) Sub Identifier Maybe
 
@@ -109,9 +109,9 @@ inExtendedTypeEnv x polytype action = RWS.local (\(typeEnv, implicitEnv) ->
     (TypeEnv $ Map.insert x polytype $ runTypeEnv typeEnv, implicitEnv)
   ) action
 
-inExtendedImplicitEnv :: MonoType -> Infer a -> Infer a
-inExtendedImplicitEnv monotype action = RWS.local (\(typeEnv, implicitEnv) ->
-    (typeEnv, ImplicitEnv $ monotype : (runImplicitEnv implicitEnv))
+inExtendedImplicitEnv :: PolyType -> Infer a -> Infer a
+inExtendedImplicitEnv polytype action = RWS.local (\(typeEnv, implicitEnv) ->
+    (typeEnv, ImplicitEnv $ polytype : (runImplicitEnv implicitEnv))
   ) action
 
 generalize :: MonoType -> TypeEnv -> PolyType
@@ -142,8 +142,9 @@ infer (Let x t1 t2) = do
   bodyType <- inExtendedTypeEnv x (generalize defType env) (infer t2)
   return bodyType
 infer (Provide t1 t2) = do
+  (env, _) <- RWS.ask
   providedType <- infer t1
-  bodyType <- inExtendedImplicitEnv providedType (infer t2)
+  bodyType <- inExtendedImplicitEnv (generalize providedType env) (infer t2)
   return bodyType
 infer Implicit = undefined
 
