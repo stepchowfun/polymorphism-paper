@@ -65,7 +65,7 @@ unify t (TypeVar x) = unify (TypeVar x) t
 unify (Arrow m1 m2) (Arrow n1 n2) =
   do sub1 <- unify m1 n1
      sub2 <- unify m1 n1
-     lub sub1 sub2
+     Just $ compose sub1 sub2
 
 -- Law: substitute (compose s1 s2) t = substitute s1 (substitute s2 t)
 compose :: Sub -> Sub -> Sub
@@ -77,15 +77,9 @@ compose s1 s2 = Sub $ Map.filterWithKey (\k -> \v -> TypeVar k /= v) $
       (runSub s1)
     )
 
-lub (Sub s1) (Sub s2) = fmap Sub $ traverse (\monotypes ->
-    case monotypes of
-      [a] -> Just a
-      [a, b] -> fmap (\sub -> substitute sub a) (unify a b)
-  ) (Map.unionWith (++) (fmap return $ s1) (fmap return $ s2))
-
 instance Monoid Sub where
   mempty = Sub Map.empty
-  mappend s1 s2 = Maybe.fromJust $ lub s1 s2
+  mappend  = compose
 
 ---------------
 -- Inference --
