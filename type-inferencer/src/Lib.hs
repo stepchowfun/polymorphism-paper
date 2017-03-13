@@ -69,8 +69,8 @@ unify (Arrow m1 m2) (Arrow n1 n2) =
 lub :: Sub -> Sub -> Maybe Sub
 lub (Sub s1) (Sub s2) = fmap Sub $ traverse (\monotypes ->
     case monotypes of
-      a : [] -> Just a
-      a : b : [] -> fmap (\sub -> substitute sub a) (unify a b)
+      [a] -> Just a
+      [a, b] -> fmap (\sub -> substitute sub a) (unify a b)
   ) (Map.unionWith (++) (fmap return $ s1) (fmap return $ s2))
 
 instance Monoid Sub where
@@ -85,9 +85,7 @@ newtype TypeEnv = TypeEnv { runTypeEnv :: Map.Map Identifier PolyType }
 
 newtype ImplicitEnv = ImplicitEnv { runImplicitEnv :: [MonoType] }
 
-type Constraint = (MonoType, [MonoType])
-
-type Infer = RWS.RWST (TypeEnv, ImplicitEnv) [Constraint] Identifier Maybe
+type Infer = RWS.RWST (TypeEnv, ImplicitEnv) Sub Identifier Maybe
 
 freshVar :: Infer MonoType
 freshVar = do
@@ -132,7 +130,7 @@ infer (Application t1 t2) = do
   absType <- infer t1
   argType <- infer t2
   retType <- freshVar
-  RWS.tell [(absType, [Arrow argType retType])]
+  RWS.tell $ Maybe.fromJust $ unify absType (Arrow argType retType)
   return retType
 infer (Let x t1 t2) = do
   (env, _) <- RWS.ask
@@ -143,11 +141,7 @@ infer (Provide t1 t2) = do
   providedType <- infer t1
   bodyType <- inExtendedImplicitEnv providedType (infer t2)
   return bodyType
-infer Implicit = do
-  implicitType <- freshVar
-  (_, implicitEnv) <- RWS.ask
-  RWS.tell [(implicitType, runImplicitEnv implicitEnv)]
-  return implicitType
+infer Implicit = undefined
 
 startIdentifier :: Term -> Identifier
 startIdentifier (Variable x) = Identifier $
@@ -171,5 +165,5 @@ startIdentifier (Provide t1 t2) = Identifier $
     (runIdentifier $ startIdentifier t2)
 startIdentifier Implicit = Identifier 0
 
-runInfer :: Term -> Maybe (MonoType, [Constraint])
+runInfer :: Term -> Maybe (MonoType, Sub)
 runInfer t = RWS.evalRWST (infer t) (TypeEnv Map.empty, ImplicitEnv []) (startIdentifier t)
