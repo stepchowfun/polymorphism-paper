@@ -254,7 +254,7 @@
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_2}{\tarrow{\tmono_1}{\tmono_2}}}$}
         \RightLabel{(\textsc{T-Application})}
-        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_2}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lapp{\lterm_2}{\lterm_1}}{\tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -365,7 +365,7 @@
           \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}{\hastype{\lterm'_1}{\tmono'_1}}}$}
           \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_2}{\tarrow{\tmono_1}{\tmono_2}}}{\hastype{\lterm'_2}{\tarrow{\tmono'_1}{\tmono'_2}}}}$}
         \RightLabel{(\textsc{S-Application})}
-        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_2}}{\hastype{\lapp{\lterm'_1}{\lterm'_2}}{\tmono'_2}}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lapp{\lterm_2}{\lterm_1}}{\tmono_2}}{\hastype{\lapp{\lterm'_2}{\lterm'_1}}{\tmono'_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
