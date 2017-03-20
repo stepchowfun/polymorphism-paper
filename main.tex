@@ -207,14 +207,14 @@
         & $\lvar$ & variable \\
         & $\labs{\hastype{\lvar}{\tmono}}{\lterm}$ & abstraction \\
         & $\lapp{\lterm}{\lterm}$ & application \\
-        & $\limplicit{\tmono}$ & implicit term \\
+        & $\limplicit{\tmono}$ & implicit parameter \\
         & $\limpintro{\tmono}{\lterm}$ & implicit introduction \\
         & $\limpelim{\lterm}$ & implicit elimination \\
-        & $\lprovidest{\lterm}{\lterm}$ & term provision \\
+        & $\lprovidest{\lterm}{\lterm}$ & provision \\
         $\tmono \Coloneqq$ & & type \\
         & $\tconst$ & type of constants \\
         & $\tarrow{\tmono}{\tmono}$ & arrow type \\
-        & $\timp{\tmono}{\tmono}$ & implicit arrow type \\
+        & $\timp{\tmono}{\tmono}$ & implicit type \\
         $\gcontext \Coloneqq$ & & type context \\
         & $\gempty$ & empty type context \\
         & $\gcontext, \hastype{\lvar}{\tmono}$ & variable binding \\
@@ -259,7 +259,7 @@
 
       \begin{prooftree}
           \AxiomC{$\entailsdelta{\icontext}{\tmono}$}
-        \RightLabel{(\textsc{T-ImplicitTerm})}
+        \RightLabel{(\textsc{T-ImplicitParam})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
       \end{prooftree}
 
@@ -371,7 +371,7 @@
       \begin{prooftree}
           \AxiomC{$\entailsdelta{\icontext}{\tmono}$}
           \AxiomC{$\ttrans{\tmono}{\tmono'}$}
-        \RightLabel{(\textsc{S-ImplicitTerm})}
+        \RightLabel{(\textsc{S-ImplicitParam})}
         \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\limplicit{\tmono}}{\tmono}}{\hastype{\lvar_{\tmono}}{\tmono'}}}$}
       \end{prooftree}
 
