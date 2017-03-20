@@ -121,7 +121,7 @@
 \newcommand\thesystem{\left\langle\lambda\right\rangle}
 \newcommand\parens[1]{\left(#1\right)}
 \newcommand\entails[2]{#1 \vdash #2}
-\newcommand\supports[2]{#1 \models #2}
+\newcommand\supports[2]{#1 \vdash_{\icontext} #2}
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\freevars[1]{\text{free}\parens{#1}}
 \newcommand\preordersym{\sqsubseteq}
@@ -135,7 +135,8 @@
 \newcommand\ldapp[1]{\left\langle #1 \right\rangle}
 \newcommand\lapp[2]{#1 \ #2}
 \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
-\newcommand\lprovide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
+\newcommand\lprovide[3]{\text{provide } #1 : #2 \text{ in } #3}
+\newcommand\lprovidest[2]{\text{provide } #1 \text{ in } #2}
 \newcommand\limplicit[1]{\left\langle #1 \right\rangle}
 
 % Types
@@ -205,7 +206,7 @@
         & $\limplicit{\tmono}$ & implicit parameter \\
         & $\ldabs{\tmono}{\lterm}$ & implicit abstraction \\
         & $\ldapp{\lterm}$ & implicit application \\
-        & $\lprovide{\lterm}{\tmono}{\lterm}$ & provide binding \\
+        & $\lprovidest{\lterm}{\lterm}$ & provide binding \\
         $\tmono \Coloneqq$ & & type \\
         & $\tarrow{\tmono}{\tmono}$ & arrow type \\
         & $\timp{\tmono}{\tmono}$ & implicit arrow type \\
@@ -274,7 +275,7 @@
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
           \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
         \RightLabel{(\textsc{T-Provide})}
-        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lprovide{\lterm_1}{\tmono_1}{\lterm_2}}{\tmono_2}}$}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lprovidest{\lterm_1}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
       \medskip
