@@ -239,46 +239,46 @@
 
       \begin{prooftree}
           \AxiomC{$\hastype{\lvar}{\tmono} \in \gcontext$}
-        \RightLabel{(\textsc{T-Variable})}
+        \RightLabel{(\textsc{T-Var})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lvar}{\tmono}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entails{\icontext; \gcontext, \hastype{\lvar}{\tmono_1}}{\hastype{\lterm}{\tmono_2}}$}
-        \RightLabel{(\textsc{T-Abstraction})}
+        \RightLabel{(\textsc{T-Abs})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\labs{\hastype{\lvar}{\tmono_1}}{\lterm}}{\tarrow{\tmono_1}{\tmono_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_2}{\tarrow{\tmono_1}{\tmono_2}}}$}
-        \RightLabel{(\textsc{T-Application})}
+        \RightLabel{(\textsc{T-App})}
         \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entailsdelta{\icontext}{\tmono}$}
-        \RightLabel{(\textsc{T-ImplicitParameter})}
+        \RightLabel{(\textsc{T-ImplicitTerm})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\hastype{\lterm}{\tmono_2}}$}
-        \RightLabel{(\textsc{T-ImplicitAbstraction})}
+        \RightLabel{(\textsc{T-ImplicitIntro})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limpintro{\tmono_1}{\lterm}}{\timp{\tmono_1}{\tmono_2}}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entailsdelta{\icontext}{\tmono_1}$}
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm}{\timp{\tmono_1}{\tmono_2}}}$}
-        \RightLabel{(\textsc{T-ImplicitApplication})}
+        \RightLabel{(\textsc{T-ImplicitElim})}
         \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limpelim{\lterm}}{\tmono_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
           \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
-        \RightLabel{(\textsc{T-Provide})}
+        \RightLabel{(\textsc{T-Provision})}
         \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lprovidest{\lterm_1}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
