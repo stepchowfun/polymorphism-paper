@@ -170,6 +170,7 @@
 
 % Translation semantics
 \newcommand\utrans[2]{#1 \leadsto #2}
+\newcommand\ttrans[2]{#1 \leadsto #2}
 \newcommand\uelab[2]{#1 \hookrightarrow #2}
 \newcommand\utovar[1]{\| #1 \|}
 
@@ -195,7 +196,7 @@
 
   To that end, we introduce an extension to System F that supports type-based implicit parameters. We also present a restricted version based on Hindley-Milner together with a corresponding inference algorithm.
 
-\section{Types for implicit parameters (simply typed version)}
+\section{Implicit parameters (simply typed version)}
 
   \begin{figure}
     \begin{mdframed}
@@ -223,7 +224,7 @@
       \end{tabular}
 
       \caption{Syntax of terms and types}
-      \label{fig:terms_syntax}
+      \label{fig:syntax}
 
     \end{mdframed}
   \end{figure}
@@ -303,13 +304,125 @@
         \BinaryInfC{$\entailsdelta{\icontext}{\tmono_2}$}
       \end{prooftree}
 
-      \caption{Typing rules}
-      \label{fig:typing_rules}
+      \caption{Type rules}
+      \label{fig:type_rules}
 
     \end{mdframed}
   \end{figure}
 
-\section{Types for implicit parameters (System F version)}
+  \begin{figure}
+    \begin{mdframed}
+
+      \begin{center}
+        \framebox{$\ttrans{\tmono}{\tmono}$}
+      \end{center}
+
+      \begin{prooftree}
+          \AxiomC{$$}
+        \RightLabel{(\textsc{S-Const})}
+        \UnaryInfC{$\ttrans{\tconst}{\tconst}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
+          \AxiomC{$\ttrans{\tmono_2}{\tmono'_2}$}
+        \RightLabel{(\textsc{S-Arrow})}
+        \BinaryInfC{$\ttrans{\tarrow{\tmono_1}{\tmono_2}}{\tarrow{\tmono'_1}{\tmono'_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
+          \AxiomC{$\ttrans{\tmono_2}{\tmono'_2}$}
+        \RightLabel{(\textsc{S-ImplicitArrow})}
+        \BinaryInfC{$\ttrans{\timp{\tmono_1}{\tmono_2}}{\tarrow{\tmono'_1}{\tmono'_2}}$}
+      \end{prooftree}
+
+      \medskip
+
+      \begin{center}
+        \framebox{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm}{\tmono}}{\hastype{\lterm}{\tmono}}}$}
+      \end{center}
+
+      \medskip
+
+      \begin{prooftree}
+          \AxiomC{$\hastype{\lvar}{\tmono} \in \gcontext$}
+          \AxiomC{$\ttrans{\tmono}{\tmono'}$}
+        \RightLabel{(\textsc{S-Variable})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lvar}{\tmono}}{\hastype{\lvar}{\tmono'}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext, \hastype{\lvar}{\tmono_1}}{\utrans{\hastype{\lterm}{\tmono_2}}{\hastype{\lterm'}{\tmono'_2}}}$}
+          \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
+        \RightLabel{(\textsc{S-Abstraction})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\labs{\hastype{\lvar}{\tmono_1}}{\lterm}}{\tarrow{\tmono_1}{\tmono_2}}}{\hastype{\labs{\hastype{\lvar}{\tmono'_1}}{\lterm'}}{\tarrow{\tmono'_1}{\tmono'_2}}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}{\hastype{\lterm'_1}{\tmono'_1}}}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_2}{\tarrow{\tmono_1}{\tmono_2}}}{\hastype{\lterm'_2}{\tarrow{\tmono'_1}{\tmono'_2}}}}$}
+        \RightLabel{(\textsc{S-Application})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_2}}{\hastype{\lapp{\lterm'_1}{\lterm'_2}}{\tmono'_2}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entailsdelta{\icontext}{\tmono}$}
+          \AxiomC{$\ttrans{\tmono}{\tmono'}$}
+        \RightLabel{(\textsc{S-ImplicitTerm})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\limplicit{\tmono}}{\tmono}}{\hastype{\lvar_{\tmono}}{\tmono'}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\utrans{\hastype{\lterm}{\tmono_2}}{\hastype{\lterm'}{\tmono'_2}}}$}
+          \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
+        \RightLabel{(\textsc{S-ImplicitIntro})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\limpintro{\tmono_1}{\lterm}}{\timp{\tmono_1}{\tmono_2}}}{\hastype{\labs{\lvar_{\tmono_1}}{\lterm'}}{\tarrow{\tmono'_1}{\tmono'_2}}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entailsdelta{\icontext}{\tmono_1}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm}{\timp{\tmono_1}{\tmono_2}}}{\hastype{\lterm'}{\tarrow{\tmono'_1}{\tmono'_2}}}}$}
+        \RightLabel{(\textsc{S-ImplicitElim})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\limpelim{\lterm}}{\tmono_2}}{\hastype{\lapp{\lterm'}{\lvar_{\tmono_1}}}{\tmono'_2}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}{\hastype{\lterm'_1}{\tmono'_1}}}$}
+          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{\hastype{\lterm'_2}{\tmono'_2}}}$}
+          \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
+        \RightLabel{(\textsc{S-Provision})}
+        \TrinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lprovidest{\lterm_1}{\lterm_2}}{\tmono_2}}{\hastype{\lapp{\parens{\labs{\hastype{\lvar_{\tmono_1}}{\tmono'_1}}{\lterm'_2}}}{\lterm'_1}}{\tmono'_2}}}$}
+      \end{prooftree}
+
+      \medskip
+
+      \begin{center}
+        \framebox{$\entailsdelta{\icontext}{\tmono}$}
+      \end{center}
+
+      \medskip
+
+      \begin{prooftree}
+          \AxiomC{$\tmono \in \icontext$}
+        \RightLabel{(\textsc{D-Assumption})}
+        \UnaryInfC{$\entailsdelta{\icontext}{\tmono}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entailsdelta{\icontext}{\tmono_1}$}
+          \AxiomC{$\entailsdelta{\icontext}{\timp{\tmono_1}{\tmono_2}}$}
+        \RightLabel{(\textsc{D-Deduction})}
+        \BinaryInfC{$\entailsdelta{\icontext}{\tmono_2}$}
+      \end{prooftree}
+
+      \caption{Translation semantics}
+      \label{fig:translation_semantics}
+
+    \end{mdframed}
+  \end{figure}
+
+\section{Implicit parameters (System F version)}
 
   \begin{figure}
     \begin{mdframed}
@@ -358,7 +471,7 @@
   \end{figure}
 
 
-\section{Types for implicit parameters (Hindley-Milner version)}
+\section{Implicit parameters (Hindley-Milner version)}
 
   \begin{figure}
     \begin{mdframed}
@@ -392,9 +505,6 @@
 
     \end{mdframed}
   \end{figure}
-
-  \[ \icontext, \iempty = \icontext \]
-  \[ \icontext_1, \parens{\icontext_2, \tpoly} = \parens{\icontext_1, \icontext_2}, \tpoly \]
 
   \begin{figure}
     \begin{mdframed}
