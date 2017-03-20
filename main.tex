@@ -121,6 +121,7 @@
 \newcommand\thesystem{\left\langle\lambda\right\rangle}
 \newcommand\parens[1]{\left(#1\right)}
 \newcommand\entails[2]{#1 \vdash #2}
+\newcommand\supports[2]{#1 \models #2}
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\freevars[1]{\text{free}\parens{#1}}
 \newcommand\preordersym{\sqsubseteq}
@@ -130,6 +131,8 @@
 \newcommand\lterm{t}
 \newcommand\lvar{x}
 \newcommand\labs[2]{\lambda #1 \ . \ #2}
+\newcommand\ldabs[2]{\delta #1 \ . \ #2}
+\newcommand\ldapp[1]{\left\langle #1 \right\rangle}
 \newcommand\lapp[2]{#1 \ #2}
 \newcommand\llet[3]{\text{let } #1 = #2 \text{ in } #3}
 \newcommand\lprovide[3]{\text{provide } #1 \text{ as } #2 \text{ in } #3}
@@ -189,9 +192,122 @@
 
   To that end, we introduce an extension to System F that supports type-based implicit parameters. We also present a restricted version based on Hindley-Milner together with a corresponding inference algorithm.
 
+\section{Types for implicit parameters (simply typed version)}
+
+  \begin{figure}
+    \begin{mdframed}
+
+      \begin{tabular}{l l l}
+        $\lterm \Coloneqq $ & & term \\
+        & $\lvar$ & variable \\
+        & $\labs{\hastype{\lvar}{\tmono}}{\lterm}$ & abstraction \\
+        & $\lapp{\lterm}{\lterm}$ & application \\
+        & $\limplicit{\tmono}$ & implicit parameter \\
+        & $\ldabs{\tmono}{\lterm}$ & implicit abstraction \\
+        & $\ldapp{\lterm}$ & implicit application \\
+        & $\lprovide{\lterm}{\tmono}{\lterm}$ & provide binding \\
+        $\tmono \Coloneqq$ & & type \\
+        & $\tvar$ & type variable \\
+        & $\tarrow{\tmono}{\tmono}$ & arrow type \\
+        & $\timp{\tmono}{\tmono}$ & implicit arrow type \\
+        $\gcontext \Coloneqq$ & & type context \\
+        & $\gempty$ & empty type context \\
+        & $\gcontext, \hastype{\lvar}{\tmono}$ & variable binding \\
+        $\icontext \Coloneqq$ & & implicit context \\
+        & $\iempty$ & empty implicit context \\
+        & $\icontext, \tmono$ & type provision
+      \end{tabular}
+
+      \caption{Syntax of terms and types}
+      \label{fig:terms_syntax}
+
+    \end{mdframed}
+  \end{figure}
+
+  \begin{figure}
+    \begin{mdframed}
+
+      \begin{center}
+        \framebox{$\entails{\icontext; \gcontext}{\hastype{\lterm}{\tmono}}$}
+      \end{center}
+
+      \medskip
+
+      \begin{prooftree}
+          \AxiomC{$\hastype{\lvar}{\tmono} \in \gcontext$}
+        \RightLabel{(\textsc{T-Variable})}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lvar}{\tmono}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext, \hastype{\lvar}{\tmono_1}}{\hastype{\lterm}{\tmono_2}}$}
+        \RightLabel{(\textsc{T-Abstraction})}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\labs{\hastype{\lvar}{\tmono_1}}{\lterm}}{\tarrow{\tmono_1}{\tmono_2}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_2}{\tarrow{\tmono_1}{\tmono_2}}}$}
+        \RightLabel{(\textsc{T-Application})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lapp{\lterm_1}{\lterm_2}}{\tmono_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\supports{\icontext}{\tmono}$}
+        \RightLabel{(\textsc{T-ImplicitParameter})}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\hastype{\lterm}{\tmono_2}}$}
+        \RightLabel{(\textsc{T-ImplicitAbstraction})}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\ldabs{\tmono_1}{\lterm}}{\timp{\tmono_1}{\tmono_2}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\supports{\icontext}{\tmono_1}$}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm}{\timp{\tmono_1}{\tmono_2}}}$}
+        \RightLabel{(\textsc{T-ImplicitApplication})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\ldapp{\lterm}}{\tmono_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
+        \RightLabel{(\textsc{T-Provide})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lprovide{\lterm_1}{\tmono_1}{\lterm_2}}{\tmono_2}}$}
+      \end{prooftree}
+
+      \medskip
+
+      \begin{center}
+        \framebox{$\supports{\icontext}{\tmono}$}
+      \end{center}
+
+      \medskip
+
+      \begin{prooftree}
+          \AxiomC{$\tmono \in \icontext$}
+        \RightLabel{(\textsc{U-Identity})}
+        \UnaryInfC{$\supports{\icontext}{\tmono}$}
+      \end{prooftree}
+
+      \begin{prooftree}
+          \AxiomC{$\supports{\icontext}{\tmono_1}$}
+          \AxiomC{$\supports{\icontext}{\timp{\tmono_1}{\tmono_2}}$}
+        \RightLabel{(\textsc{U-ModusPonens})}
+        \BinaryInfC{$\supports{\icontext}{\tmono_2}$}
+      \end{prooftree}
+
+      \caption{Typing rules}
+      \label{fig:typing_rules}
+
+    \end{mdframed}
+  \end{figure}
+
 \section{Types for implicit parameters (System F version)}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{tabular}{l l l}
@@ -222,7 +338,7 @@
     \end{mdframed}
   \end{figure}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{center}
@@ -240,7 +356,7 @@
 
 \section{Types for implicit parameters (Hindley-Milner version)}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{tabular}{l l l}
@@ -276,7 +392,7 @@
   \[ \icontext, \iempty = \icontext \]
   \[ \icontext_1, \parens{\icontext_2, \tpoly} = \parens{\icontext_1, \icontext_2}, \tpoly \]
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{center}
@@ -322,7 +438,7 @@
     \end{mdframed}
   \end{figure}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{center}
@@ -356,7 +472,7 @@
     \end{mdframed}
   \end{figure}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{center}
@@ -413,7 +529,7 @@
 
 \section{Type inference}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{center}
@@ -472,7 +588,7 @@
 
 \section{Translation semantics}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{center}
@@ -520,7 +636,7 @@
     \end{mdframed}
   \end{figure}
 
-  \begin{figure}[h!]
+  \begin{figure}
     \begin{mdframed}
 
       \begin{center}
