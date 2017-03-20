@@ -121,7 +121,7 @@
 \newcommand\thesystem{\left\langle\lambda\right\rangle}
 \newcommand\parens[1]{\left(#1\right)}
 \newcommand\entails[2]{#1 \vdash #2}
-\newcommand\supports[2]{#1 \vdash_{\icontext} #2}
+\newcommand\entailsdelta[2]{#1 \vdash_{\icontext} #2}
 \newcommand\hastype[2]{#1 : #2}
 \newcommand\freevars[1]{\text{free}\parens{#1}}
 \newcommand\preordersym{\sqsubseteq}
@@ -161,9 +161,9 @@
 \newcommand\iempty{\epsilon_{\icontext}}
 
 % Substitutions
+\newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
 \newcommand\ssub{\theta}
 \newcommand\sempty{\epsilon_{\ssub}}
-\newcommand\sub[3]{#1 \left[ #2 \mapsto #3 \right]}
 \newcommand\slub[2]{#1 \vee #2}
 
 % Translation semantics
@@ -253,7 +253,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\supports{\icontext}{\tmono}$}
+          \AxiomC{$\entailsdelta{\icontext}{\tmono}$}
         \RightLabel{(\textsc{T-ImplicitParameter})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
       \end{prooftree}
@@ -265,7 +265,7 @@
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\supports{\icontext}{\tmono_1}$}
+          \AxiomC{$\entailsdelta{\icontext}{\tmono_1}$}
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm}{\timp{\tmono_1}{\tmono_2}}}$}
         \RightLabel{(\textsc{T-ImplicitApplication})}
         \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\ldapp{\lterm}}{\tmono_2}}$}
@@ -281,7 +281,7 @@
       \medskip
 
       \begin{center}
-        \framebox{$\supports{\icontext}{\tmono}$}
+        \framebox{$\entailsdelta{\icontext}{\tmono}$}
       \end{center}
 
       \medskip
@@ -289,14 +289,14 @@
       \begin{prooftree}
           \AxiomC{$\tmono \in \icontext$}
         \RightLabel{(\textsc{D-Assumption})}
-        \UnaryInfC{$\supports{\icontext}{\tmono}$}
+        \UnaryInfC{$\entailsdelta{\icontext}{\tmono}$}
       \end{prooftree}
 
       \begin{prooftree}
-          \AxiomC{$\supports{\icontext}{\tmono_1}$}
-          \AxiomC{$\supports{\icontext}{\timp{\tmono_1}{\tmono_2}}$}
+          \AxiomC{$\entailsdelta{\icontext}{\tmono_1}$}
+          \AxiomC{$\entailsdelta{\icontext}{\timp{\tmono_1}{\tmono_2}}$}
         \RightLabel{(\textsc{D-Deduction})}
-        \BinaryInfC{$\supports{\icontext}{\tmono_2}$}
+        \BinaryInfC{$\entailsdelta{\icontext}{\tmono_2}$}
       \end{prooftree}
 
       \caption{Typing rules}
