@@ -288,14 +288,14 @@
 
       \begin{prooftree}
           \AxiomC{$\tmono \in \icontext$}
-        \RightLabel{(\textsc{U-Identity})}
+        \RightLabel{(\textsc{D-Assumption})}
         \UnaryInfC{$\supports{\icontext}{\tmono}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\supports{\icontext}{\tmono_1}$}
           \AxiomC{$\supports{\icontext}{\timp{\tmono_1}{\tmono_2}}$}
-        \RightLabel{(\textsc{U-ModusPonens})}
+        \RightLabel{(\textsc{D-Deduction})}
         \BinaryInfC{$\supports{\icontext}{\tmono_2}$}
       \end{prooftree}
 
