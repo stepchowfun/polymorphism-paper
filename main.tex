@@ -207,10 +207,10 @@
         & $\lvar$ & variable \\
         & $\labs{\hastype{\lvar}{\tmono}}{\lterm}$ & abstraction \\
         & $\lapp{\lterm}{\lterm}$ & application \\
+        & $\lprovidest{\lterm}{\lterm}$ & provision \\
         & $\limplicit{\tmono}$ & implicit parameter \\
         & $\limpintro{\tmono}{\lterm}$ & implicit introduction \\
         & $\limpelim{\lterm}$ & implicit elimination \\
-        & $\lprovidest{\lterm}{\lterm}$ & provision \\
         $\tmono \Coloneqq$ & & type \\
         & $\tconst$ & type of constants \\
         & $\tarrow{\tmono}{\tmono}$ & arrow type \\
@@ -258,6 +258,13 @@
       \end{prooftree}
 
       \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
+          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
+        \RightLabel{(\textsc{T-Provision})}
+        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lprovidest{\lterm_1}{\lterm_2}}{\tmono_2}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
           \AxiomC{$\entailsdelta{\icontext}{\tmono}$}
         \RightLabel{(\textsc{T-ImplicitParam})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limplicit{\tmono}}{\tmono}}$}
@@ -274,13 +281,6 @@
           \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm}{\timp{\tmono_1}{\tmono_2}}}$}
         \RightLabel{(\textsc{T-ImplicitElim})}
         \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\limpelim{\lterm}}{\tmono_2}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\entails{\icontext; \gcontext}{\hastype{\lterm_1}{\tmono_1}}$}
-          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\hastype{\lterm_2}{\tmono_2}}$}
-        \RightLabel{(\textsc{T-Provision})}
-        \BinaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lprovidest{\lterm_1}{\lterm_2}}{\tmono_2}}$}
       \end{prooftree}
 
       \medskip
@@ -369,6 +369,14 @@
       \end{prooftree}
 
       \begin{prooftree}
+          \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}{\hastype{\lterm'_1}{\tmono'_1}}}$}
+          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{\hastype{\lterm'_2}{\tmono'_2}}}$}
+          \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
+        \RightLabel{(\textsc{S-Provision})}
+        \TrinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lprovidest{\lterm_1}{\lterm_2}}{\tmono_2}}{\hastype{\lapp{\parens{\labs{\hastype{\lvar_{\tmono_1}}{\tmono'_1}}{\lterm'_2}}}{\lterm'_1}}{\tmono'_2}}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
           \AxiomC{$\entailsdelta{\icontext}{\tmono}$}
           \AxiomC{$\ttrans{\tmono}{\tmono'}$}
         \RightLabel{(\textsc{S-ImplicitParam})}
@@ -387,14 +395,6 @@
           \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm}{\timp{\tmono_1}{\tmono_2}}}{\hastype{\lterm'}{\tarrow{\tmono'_1}{\tmono'_2}}}}$}
         \RightLabel{(\textsc{S-ImplicitElim})}
         \BinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\limpelim{\lterm}}{\tmono_2}}{\hastype{\lapp{\lterm'}{\lvar_{\tmono_1}}}{\tmono'_2}}}$}
-      \end{prooftree}
-
-      \begin{prooftree}
-          \AxiomC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lterm_1}{\tmono_1}}{\hastype{\lterm'_1}{\tmono'_1}}}$}
-          \AxiomC{$\entails{\icontext, \tmono_1; \gcontext}{\utrans{\hastype{\lterm_2}{\tmono_2}}{\hastype{\lterm'_2}{\tmono'_2}}}$}
-          \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
-        \RightLabel{(\textsc{S-Provision})}
-        \TrinaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lprovidest{\lterm_1}{\lterm_2}}{\tmono_2}}{\hastype{\lapp{\parens{\labs{\hastype{\lvar_{\tmono_1}}{\tmono'_1}}{\lterm'_2}}}{\lterm'_1}}{\tmono'_2}}}$}
       \end{prooftree}
 
       \medskip
