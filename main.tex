@@ -239,6 +239,12 @@
       \medskip
 
       \begin{prooftree}
+          \AxiomC{}
+        \RightLabel{(\textsc{T-Constant})}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lconst}{\tconst}}$}
+      \end{prooftree}
+
+      \begin{prooftree}
           \AxiomC{$\hastype{\lvar}{\tmono} \in \gcontext$}
         \RightLabel{(\textsc{T-Variable})}
         \UnaryInfC{$\entails{\icontext; \gcontext}{\hastype{\lvar}{\tmono}}$}
@@ -320,22 +326,22 @@
       \medskip
 
       \begin{prooftree}
-          \AxiomC{$$}
-        \RightLabel{(\textsc{S-Const})}
+          \AxiomC{}
+        \RightLabel{(\textsc{U-Constant})}
         \UnaryInfC{$\ttrans{\tconst}{\tconst}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
           \AxiomC{$\ttrans{\tmono_2}{\tmono'_2}$}
-        \RightLabel{(\textsc{S-Arrow})}
+        \RightLabel{(\textsc{U-Arrow})}
         \BinaryInfC{$\ttrans{\tarrow{\tmono_1}{\tmono_2}}{\tarrow{\tmono'_1}{\tmono'_2}}$}
       \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\ttrans{\tmono_1}{\tmono'_1}$}
           \AxiomC{$\ttrans{\tmono_2}{\tmono'_2}$}
-        \RightLabel{(\textsc{S-Implicit})}
+        \RightLabel{(\textsc{U-Implicit})}
         \BinaryInfC{$\ttrans{\timp{\tmono_1}{\tmono_2}}{\tarrow{\tmono'_1}{\tmono'_2}}$}
       \end{prooftree}
 
@@ -346,6 +352,12 @@
       \end{center}
 
       \medskip
+
+      \begin{prooftree}
+          \AxiomC{}
+        \RightLabel{(\textsc{S-Constant})}
+        \UnaryInfC{$\entails{\icontext; \gcontext}{\utrans{\hastype{\lconst}{\tconst}}{\hastype{\lconst}{\tconst}}}$}
+      \end{prooftree}
 
       \begin{prooftree}
           \AxiomC{$\hastype{\lvar}{\tmono} \in \gcontext$}
